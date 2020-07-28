@@ -33,7 +33,7 @@ class PermissionMiddleware
         ->join('user_has_role as ur', 'r.id', 'ur.role_id')
         ->join('users as u', 'ur.user_id', 'u.id')
         ->where('u.id', $user->id)
-        ->where('permission.id', $permission)
+        ->where('permission.route', $permission)
         ->first();
 
         # Validate if you do not have permission

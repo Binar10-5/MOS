@@ -22,17 +22,20 @@ class MenuController extends Controller
         }
 
         # Get the modules with their respective permissions
-        $module_list = Module::select('module.id as module_id', 'module.name as module_name', 'p.id as permission_id', 'p.name as permission_name')
+        $module_list = Module::select('module.id as module_id', 'module.name as module_name', 'p.id as permission_id', 'p.name as permission_name', 'module.list_order')
         ->join('permission as p', 'module.id', 'p.module_id')
         ->join('role_has_permission as rp', 'p.id', 'rp.permission_id')
         ->join('role as r', 'rp.role_id', 'r.id')
         ->join('user_has_role as ur', 'r.id', 'ur.role_id')
         ->join('users as u', 'ur.user_id', 'u.id')
+        ->orderBy('module.list_order', 'ASC')
         ->distinct('u.id')
+        ->where('u.id', $user->id)
         ->get();
 
         # Order by the module name
-        $collection = collect($module_list)->sortBy('module_name');
+        $collection = collect($module_list)->sortBy('list_order');
+
         # Group by the module name
         $modules = collect($collection)->groupBy('module_name');
 

@@ -8,6 +8,6 @@ class Permission extends Model
 {
     protected $table = 'permission';
     protected $fillable = [
-        'id', 'name', 'description'
+        'id', 'name', 'description', 'module_id', 'route'
     ];
 }

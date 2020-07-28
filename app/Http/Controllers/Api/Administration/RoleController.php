@@ -12,9 +12,9 @@ class RoleController extends Controller
     public function __construct()
     {
         # the middleware param 4 = List roles
-        $this->middleware('permission:4')->only(['show', 'index']);
+        $this->middleware('permission:/list_role')->only(['show', 'index']);
         # the middleware param 5 = Create, update, delete roles
-        $this->middleware('permission:5')->only(['store', 'update', 'destroy']);
+        $this->middleware('permission:/create_role')->only(['store', 'update', 'destroy']);
     }
     /**
      * Display a listing of the resource.

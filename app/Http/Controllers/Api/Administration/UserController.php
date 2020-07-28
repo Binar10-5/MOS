@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -16,11 +17,11 @@ class UserController extends Controller
     public function __construct()
     {
         # the middleware param 1 = List user
-        $this->middleware('permission:1')->only(['show', 'index']);
+        $this->middleware('permission:/list_user')->only(['show', 'index']);
         # the middleware param 2 = Create user
-        $this->middleware('permission:2')->only('store');
+        $this->middleware('permission:/create_user')->only('store');
         # the middleware param 3 = Update user
-        $this->middleware('permission:3')->only(['update', 'destroy']);
+        $this->middleware('permission:/update_user')->only(['update', 'destroy']);
     }
 
 
@@ -31,8 +32,28 @@ class UserController extends Controller
      */
     public function index()
     {
-        # Get users
-        $users = User::where('state_id', 1)->get();
+       # Get users
+       if(request('paginate')){
+            $users = User::name(request('name'))
+            ->state(request('state'))
+            ->dni(request('dni'))
+            ->range(request('date_start'), request('date_end'))
+            ->byname(request('order_name'))
+            ->bydni(request('order_dni'))
+            ->bycreatedAt(request('order_created_at'))
+            ->where('id', '!=', Auth::id())
+            ->paginate(8);
+        }else{
+            $users = User::name(request('name'))
+            ->state(request('state'))
+            ->dni(request('dni'))
+            ->range(request('date_start'), request('date_end'))
+            ->byname(request('order_name'))
+            ->bydni(request('order_dni'))
+            ->bycreatedAt(request('order_created_at'))
+            ->where('id', '!=', Auth::id())
+            ->get();
+        }
 
         foreach ($users as $user) {
 
@@ -61,10 +82,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator=\Validator::make($request->all(),[
-            'name' => 'required|max:20',
-            'email' => 'required|email|max:80|email|unique:users',
-            'password' => 'required|max:50|min:6',
-            'add_array' => 'bail|array',
+            'full_name' => 'required|max:255',
+            'cell_phone' => 'required|max:15',
+            'dni' => 'required|max:15|unique:users,dni',
+            'email' => 'required|max:80|email|unique:users',
+            'add_array' => 'bail|required|array',
+            'add_array.*' => 'bail|exists:role,id'
         ]);
         if($validator->fails())
         {
