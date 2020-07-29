@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'full_name', 'email', 'password', 'address', 'code_email_verify', 'code_password_verify', 'pasword_verify', 'email_verify', 'state_id', 'cell_phone', 'dni'
+        'name', 'last_name', 'email', 'password', 'address', 'code_email_verify', 'code_password_verify', 'pasword_verify', 'email_verify', 'state_id', 'cell_phone', 'dni'
     ];
 
     /**
@@ -41,7 +41,7 @@ class User extends Authenticatable
     public function scopeName($query, $name)
     {
         if(!empty($name)){
-            $query->where('full_name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%'.$name.'%');
         }
     }
 

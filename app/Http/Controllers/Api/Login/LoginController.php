@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Login;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -103,7 +104,6 @@ class LoginController extends Controller
       DB::table('oauth_access_tokens')->where('user_id', Auth::id())->delete();
 
       return response()->json(['message' => 'La sesion a sido cerrada con exito'], 200);
-
 
     }
 }
