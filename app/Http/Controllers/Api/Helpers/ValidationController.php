@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\Helpers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Helpers\SendEmails;
 use Illuminate\Http\Request;
 use App\User;
-use App\Mail\SendEmails;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class ValidationController extends Controller
 {
@@ -206,7 +208,7 @@ class ValidationController extends Controller
 
         # return response()->json(['response' => ['error' => ['Dile a ronaldo que te cree un pqrs, con un correo tuyo, para que no le llegue el correo a un cliente de verdad.']]], 400);
         # Send Notification
-        $mail = Mail::to($user->email)->send(new SendEmails('forget_password', 'Cambio de contraseña.', 'correo', $data));
+        $mail = Mail::to($user->email)->send(new SendEmails('forget_password', 'Cambio de contraseña.', 'noreply@mosbeautyshop.com', $data));
 
         if($mail){
             return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);

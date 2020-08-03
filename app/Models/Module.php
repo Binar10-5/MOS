@@ -8,6 +8,6 @@ class Module extends Model
 {
     protected $table = 'module';
     protected $fillable = [
-        'id', 'name', 'description'
+        'id', 'name', 'description', 'list_order'
     ];
 }

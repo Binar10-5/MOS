@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\Administration;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Helpers\SendEmails;
 use App\Models\Role;
 use App\Models\UserRole;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Mail\SendEmails;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -116,7 +117,6 @@ class UserController extends Controller
                 'name' => request('name'),
                 'last_name' => request('last_name'),
                 'cell_phone' => request('cell_phone'),
-                'address' => request('address'),
                 'dni' => request('dni'),
                 'email' => request('email'),
                 'code_email_verify' => $email_code,
@@ -148,7 +148,7 @@ class UserController extends Controller
             return response()->json( ['response' => ['error' => ['Error al asignar rol'], 'data' => [$e->getMessage(), $e->getFile(), $e->getLine()]]], 400);
         }
         # We generate the data to send the mail to the created user
-        /*$data = array(
+        $data = array(
             'password_code' => $password_code,
             'email_code' => $email_code,
             'name' => $user->name." ".$user->last_name,
@@ -156,12 +156,12 @@ class UserController extends Controller
         );
 
         # Send Notification
-        $mail = Mail::to($user->email)->send(new SendEmails('email_verify', 'Correo de verificación de cuenta.', 'correo', $data));
+        $mail = Mail::to($user->email)->send(new SendEmails('email_verify', 'Correo de verificación de cuenta.', 'noreply@mosbeautyshop.com', $data));
 
         if($mail){
             return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
-        }*/
-        
+        }
+
         DB::commit();
         return response()->json(['response' => 'Success'], 200);
     }
@@ -182,16 +182,16 @@ class UserController extends Controller
          if(!$user){
              return response()->json(['response' => ['error' => ['Ususario no encontrado']]], 404);
          }
- 
+
          # Get user roles
          $roles = Role::select('role.id', 'role.name', 'role.description')
          ->join('user_has_role as ur', 'role.id', 'ur.role_id')
          ->where('ur.user_id', $user->id)
          ->get();
- 
+
          # Assign roles to json
          $user->roles = $roles;
- 
+
          return response()->json(['response' => $user], 200);
     }
 
@@ -207,7 +207,6 @@ class UserController extends Controller
         $validator=\Validator::make($request->all(),[
             'name' => 'bail|required|min:2|max:50',
             'last_name' => 'bail|required|min:2|max:75',
-            'address' => 'bail|required|min:2|max:100',
             'dni' => 'required|max:15|unique:users,dni,'.$id,
             'cell_phone' => 'required|max:15',
             'email' => 'bail|required|min:5|max:75|unique:users,email,'.$id,
@@ -232,7 +231,6 @@ class UserController extends Controller
         # Here we update the basic user data
         $user->name = request('name');
         $user->last_name = request('last_name');
-        $user->address = request('address');
         $user->dni = request('dni');
         $user->cell_phone = request('cell_phone');
         $user->state_id = request('state_id');
@@ -302,7 +300,7 @@ class UserController extends Controller
 
 
         $user->update();
-        /*if($update_email){
+        if($update_email){
             if($user){
 
                 # We generate the data to send the mail to the created user
@@ -313,13 +311,13 @@ class UserController extends Controller
                 );
 
                 # Send Notification
-                $mail = Mail::to($user->email)->send(new SendEmails('change_email', 'Verificación de nuevo correo.', 'correo', $data));
+                $mail = Mail::to($user->email)->send(new SendEmails('change_email', 'Verificación de nuevo correo.', 'noreply@mosbeautyshop.com', $data));
 
                 if($mail){
                     return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
                 }
             }
-        }*/
+        }
         # Here we return success.
         DB::commit();
         return response()->json(['response' => 'Usuario actualizado con exito.'], 200);

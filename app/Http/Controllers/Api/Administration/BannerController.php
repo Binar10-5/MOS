@@ -65,7 +65,7 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         $validator=\Validator::make($request->all(),[
-            'name' => 'bail|required|min:1|max:75|unique:banner,name',
+            'name' => 'bail|required|min:1|max:75',
             'description' => 'bail|required|min:1',
             'img_short' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'img_median' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
@@ -136,7 +136,7 @@ class BannerController extends Controller
     {
         if(request('paginate')){
             $banners = Banner::select('mb.id', 'banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'banner.state_id', 'banner.public_id',
-            'banner.order_by', 'banner.language_id')
+            'banner.order_by', 'banner.language_id', 'banner.principal_id')
             ->join('m_banners as mb', 'banner.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
@@ -146,7 +146,7 @@ class BannerController extends Controller
             ->first();
         }else{
             $banners = Banner::select('mb.id', 'banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'banner.state_id', 'banner.public_id',
-             'banner.order_by', 'banner.language_id')
+             'banner.order_by', 'banner.language_id', 'banner.principal_id')
             ->join('m_banners as mb', 'banner.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
@@ -169,7 +169,7 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         $validator=\Validator::make($request->all(),[
-            'name' => 'required|min:1|max:75|unique:banner,name,'.$id,
+            'name' => 'required|min:1|max:75',
             'description' => 'required|min:1',
             'link' => 'required',
             'change_short' => 'required|boolean',
