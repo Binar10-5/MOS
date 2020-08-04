@@ -8,7 +8,7 @@ class Banner extends Model
 {
     protected $table = 'banner';
     protected $fillable = [
-        'id', 'name', 'description', 'img_short', 'img_median', 'img_big', 'link', 'state_id', 'public_id', 'order_by', 'principal_id', 'language_id'
+        'id', 'name', 'description', 'img_short', 'img_median', 'img_big', 'link', 'public_id', 'order_by', 'principal_id', 'language_id', 'state_id'
     ];
 
     public function scopeName($query, $name)
@@ -21,7 +21,7 @@ class Banner extends Model
     public function scopeState($query, $state)
     {
         if(!empty($state)){
-            $query->where('banner.state_id', $state);
+            $query->where('mb.state_id', $state);
         }
     }
 

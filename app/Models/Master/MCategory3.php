@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MBanner extends Model
+class MCategory3 extends Model
 {
-    protected $table = 'm_banners';
+    protected $table = 'm_categories_3';
     protected $fillable = [
         'id', 'name', 'state_id'
     ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Administration;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Language;
+use App\Models\MBanner;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,22 +34,22 @@ class BannerController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $banners = Banner::select('banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'banner.state_id', 'banner.public_id',
-            'banner.order_by', 'banner.language_id', 'banner.principal_id')
+            $banners = Banner::select('banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'mb.state_id as entity_state_id', 'banner.public_id',
+            'banner.order_by', 'banner.language_id', 'banner.principal_id', 'banner.state_id')
             ->join('m_banners as mb', 'banner.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
             ->orderBy('order_by', 'ASC')
-            ->where('banner.language_id', 1)
+            ->where('banner.language_id', $this->language)
             ->paginate(8);
         }else{
-            $banners = Banner::select('banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'banner.state_id', 'banner.public_id',
-             'banner.order_by', 'banner.language_id', 'banner.principal_id')
+            $banners = Banner::select('banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'mb.state_id as entity_state_id', 'banner.public_id',
+             'banner.order_by', 'banner.language_id', 'banner.principal_id', 'banner.state_id')
             ->join('m_banners as mb', 'banner.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
             ->orderBy('order_by', 'ASC')
-            ->where('banner.language_id', 1)
+            ->where('banner.language_id', $this->language)
             ->get();
         }
 
@@ -71,7 +72,9 @@ class BannerController extends Controller
             'img_median' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'img_big' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'link' => 'bail|required',
-            'state_id' => 'bail|required|integer|exists:state,id',
+            'state_id' => 'bail|required|integer|exists:banners_state,id',
+            'entity_state_id' => 'bail|required|integer',
+            'principal_id' => 'bail|integer|exists:m_banners,id',
         ]);
         if($validator->fails())
         {
@@ -99,7 +102,20 @@ class BannerController extends Controller
             "public_id" => $public_id."-big"
         ));
         # Get the last banner
-        $oder_by = Banner::max('order_by');
+        $oder_by = Banner::where('language_id', $this->language)->max('order_by');
+
+        $main_banner = MBanner::find(request('principal_id'));
+
+        if($main_banner){
+            $m_banner_id = $main_banner->id;
+        }else{
+            $m_banner = MBanner::create([
+                'name' => request('name'),
+                'state_id' => request('state_id')
+            ]);
+
+            $m_banner_id = $m_banner->id;
+        }
 
         #Create the banner
         $banner = Banner::create([
@@ -111,7 +127,8 @@ class BannerController extends Controller
             'link' => request('link'),
             'order_by' => $oder_by+1,
             'public_id' => $public_id,
-            'state_id' => request('state_id'),
+            'principal_id' => $m_banner_id,
+            'language_id' => $this->language,
         ]);
 
         # If there is a problem delete the cloud photos
@@ -135,8 +152,8 @@ class BannerController extends Controller
     public function show($id)
     {
         if(request('paginate')){
-            $banners = Banner::select('mb.id', 'banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'banner.state_id', 'banner.public_id',
-            'banner.order_by', 'banner.language_id', 'banner.principal_id')
+            $banners = Banner::select('mb.id', 'banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'mb.state_id as entity_state_id', 'banner.public_id',
+            'banner.order_by', 'banner.language_id', 'banner.principal_id', 'banner.state_id')
             ->join('m_banners as mb', 'banner.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
@@ -145,8 +162,8 @@ class BannerController extends Controller
             ->where('mb.id', $id)
             ->first();
         }else{
-            $banners = Banner::select('mb.id', 'banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'banner.state_id', 'banner.public_id',
-             'banner.order_by', 'banner.language_id', 'banner.principal_id')
+            $banners = Banner::select('mb.id', 'banner.id as son_id', 'banner.name', 'banner.description', 'banner.img_short', 'banner.img_median', 'banner.img_big', 'banner.link', 'mb.state_id as entity_state_id', 'banner.public_id',
+             'banner.order_by', 'banner.language_id', 'banner.principal_id', 'banner.state_id')
             ->join('m_banners as mb', 'banner.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
@@ -176,6 +193,7 @@ class BannerController extends Controller
             'change_median' => 'required|boolean',
             'change_big' => 'required|boolean',
             'order' => 'required|integer',
+            'entity_state_id' => 'bail|required|integer',
             'state_id' => 'required|integer'
         ]);
         if($validator->fails())
@@ -188,6 +206,11 @@ class BannerController extends Controller
         if(!$banner){
             return response()->json(['response' => ['error' => ['Banner no encontrado.']]], 404);
         }
+
+        $m_banner = MBanner::find($id);
+
+        $m_banner->state_id = request('entity_state_id');
+        $m_banner->update();
 
         $last_order_by = Banner::where('language_id', $this->language)->where('order_by', request('order'))->where('principal_id', '!=', $id)->first();
         if($last_order_by){

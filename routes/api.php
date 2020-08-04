@@ -39,6 +39,11 @@ Route::middleware('auth:api')->group(function () {
     # Actualizar banner
     Route::post('banners/{id}', 'Api\Administration\BannerController@update');
     Route::get('moduleValidator', 'Api\Administration\MenuController@modulegeneral');
+    # Categorías Nivel 1
+    Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
+
+    # Categorías Nivel 2
+    Route::apiResource('categories2', 'Api\Administration\Categories2Controller');
 
     Route::get('userProfile', 'Api\Administration\ProfileController@userProfile');
 
