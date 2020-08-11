@@ -8,6 +8,6 @@ class MCategory2 extends Model
 {
     protected $table = 'm_categories_2';
     protected $fillable = [
-        'id', 'name', 'state_id'
+        'id', 'name', 'state_id', 'category1_id'
     ];
 }

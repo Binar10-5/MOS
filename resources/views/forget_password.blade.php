@@ -8,7 +8,7 @@
 </head>
 <body>
     <H2>Hola {{$data['name']}} Email: {{$data['email']}}</H2>
-    <a href="https://25.102.120.145:4300/validacion/5/{{$password_code}}">Link de verificación de cuenta.</a>
+    <a href="https://25.102.120.145:4300/forgetPass/5/{{$data['password_code']}}">Link de verificación de cuenta.</a>
 </body>
 </html>
 

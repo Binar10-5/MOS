@@ -45,6 +45,12 @@ Route::middleware('auth:api')->group(function () {
     # Categorías Nivel 2
     Route::apiResource('categories2', 'Api\Administration\Categories2Controller');
 
+    # Categorías Nivel 3
+    Route::apiResource('categories3', 'Api\Administration\Categories3Controller');
+
+    # Categorías Nivel 3
+    Route::apiResource('products', 'Api\Administration\ProductsController');
+
     Route::get('userProfile', 'Api\Administration\ProfileController@userProfile');
 
     # Cambio de contraseña por el usuario

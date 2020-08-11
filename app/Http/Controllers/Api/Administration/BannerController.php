@@ -72,7 +72,7 @@ class BannerController extends Controller
             'img_median' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'img_big' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'link' => 'bail|required',
-            'state_id' => 'bail|required|integer|exists:banners_state,id',
+            'state_id' => 'bail|required|integer|exists:banners_states,id',
             'entity_state_id' => 'bail|required|integer',
             'principal_id' => 'bail|integer|exists:m_banners,id',
         ]);
@@ -128,6 +128,7 @@ class BannerController extends Controller
             'order_by' => $oder_by+1,
             'public_id' => $public_id,
             'principal_id' => $m_banner_id,
+            'state_id' => request('state_id'),
             'language_id' => $this->language,
         ]);
 
@@ -296,25 +297,31 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-        $banner = Banner::where('principal_id', $id)->where('language_id', $this->language)->first();
 
-        if(!$banner){
+        $m_banner = MBanner::find($id);
+
+
+        if(!$m_banner){
             return response()->json(['response' => ['error' => ['Banner no encontrado']]], 404);
         }
         DB::beginTransaction();
         try{
+            $banners = Banner::where('principal_id', $id)->get();
 
-            # Delete the img of Clouddinary
-            $api = new \Cloudinary\Api();
-            $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-short'));
-            $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-median'));
-            $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-big'));
-            $banners_order = Banner::where('order_by', '>', $banner->order_by)->get();
-            foreach ($banners_order as $banner_order) {
-                $banner_order->order_by = $banner_order->order_by - 1;
-                $banner_order->update();
-            }
-            $banner->delete();
+           foreach ($banners as $banner) {
+                # Delete the img of Clouddinary
+                $api = new \Cloudinary\Api();
+                $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-short'));
+                $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-median'));
+                $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-big'));
+                $banners_order = Banner::where('order_by', '>', $banner->order_by)->where('language_id', $banner->language_id)->get();
+                foreach ($banners_order as $banner_order) {
+                    $banner_order->order_by = $banner_order->order_by - 1;
+                    $banner_order->update();
+                }
+                $banner->delete();
+           }
+           $m_banner->delete();
         }catch(Exception $e){
             DB::rollback();
         }

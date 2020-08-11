@@ -23,6 +23,8 @@ class Categories1Controller extends Controller
         $language = Language::find($request->header('language-key'));
         if($language){
             $this->language = $request->header('language-key');
+        }else if($request->header('language-key') == ''){
+            $this->language = '';
         }else{
             $this->language = 1;
         }
@@ -35,32 +37,19 @@ class Categories1Controller extends Controller
     public function index()
     {
         if(request('paginate')){
-            $categories = Category1::select('categories_1.id as son_id', 'categories_1.name', 'categories_1.description', 'categories_1.list_order', 'categories_1.principal_id', 'categories_1.language_id', 'mc1.state_id as entity_state_id', 'categories_1.state_id')
+            $categories = Category1::select('mc1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
             ->join('m_categories_1 as mc1', 'categories_1.principal_id', 'mc1.id')
-            #->name(request('name'))
-            #->state(request('state'))
-            ->orderBy('categories_1.list_order', 'ASC')
-            ->where('categories_1.language_id', $this->language)
+            ->name(request('name'))
+            ->mState(request('m_state'))
+            ->language($this->language)
             ->paginate(8);
         }else{
-            $categories = Category1::select('categories_1.id as son_id', 'categories_1.name', 'categories_1.description', 'categories_1.list_order', 'categories_1.principal_id', 'categories_1.language_id', 'mc1.state_id as entity_state_id', 'categories_1.state_id')
+            $categories = Category1::select('mc1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
             ->join('m_categories_1 as mc1', 'categories_1.principal_id', 'mc1.id')
-            #->name(request('name'))
-            #->state(request('state'))
-            ->orderBy('categories_1.list_order', 'ASC')
-            ->where('categories_1.language_id', $this->language)
+            ->name(request('name'))
+            ->mState(request('m_state'))
+            ->language($this->language)
             ->get();
-        }
-
-        foreach ($categories as $category) {
-            $categories2 = Category2::select('categories_2.id as son_id', 'categories_2.name', 'categories_2.description', 'categories_2.list_order', 'categories_2.language_id', 'categories_2.principal_id', 'mc2.state_id as entity_state_id', 'categories_2.state_id')
-            ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
-            ->join('m_categories_1 as mc1', 'mc2.category1_id', 'mc1.id')
-            ->where('categories_2.language_id', $this->language)
-            ->where('mc2.category1_id', $category->principal_id)
-            ->get();
-
-            $category->categories_2 = $categories2;
         }
 
         return response()->json(['response' => $categories], 200);
@@ -79,6 +68,7 @@ class Categories1Controller extends Controller
             'description' => 'required',
             'state_id' => 'required|integer|exists:categories_states,id',
             'entity_state_id' => 'required|integer',
+            'principal_id' => 'bail|integer|exists:m_categories_1,id',
         ]);
         if($validator->fails())
         {
@@ -89,7 +79,12 @@ class Categories1Controller extends Controller
         try{
             $principal_category = MCategory1::find(request('principal_id'));
             if($principal_category){
-                $principal_id = $principal_category->id;
+                $validate_language = Category1::where('principal_id', request('principal_id'))->where('language_id', $this->language)->first();
+                if($validate_language){
+                    return response()->json(['response' => ['error' => ['La categoría ya tiene un registro con este idioma.']]], 400);
+                }else{
+                    $principal_id = $principal_category->id;
+                }
             }else{
                 $m_caregory_1 = MCategory1::create([
                     'name' => request('name'),
@@ -136,7 +131,8 @@ class Categories1Controller extends Controller
         #->state(request('state'))
         ->orderBy('categories_1.list_order', 'ASC')
         ->where('categories_1.language_id', $this->language)
-        ->find($id);
+        ->where('mc1.id', $id)
+        ->first();
 
         if($category){
             $categories2 = Category2::select('categories_2.id as son_id', 'categories_2.name', 'categories_2.description', 'categories_2.list_order', 'categories_2.language_id', 'categories_2.principal_id', 'mc2.state_id as entity_state_id', 'categories_2.state_id')
