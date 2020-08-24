@@ -135,9 +135,10 @@ class BrandsController extends Controller
             array(
                 "folder" => "MOS/Logos/Marcas/",
                 # Here we must put the same public_id that the previous resource has
-                "public_id" => $brand->public_id,
+                "public_id" => $brand->brand,
                 "invalidate"=> true
             ));
+
             $brand->logo = $upload['secure_url'];
 
         }

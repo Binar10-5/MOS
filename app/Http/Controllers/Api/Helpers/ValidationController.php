@@ -66,7 +66,7 @@ class ValidationController extends Controller
         ->first();
 
         if(!$user_password){
-            return response()->json(['response' => ['error' => ['Error']]], 404);
+            return response()->json(['response' => ['error' => ['Error, el código no es valido']]], 404);
         }
 
         if($user_password->password_verify){

@@ -37,7 +37,7 @@ class SendEmails extends Mailable
     public function build()
     {
         return $this->view($this->new_view)
-        ->from($this->from_send, 'Tu Droguería Virtual')
+        ->from($this->from_send, 'MOS')
         ->subject($this->new_subject)
         ->with('data', $this->data);
     }
