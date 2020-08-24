@@ -130,8 +130,6 @@ class ProductsController extends Controller
             'description' => 'required',
             'color_code' => 'required',
             'color' => 'required',
-            'principal_id' => 'required|integer|exists:m_products,id',
-            'quantity' => 'required|integer',
             'price' => 'required',
             'img_1' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'state_id' => 'required|integer|min:0|max:1',
@@ -154,6 +152,15 @@ class ProductsController extends Controller
                 }
             }else{
                 # Obtener el maximo de las posiciones por cat, para ponerlo en el ultimo lugar
+
+                $validator=\Validator::make($request->all(),[
+                    'principal_id' => 'required|integer|exists:m_products,id',
+                    'quantity' => 'required|integer',
+                ]);
+                if($validator->fails())
+                {
+                return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+                }
 
                 $max_cat1 = ProductVariant::max('category1_order');
                 $max_cat2 = ProductVariant::max('category2_order');
