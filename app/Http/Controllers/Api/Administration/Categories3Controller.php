@@ -69,8 +69,8 @@ class Categories3Controller extends Controller
             'description' => 'required',
             'state_id' => 'required|integer|exists:categories_states,id',
             'entity_state_id' => 'required|integer',
-            'principal_id' => 'bail|integer|exists:m_categories_3,id',
-            'category2_id' => 'bail|required|integer|exists:m_categories_1,id',
+            'principal_id' => 'bail',
+            'category2_id' => 'bail|required|integer|exists:m_categories_2,id',
         ]);
         if($validator->fails())
         {

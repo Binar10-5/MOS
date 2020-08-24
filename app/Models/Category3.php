@@ -14,7 +14,7 @@ class Category3 extends Model
     public function scopeName($query, $name)
     {
         if(!empty($name)){
-            $query->where('categories_3.name', 'LIKE', '%'.$name.'%');
+            $query->where('mc3.name', 'LIKE', '%'.$name.'%');
         }
     }
 

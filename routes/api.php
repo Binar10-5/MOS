@@ -48,8 +48,24 @@ Route::middleware('auth:api')->group(function () {
     # Categorías Nivel 3
     Route::apiResource('categories3', 'Api\Administration\Categories3Controller');
 
-    # Categorías Nivel 3
+    # Marcas
+    Route::post('brands/{id}', 'Api\Administration\BrandsController@update');
+    Route::apiResource('brands', 'Api\Administration\BrandsController');
+
+    # Productos
     Route::apiResource('products', 'Api\Administration\ProductsController');
+    Route::post('products/{id}', 'Api\Administration\ProductsController@update');
+    Route::get('masterProducts/{id}', 'Api\Administration\ProductsController@showMaster');
+    Route::put('masterProducts/{id}', 'Api\Administration\ProductsController@updateMaster');
+
+    Route::post('orderProducts', 'Api\Administration\ProductsController@orderProducts');
+
+
+    # Listar variantes de el producto
+    Route::get('productVariants/{id}', 'Api\Administration\ProductsController@variantList');
+
+    # Crear variante de el producto
+    Route::post('productVariants', 'Api\Administration\ProductsController@productVariants');
 
     Route::get('userProfile', 'Api\Administration\ProfileController@userProfile');
 

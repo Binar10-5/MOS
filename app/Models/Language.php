@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Language extends Model
 {
-    protected $table = 'm_banners';
+    protected $table = 'languages';
     protected $fillable = [
         'id', 'name', 'description'
     ];
