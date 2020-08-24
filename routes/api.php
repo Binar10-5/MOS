@@ -21,6 +21,9 @@ Route::post('validateEmail', 'Api\Helpers\ValidationController@validateAcount');
 # Ruta para establecer tu contraseña inicial
 Route::post('updateFirstPass', 'Api\Helpers\ValidationController@updateFirstPassword');
 
+# Ruta para obtener la lista de idiomas
+Route::get('languages', 'Api\Free\ListsFreeController@language');
+
 # Olvido de contraseña
 Route::post('forgetPass', 'Api\Helpers\ValidationController@forgetPassword');
 

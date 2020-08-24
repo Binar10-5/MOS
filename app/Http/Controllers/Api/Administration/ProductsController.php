@@ -130,7 +130,7 @@ class ProductsController extends Controller
             'description' => 'required',
             'color_code' => 'required',
             'color' => 'required',
-            'price' => 'required',
+            'principal_id' => 'required|integer|exists:m_products,id',
             'img_1' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'state_id' => 'required|integer|min:0|max:1',
         ]);
@@ -154,8 +154,8 @@ class ProductsController extends Controller
                 # Obtener el maximo de las posiciones por cat, para ponerlo en el ultimo lugar
 
                 $validator=\Validator::make($request->all(),[
-                    'principal_id' => 'required|integer|exists:m_products,id',
                     'quantity' => 'required|integer',
+                    'price' => 'required',
                 ]);
                 if($validator->fails())
                 {
