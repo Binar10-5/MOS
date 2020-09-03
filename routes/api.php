@@ -62,6 +62,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('masterProducts/{id}', 'Api\Administration\ProductsController@updateMaster');
 
     Route::post('orderProducts', 'Api\Administration\ProductsController@orderProducts');
+    Route::get('variantsByCategory', 'Api\Administration\ProductsController@variantListCategory');
 
 
     # Listar variantes de el producto

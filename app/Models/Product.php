@@ -39,6 +39,27 @@ class Product extends Model
         }
     }
 
+    public function scopeCategory1($query, $category1)
+    {
+        if(!empty($category1)){
+            $query->where('mc1.id', $category1);
+        }
+    }
+
+    public function scopeCategory2($query, $category2)
+    {
+        if(!empty($category2)){
+            $query->where('mc2.id', $category2);
+        }
+    }
+
+    public function scopeCategory3($query, $category3)
+    {
+        if(!empty($category3)){
+            $query->where('mc3.id', $category3);
+        }
+    }
+
     public function scopeLanguage($query, $language)
     {
         if(!empty($language)){
