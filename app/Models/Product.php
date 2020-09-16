@@ -18,6 +18,13 @@ class Product extends Model
         }
     }
 
+    public function scopeLanguageName($query, $name)
+    {
+        if(!empty($name)){
+            $query->where('products.name', 'LIKE', '%'.$name.'%');
+        }
+    }
+
     public function scopeVState($query, $state_id)
     {
         if(!empty($state_id)){

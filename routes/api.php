@@ -30,6 +30,23 @@ Route::post('forgetPass', 'Api\Helpers\ValidationController@forgetPassword');
 # Ruta para la validación del cambio de correo electronico
 Route::post('validateNewEmail', 'Api\Helpers\ValidationController@validateNewEmail');
 
+
+# Rutas para el cliente
+Route::middleware('clint')->group(function () {
+    # Lista de categorías
+    Route::get('categoriesList', 'Api\Client\ClientsController@categoriesList');
+    # Lista de productos
+    Route::get('productsList', 'Api\Client\ClientsController@productsList');
+
+    # Lista de marcas
+    Route::get('brandsList', 'Api\Client\ClientsController@brandsList');
+
+    # Lista de banners
+    Route::get('bannersList', 'Api\Client\ClientsController@bannersList');
+
+});
+
+
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('users', 'Api\Administration\UserController');
     # Get(Lista de roles), Get/id(Detalle del rol), Post(Creación del rol), PUT(Actualizar un rol)
