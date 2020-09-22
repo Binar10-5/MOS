@@ -132,8 +132,8 @@ class ProductsController extends Controller
             'color' => 'required',
             'principal_id' => 'required|integer|exists:m_products,id',
             'img_1' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
-            'favorite' => 'required|integer|min:0|max:1',
-            'new_product' => 'required|integer|min:0|max:1',
+            'favorite' => 'required|boolean|min:0|max:1',
+            'new_product' => 'required|boolean|min:0|max:1',
             'state_id' => 'required|integer|min:0|max:1',
         ]);
         if($validator->fails())
