@@ -67,6 +67,20 @@ class Product extends Model
         }
     }
 
+    public function scopeFavorite($query, $favorite)
+    {
+        if(!empty($favorite)){
+            $query->where('vp.favorite', $favorite);
+        }
+    }
+
+    public function scopeNewProduct($query, $new)
+    {
+        if(!empty($new)){
+            $query->where('vp.new_product', $new);
+        }
+    }
+
     public function scopeLanguage($query, $language)
     {
         if(!empty($language)){

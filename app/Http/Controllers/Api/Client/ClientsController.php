@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\BannerByCategory;
 use App\Models\Brand;
 use App\Models\Category1;
 use App\Models\Category2;
@@ -30,6 +31,7 @@ class ClientsController extends Controller
         $categories_1 = Category1::select('mc1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
         ->join('m_categories_1 as mc1', 'categories_1.principal_id', 'mc1.id')
         ->language($this->language)
+        ->where('mc1.state_id', 1)
         ->get();
 
         foreach ($categories_1 as $c1) {
@@ -37,6 +39,7 @@ class ClientsController extends Controller
             ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
             ->category1($c1->principal_id)
             ->language($this->language)
+            ->where('mc2.state_id', 1)
             ->get();
 
             $c1->categories_2 = $categories_2;
@@ -45,6 +48,7 @@ class ClientsController extends Controller
                 ->join('m_categories_3 as mc3', 'categories_3.principal_id', 'mc3.id')
                 ->category2($c2->principal_id)
                 ->language($this->language)
+                ->where('mc3.state_id', 1)
                 ->get();
 
                 $c2->categories_3 = $categories_3;
@@ -58,7 +62,7 @@ class ClientsController extends Controller
     {
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
         'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
-        'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product')
+        'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
@@ -68,6 +72,8 @@ class ClientsController extends Controller
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
         ->category3(request('category3_id'))
+        ->favorite(request('favorite'))
+        ->newProduct(request('new_product'))
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
         ->where('products.state_id', 1)
@@ -97,6 +103,19 @@ class ClientsController extends Controller
         ->get();
 
         return response()->json(['response' => $banners], 200);
+
+    }
+
+    public function bannersByCatgoryList($id)
+    {
+        $banner = BannerByCategory::select('banners_by_category.id as son_id', 'banners_by_category.name', 'banners_by_category.description', 'banners_by_category.img_short', 'banners_by_category.img_median', 'banners_by_category.img_big', 'banners_by_category.link', 'mb.state as entity_state_id', 'banners_by_category.public_id',
+        'banners_by_category.order_by', 'banners_by_category.language_id', 'banners_by_category.principal_id', 'banners_by_category.state_id')
+        ->join('m_banners_by_category as mb', 'banners_by_category.principal_id', 'mb.id')
+        ->where('banners_by_category.language_id', $this->language)
+        ->where('mb.id', $id)
+        ->first();
+
+        return response()->json(['response' => $banner], 200);
 
     }
 }

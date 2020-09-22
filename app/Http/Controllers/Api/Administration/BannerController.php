@@ -236,7 +236,7 @@ class BannerController extends Controller
                 # Here we upload the new image
                 $upload = \Cloudinary\Uploader::upload(request('img_short'),
                 array(
-                    "folder" => "GIMED/banners/",
+                    "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
                     "public_id" => $banner->public_id.'-short',
                     "invalidate"=> true
@@ -255,7 +255,7 @@ class BannerController extends Controller
                 # Here we upload the new image
                 $upload = \Cloudinary\Uploader::upload(request('img_median'),
                 array(
-                    "folder" => "GIMED/banners/",
+                    "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
                     "public_id" => $banner->public_id.'-median',
                     "invalidate"=> true
@@ -274,7 +274,7 @@ class BannerController extends Controller
                 # Here we upload the new image
                 $upload = \Cloudinary\Uploader::upload(request('img_big'),
                 array(
-                    "folder" => "GIMED/banners/",
+                    "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
                     "public_id" => $banner->public_id.'-big',
                     "invalidate"=> true

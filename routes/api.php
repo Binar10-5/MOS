@@ -44,6 +44,9 @@ Route::middleware('clint')->group(function () {
     # Lista de banners
     Route::get('bannersList', 'Api\Client\ClientsController@bannersList');
 
+    # Lista de banners
+    Route::get('bannersByCategoryList/{id}', 'Api\Client\ClientsController@bannersByCatgoryList');
+
 });
 
 
@@ -56,8 +59,17 @@ Route::middleware('auth:api')->group(function () {
     Route::get('permissions', 'Api\Administration\PermissionsControler@index');
 
     Route::apiResource('banners', 'Api\Administration\BannerController');
+
+    # Administración de banners por categorías
+    Route::apiResource('bannersByCategory', 'Api\Administration\BannersByCategoryController');
     # Actualizar banner
     Route::post('banners/{id}', 'Api\Administration\BannerController@update');
+    # Actualizar banner por categorías
+    Route::post('bannersByCategory/{id}', 'Api\Administration\BannerController@update');
+
+    # Administración de vídeos de el home
+    Route::apiResource('videosHome', 'Api\Administration\VideosHomeController');
+
     Route::get('moduleValidator', 'Api\Administration\MenuController@modulegeneral');
     # Categorías Nivel 1
     Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
