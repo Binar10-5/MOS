@@ -156,7 +156,7 @@ class VideosHomeController extends Controller
         $m_video = MVideoHome::find($id);
 
         if(request('state') == 1 && $m_video->state != 1){
-            $m_video_update = MVideoHome::where('id', '!=', $id)->update(['state' => 0]);
+            $m_video_update = MVideoHome::where('id', '!=', $id)->update(['state' => 2]);
         }
 
         DB::beginTransaction();
