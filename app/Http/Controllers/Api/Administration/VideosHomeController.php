@@ -140,7 +140,7 @@ class VideosHomeController extends Controller
             'description' => 'bail|required|min:1',
             'video' => 'bail|required',
             'state' => 'bail|required|integer',
-            'principal_id' => 'bail|integer|exists:m_videos_home,id',
+            'principal_id' => 'bail|integer|exists:m_video_home,id',
         ]);
         if($validator->fails())
         {
