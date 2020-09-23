@@ -32,7 +32,7 @@ class BannersByCategoryController extends Controller
     {
         if(request('paginate')){
             $banners = BannerByCategory::select('banners_by_category.id as son_id', 'banners_by_category.name', 'banners_by_category.description', 'banners_by_category.img_short', 'banners_by_category.img_median', 'banners_by_category.img_big', 'banners_by_category.link', 'mb.state as entity_state_id', 'banners_by_category.public_id',
-            'banners_by_category.order_by', 'banners_by_category.language_id', 'banners_by_category.principal_id', 'banners_by_category.state_id')
+            'banners_by_category.order_by', 'banners_by_category.language_id', 'banners_by_category.principal_id', 'mb.state')
             ->join('m_banners_by_category as mb', 'banners_by_category.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
@@ -41,7 +41,7 @@ class BannersByCategoryController extends Controller
             ->paginate(8);
         }else{
             $banners = BannerByCategory::select('banners_by_category.id as son_id', 'banners_by_category.name', 'banners_by_category.description', 'banners_by_category.img_short', 'banners_by_category.img_median', 'banners_by_category.img_big', 'banners_by_category.link', 'mb.state as entity_state_id', 'banners_by_category.public_id',
-             'banners_by_category.order_by', 'banners_by_category.language_id', 'banners_by_category.principal_id', 'banners_by_category.state_id')
+             'banners_by_category.order_by', 'banners_by_category.language_id', 'banners_by_category.principal_id', 'mb.state')
             ->join('m_banners_by_category as mb', 'banners_by_category.principal_id', 'mb.id')
             ->name(request('name'))
             ->state(request('state'))
