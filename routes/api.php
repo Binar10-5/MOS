@@ -65,7 +65,7 @@ Route::middleware('auth:api')->group(function () {
     # Actualizar banner
     Route::post('banners/{id}', 'Api\Administration\BannerController@update');
     # Actualizar banner por categorías
-    Route::post('bannersByCategory/{id}', 'Api\Administration\BannerController@update');
+    Route::post('bannersByCategory/{id}', 'Api\Administration\BannersByCategoryController@update');
 
     # Administración de vídeos de el home
     Route::apiResource('videosHome', 'Api\Administration\VideosHomeController');
