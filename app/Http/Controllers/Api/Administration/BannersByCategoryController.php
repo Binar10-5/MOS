@@ -131,6 +131,8 @@ class BannersByCategoryController extends Controller
                 $banner->img_short = $upload['secure_url'];
 
             }
+            return response()->json(['response' => ['error' => ['Hola']]],400);
+
             if(request('change_median')){
                 $validator=\Validator::make($request->all(),[
                     'img_median' => 'image|max:10240|mimes:jpg,jpeg,png',
