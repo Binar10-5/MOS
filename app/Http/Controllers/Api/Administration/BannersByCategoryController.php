@@ -114,7 +114,7 @@ class BannersByCategoryController extends Controller
         if($banner){
             if(request('change_short')){
                 $validator=\Validator::make($request->all(),[
-                    'img_short' => 'image|max:5120|mimes:jpg,jpeg,png',
+                    'img_short' => 'image|max:10240|mimes:jpg,jpeg,png',
                 ]);
                 if($validator->fails())
                 {
@@ -133,7 +133,7 @@ class BannersByCategoryController extends Controller
             }
             if(request('change_median')){
                 $validator=\Validator::make($request->all(),[
-                    'img_median' => 'image|max:5120|mimes:jpg,jpeg,png',
+                    'img_median' => 'image|max:10240|mimes:jpg,jpeg,png',
                 ]);
                 if($validator->fails())
                 {
@@ -152,7 +152,7 @@ class BannersByCategoryController extends Controller
             }
             if(request('change_big')){
                 $validator=\Validator::make($request->all(),[
-                    'img_big' => 'image|max:5120|mimes:jpg,jpeg,png',
+                    'img_big' => 'image|max:10240|mimes:jpg,jpeg,png',
                 ]);
                 if($validator->fails())
                 {
