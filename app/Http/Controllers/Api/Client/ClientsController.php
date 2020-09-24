@@ -116,28 +116,7 @@ class ClientsController extends Controller
         ->language($this->language)
         ->paginate(8);
 
-        $brands = Product::select('mp.brand_id')
-        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
-        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
-        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
-        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
-        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
-        #->vState(request('v_state'))
-        ->category1(request('category1_id'))
-        ->category2(request('category2_id'))
-        ->category3(request('category3_id'))
-        ->favorite(request('favorite'))
-        ->newProduct(request('new_product'))
-        ->priceRange(request('min'), request('max'))
-        ->languageName(request('name'))
-        ->where('mp.state_id', 1)
-        ->where('products.state_id', 1)
-        ->language($this->language)
-        ->get();
 
-        $brands_collect = collect($brands)->pluck('brand_id');
-
-        return response()->json(['response' => ['error' => $brands_collect]], 200);
 
         return response()->json(['response' => $products], 200);
     }
