@@ -112,7 +112,6 @@ class BannersByCategoryController extends Controller
         $banner->link = request('link');
         $banner->state_id = 1;
         if($banner){
-            return response()->json(['response' => ['error' => ['Hola']]],400);
             if(request('change_short')){
                 $validator=\Validator::make($request->all(),[
                     'img_short' => 'image|max:10240|mimes:jpg,jpeg,png',
