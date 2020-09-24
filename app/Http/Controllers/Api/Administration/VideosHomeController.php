@@ -184,6 +184,14 @@ class VideosHomeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $video = MVideoHome::find($id);
+
+        if(!$video){
+            return response()->json(['response' => ['error' => ['Vídeo no encontrado']]], 400);
+        }
+
+        $video->delete();
+
+        return response()->json(['response' => 'Success'], 200);
     }
 }

@@ -58,10 +58,45 @@ class ClientsController extends Controller
         return response()->json(['response' => $categories_1], 200);
     }
 
+    public function categories2List($id)
+    {
+        $category = Category1::select('mc1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
+        ->join('m_categories_1 as mc1', 'categories_1.principal_id', 'mc1.id')
+        ->language($this->language)
+        ->where('mc1.state_id', 1)
+        ->where('mc1.id', $id)
+        ->first();
+
+        if(!$category){
+            return response()->json(['response' => ['error' => ['Categoría no encontrada']]], 400);
+        }
+
+        $categories_2 = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id')
+        ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
+        ->category1($category->principal_id)
+        ->language($this->language)
+        ->where('mc2.state_id', 1)
+        ->get();
+
+        $category->categories_2 = $categories_2;
+        foreach ($categories_2 as $c2) {
+            $categories_3 = Category3::select('mc3.id as principal_id', 'mc3.name', 'mc3.state_id as entity_state_id')
+            ->join('m_categories_3 as mc3', 'categories_3.principal_id', 'mc3.id')
+            ->category2($c2->principal_id)
+            ->language($this->language)
+            ->where('mc3.state_id', 1)
+            ->get();
+
+            $c2->categories_3 = $categories_3;
+        }
+
+        return response()->json(['response' => $category], 200);
+    }
+
     public function productsList()
     {
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
         'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -74,13 +109,79 @@ class ClientsController extends Controller
         ->category3(request('category3_id'))
         ->favorite(request('favorite'))
         ->newProduct(request('new_product'))
+        ->priceRange(request('min'), request('max'))
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
         ->where('products.state_id', 1)
         ->language($this->language)
         ->paginate(8);
 
+        $brands = Product::select('mp.brand_id')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
+        #->vState(request('v_state'))
+        ->category1(request('category1_id'))
+        ->category2(request('category2_id'))
+        ->category3(request('category3_id'))
+        ->favorite(request('favorite'))
+        ->newProduct(request('new_product'))
+        ->priceRange(request('min'), request('max'))
+        ->languageName(request('name'))
+        ->where('mp.state_id', 1)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $brands_collect = collect($brands)->pluck('brand_id');
+
+        return response()->json(['response' => ['error' => $brands_collect]], 200);
+
         return response()->json(['response' => $products], 200);
+    }
+
+    public function productsListDetail($id)
+    {
+        $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
+        #->vState(request('v_state'))
+        ->where('mp.state_id', 1)
+        ->where('vp.id', $id)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->first();
+
+        if(!$product){
+            return response()->json(['response' => ['error' => 'Producto no encontrado']], 400);
+        }
+
+        $colors = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id',
+        'vp.new_product', 'vp.favorite', 'vp.new_product')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
+        #->vState(request('v_state'))
+        ->where('mp.state_id', 1)
+        ->where('mp.id', $product->principal_id)
+        ->where('vp.id', '!=',$id)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $product->colors = $colors;
+
+        return response()->json(['response' => $product], 200);
     }
 
     public function brandsList()

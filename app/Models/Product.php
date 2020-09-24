@@ -81,6 +81,13 @@ class Product extends Model
         }
     }
 
+    public function scopePriceRange($query, $min, $max)
+    {
+        if(!empty($min) && !empty($max)){
+            $query->whereBetween('vp.price', [$min, $max]);
+        }
+    }
+
     public function scopeLanguage($query, $language)
     {
         if(!empty($language)){

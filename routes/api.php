@@ -35,8 +35,13 @@ Route::post('validateNewEmail', 'Api\Helpers\ValidationController@validateNewEma
 Route::middleware('clint')->group(function () {
     # Lista de categorías
     Route::get('categoriesList', 'Api\Client\ClientsController@categoriesList');
+    # Lista de categorías 1
+    Route::get('categoriesList/{id}', 'Api\Client\ClientsController@categories2List');
     # Lista de productos
     Route::get('productsList', 'Api\Client\ClientsController@productsList');
+
+    # Detalle de productos
+    Route::get('productsList/{id}', 'Api\Client\ClientsController@productsListDetail');
 
     # Lista de marcas
     Route::get('brandsList', 'Api\Client\ClientsController@brandsList');
