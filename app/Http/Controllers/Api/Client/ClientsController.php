@@ -172,8 +172,8 @@ class ClientsController extends Controller
         }
 
         $colors = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id',
-        'vp.new_product', 'vp.favorite', 'vp.new_product', 'vp.cruelty_free')
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product', 'vp.cruelty_free')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
@@ -182,7 +182,6 @@ class ClientsController extends Controller
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('mp.id', $product->principal_id)
-        ->where('vp.id', '!=',$id)
         ->where('products.state_id', 1)
         ->language($this->language)
         ->get();
