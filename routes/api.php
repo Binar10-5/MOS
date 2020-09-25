@@ -49,6 +49,9 @@ Route::middleware('clint')->group(function () {
     # Lista de banners
     Route::get('bannersList', 'Api\Client\ClientsController@bannersList');
 
+    # Lista de videos
+    Route::get('videoHomeList', 'Api\Client\ClientsController@videoHomeList');
+
     # Lista de banners
     Route::get('bannersByCategoryList/{id}', 'Api\Client\ClientsController@bannersByCatgoryList');
 

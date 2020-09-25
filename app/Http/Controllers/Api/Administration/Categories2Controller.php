@@ -67,10 +67,11 @@ class Categories2Controller extends Controller
     public function store(Request $request)
     {
         $validator=\Validator::make($request->all(),[
-            'name' => 'required|min:1|max:75',
+            'name' => 'required|min:1|max:75|unique:categories_2,name',
             'description' => 'required',
             'state_id' => 'required|integer|exists:categories_states,id',
             'entity_state_id' => 'required|integer',
+            'image' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'principal_id' => 'bail',
             'category1_id' => 'bail|required|integer|exists:m_categories_1,id',
         ]);
@@ -99,16 +100,32 @@ class Categories2Controller extends Controller
                 $principal_id = $m_caregory_2->id;
             }
 
+            $language = Language::find($request->header('language-key'));
+            $public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.request('name'));
+
+            # Here we upload an image 1
+            $img_1 = \Cloudinary\Uploader::upload(request('image'),
+            array(
+                "folder" => "MOS/categories-2/".$language->name,
+                "public_id" => $public_id
+            ));
+
+
             $category = Category2::create([
                 'name' => request('name'),
                 'description' => request('description'),
                 'list_order' => 1,
                 'principal_id' => $principal_id,
+                'image' => $img_1['secure_url'],
+                'public_id' => $public_id,
                 'language_id' => $this->language,
                 'state_id' => request('state_id'),
                 ]);
 
             if(!$category){
+                # If there is a problem delete the cloud photos
+                $api = new \Cloudinary\Api();
+                $api->delete_resources(array($img_1['public_id']));
                 return response()->json(['response' => ['error' => ['Error al crear la categoria']]], 400);
             }
 
@@ -165,6 +182,7 @@ class Categories2Controller extends Controller
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75',
             'description' => 'required',
+            'change_image' => 'required|boolean',
             'state_id' => 'required|integer|exists:categories_states,id',
             'category1_id' => 'bail|required|integer|exists:m_categories_1,id',
         ]);
@@ -172,6 +190,7 @@ class Categories2Controller extends Controller
         {
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
+        $language = Language::find($request->header('language-key'));
 
         $category = Category2::where('principal_id', $id)->where('language_id', $this->language)->first();
 
@@ -180,15 +199,43 @@ class Categories2Controller extends Controller
         }
 
         $m_category_2 = MCategory2::find($id);
+        DB::beginTransaction();
+        try{
 
-        $m_category_2->category1_id = request('category1_id');
-        $m_category_2->update();
+            $m_category_2->category1_id = request('category1_id');
+            $m_category_2->update();
 
-        $category->name = request('name');
-        $category->description = request('description');
-        $category->state_id = request('state_id');
-        $category->update();
+            $category->name = request('name');
+            $category->description = request('description');
+            $category->state_id = request('state_id');
 
+            if(request('change_image')){
+                $validator=\Validator::make($request->all(),[
+                    'image' => 'image|max:10240|mimes:jpg,jpeg,png',
+                ]);
+                if($validator->fails())
+                {
+                return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+                }
+                # Here we upload the new image
+                $upload = \Cloudinary\Uploader::upload(request('image'),
+                array(
+                    "folder" => "MOS/products/".$language->name,
+                    # Here we must put the same public_id that the previous resource has
+                    "public_id" => $category->public_id,
+                    "invalidate"=> true
+                ));
+
+                $category->image1 = $upload['secure_url'];
+            }
+            $category->update();
+
+        }catch(Exception $e){
+            DB::rollback();
+            return response()->json(['response' => ['error' => $e->getMessage(), $e->getLine()]], 400);
+        }
+
+        DB::commit();
         return response()->json(['response' => 'Success'], 200);
     }
 

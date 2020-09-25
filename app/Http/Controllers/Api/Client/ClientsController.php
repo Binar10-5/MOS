@@ -11,6 +11,7 @@ use App\Models\Category2;
 use App\Models\Category3;
 use App\Models\Language;
 use App\Models\Product;
+use App\Models\VideoHome;
 use Illuminate\Http\Request;
 
 class ClientsController extends Controller
@@ -116,9 +117,37 @@ class ClientsController extends Controller
         ->language($this->language)
         ->paginate(8);
 
+        $brands = Product::select('mp.brand_id')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
+        #->vState(request('v_state'))
+        ->category1(request('category1_id'))
+        ->category2(request('category2_id'))
+        ->category3(request('category3_id'))
+        ->favorite(request('favorite'))
+        ->newProduct(request('new_product'))
+        ->priceRange(request('min'), request('max'))
+        ->languageName(request('name'))
+        ->where('mp.state_id', 1)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $brands_collect = collect($brands)->pluck('brand_id');
+
+        $brands_count = collect($brands_collect)->countBy()->sortKeys();
+
+        $all_brands = Brand::whereIn('id', $brands_collect)->get();
+
+        foreach ($all_brands as $brand) {
+            $brand->coun = $brands_count[$brand->id];
+        }
 
 
-        return response()->json(['response' => $products], 200);
+        return response()->json(['response' => $products, 'brands' => $all_brands], 200);
     }
 
     public function productsListDetail($id)
@@ -196,6 +225,18 @@ class ClientsController extends Controller
         ->first();
 
         return response()->json(['response' => $banner], 200);
+
+    }
+
+    public function videoHomeList()
+    {
+        $videos = VideoHome::select('video_home.id as son_id', 'video_home.name', 'video_home.description', 'video_home.video', 'video_home.principal_id', 'video_home.language_id', 'mv.state')
+        ->join('m_video_home as mv', 'video_home.principal_id', 'mv.id')
+        ->where('video_home.language_id', $this->language)
+        ->where('mv.state', 1)
+        ->get();
+
+        return response()->json(['response' => $videos], 200);
 
     }
 }
