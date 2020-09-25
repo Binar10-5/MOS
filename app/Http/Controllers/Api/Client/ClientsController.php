@@ -143,7 +143,7 @@ class ClientsController extends Controller
         $all_brands = Brand::whereIn('id', $brands_collect)->get();
 
         foreach ($all_brands as $brand) {
-            $brand->coun = $brands_count[$brand->id];
+            $brand->count = $brands_count[$brand->id];
         }
 
 
