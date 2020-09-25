@@ -8,7 +8,8 @@ class ProductVariant extends Model
 {
     protected $table = 'product_variants';
     protected $fillable = [
-        'id', 'name', 'color_code', 'color', 'principal_id', 'quantity', 'price', 'category1_order', 'category2_order', 'category3_order', 'state_id', 'new_product', 'favorite'
+        'id', 'name', 'color_code', 'color', 'principal_id', 'quantity', 'price', 'category1_order', 'category2_order', 'category3_order', 'state_id',
+        'new_product', 'favorite', 'cruelty_free'
     ];
 
     public function scopeName($query, $name)

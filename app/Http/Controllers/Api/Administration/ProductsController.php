@@ -134,6 +134,7 @@ class ProductsController extends Controller
             'img_1' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'favorite' => 'required',
             'new_product' => 'required',
+            'cruelty_free' => 'required',
             'state_id' => 'required|integer|min:0|max:1',
         ]);
         if($validator->fails())
@@ -180,6 +181,7 @@ class ProductsController extends Controller
                     'category3_order' => $max_cat3+1,
                     'favorite' => request('favorite'),
                     'new_product' => request('new_product'),
+                    'cruelty_free' => request('cruelty_free'),
                     'state_id' => request('state_id'),
                 ]);
 
@@ -337,7 +339,7 @@ class ProductsController extends Controller
     public function variantListCategory(Request $request)
     {
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product',
+        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free',
         'vp.category1_order', 'vp.category2_order', 'vp.category3_order')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -371,7 +373,7 @@ class ProductsController extends Controller
     public function show($id)
     {
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product')
+        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->language($this->language)
@@ -407,6 +409,7 @@ class ProductsController extends Controller
             'change_img_5' => 'required|boolean',
             'favorite' => 'required|integer|min:0|max:1',
             'new_product' => 'required|integer|min:0|max:1',
+            'cruelty_free' => 'required|integer|min:0|max:1',
         ]);
         if($validator->fails())
         {
@@ -436,6 +439,7 @@ class ProductsController extends Controller
             'variant_state_id' => $variant->state_id,
             'favorite' => $variant->favorite,
             'new_product' => $variant->new_product,
+            'cruelty_free' => $variant->cruelty_free,
             'state_id' => $variant_language->state_id,
             'image1' => $variant_language->image1,
             'image2' => $variant_language->image2,
@@ -453,6 +457,7 @@ class ProductsController extends Controller
             $variant->state_id = request('variant_state');
             $variant->new_product = request('new_product');
             $variant->favorite = request('favorite');
+            $variant->cruelty_free = request('cruelty_free');
             $variant->update();
 
             $variant_language->name = request('name');
@@ -574,6 +579,7 @@ class ProductsController extends Controller
                 'variant_state_id' => $variant->state_id,
                 'favorite' => $variant->favorite,
                 'new_product' => $variant->new_product,
+                'cruelty_free' => $variant->cruelty_free,
                 'state_id' => $variant_language->state_id,
                 'image1' => $variant_language->image1,
                 'image2' => $variant_language->image2,
