@@ -29,14 +29,14 @@ class ClientsController extends Controller
 
     public function categoriesList()
     {
-        $categories_1 = Category1::select('mc1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
+        $categories_1 = Category1::select('categories_1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
         ->join('m_categories_1 as mc1', 'categories_1.principal_id', 'mc1.id')
         ->language($this->language)
         ->where('mc1.state_id', 1)
         ->get();
 
         foreach ($categories_1 as $c1) {
-            $categories_2 = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id')
+            $categories_2 = Category2::select('mc2.id as principal_id', 'categories_2.name', 'mc2.state_id as entity_state_id', 'categories_2.image')
             ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
             ->category1($c1->principal_id)
             ->language($this->language)
@@ -45,7 +45,7 @@ class ClientsController extends Controller
 
             $c1->categories_2 = $categories_2;
             foreach ($categories_2 as $c2) {
-                $categories_3 = Category3::select('mc3.id as principal_id', 'mc3.name', 'mc3.state_id as entity_state_id')
+                $categories_3 = Category3::select('mc3.id as principal_id', 'categories_3.name', 'mc3.state_id as entity_state_id')
                 ->join('m_categories_3 as mc3', 'categories_3.principal_id', 'mc3.id')
                 ->category2($c2->principal_id)
                 ->language($this->language)
@@ -61,7 +61,7 @@ class ClientsController extends Controller
 
     public function categories2List($id)
     {
-        $category = Category1::select('mc1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
+        $category = Category1::select('categories_1.name', 'mc1.id as principal_id', 'mc1.state_id as entity_state_id')
         ->join('m_categories_1 as mc1', 'categories_1.principal_id', 'mc1.id')
         ->language($this->language)
         ->where('mc1.state_id', 1)
@@ -72,7 +72,7 @@ class ClientsController extends Controller
             return response()->json(['response' => ['error' => ['Categoría no encontrada']]], 400);
         }
 
-        $categories_2 = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id')
+        $categories_2 = Category2::select('mc2.id as principal_id', 'categories_2.name', 'mc2.state_id as entity_state_id', 'categories_2.image')
         ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
         ->category1($category->principal_id)
         ->language($this->language)
@@ -81,7 +81,7 @@ class ClientsController extends Controller
 
         $category->categories_2 = $categories_2;
         foreach ($categories_2 as $c2) {
-            $categories_3 = Category3::select('mc3.id as principal_id', 'mc3.name', 'mc3.state_id as entity_state_id')
+            $categories_3 = Category3::select('mc3.id as principal_id', 'categories_3.name', 'mc3.state_id as entity_state_id')
             ->join('m_categories_3 as mc3', 'categories_3.principal_id', 'mc3.id')
             ->category2($c2->principal_id)
             ->language($this->language)
