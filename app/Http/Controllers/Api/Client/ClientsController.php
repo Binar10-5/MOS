@@ -11,6 +11,7 @@ use App\Models\Category2;
 use App\Models\Category3;
 use App\Models\Language;
 use App\Models\Product;
+use App\Models\ClientEmail;
 use App\Models\VideoHome;
 use Illuminate\Http\Request;
 
@@ -237,5 +238,30 @@ class ClientsController extends Controller
 
         return response()->json(['response' => $videos], 200);
 
+    }
+
+    public function clientEmail(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'email' => 'required|max:80|email',
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+        $valid_email = ClientEmail::where('email', request('email'))->first();
+
+        if($valid_email){
+            return response()->json(['response' => ['error' => ['El correo ya se encuentra registrado']]], 400);
+        }
+
+        if(!$valid_email){
+            $client_email = ClientEmail::create([
+                'email' => request('email'),
+                'state' => 1,
+            ]);
+        }
+
+        return response()->json(['response' => 'Success'], 200);
     }
 }

@@ -52,6 +52,9 @@ Route::middleware('clint')->group(function () {
     # Lista de videos
     Route::get('videoHomeList', 'Api\Client\ClientsController@videoHomeList');
 
+    # Suscribirse
+    Route::post('clientEmail', 'Api\Client\ClientsController@clientEmail');
+
     # Lista de banners
     Route::get('bannersByCategoryList/{id}', 'Api\Client\ClientsController@bannersByCatgoryList');
 
@@ -84,6 +87,9 @@ Route::middleware('auth:api')->group(function () {
 
     # Categorías Nivel 2
     Route::apiResource('categories2', 'Api\Administration\Categories2Controller');
+
+    # Categorías Nivel 2 Update image
+    Route::post('categories2/{id}', 'Api\Administration\Categories2Controller@update');
 
     # Categorías Nivel 3
     Route::apiResource('categories3', 'Api\Administration\Categories3Controller');
