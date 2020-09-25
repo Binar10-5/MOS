@@ -100,6 +100,8 @@ Route::middleware('auth:api')->group(function () {
 
     # Productos
     Route::apiResource('products', 'Api\Administration\ProductsController');
+    # Suscriciones
+    Route::apiResource('subscribers', 'Api\Administration\SubscribersController');
     Route::post('products/{id}', 'Api\Administration\ProductsController@update');
     Route::get('masterProducts/{id}', 'Api\Administration\ProductsController@showMaster');
     Route::put('masterProducts/{id}', 'Api\Administration\ProductsController@updateMaster');
