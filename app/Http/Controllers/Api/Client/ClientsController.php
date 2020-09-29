@@ -112,6 +112,7 @@ class ClientsController extends Controller
         ->favorite(request('favorite'))
         ->newProduct(request('new_product'))
         ->priceRange(request('min'), request('max'))
+        ->brand(request('brands'))
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
         ->where('products.state_id', 1)

@@ -88,6 +88,13 @@ class Product extends Model
         }
     }
 
+    public function scopeBrand($query, $brands)
+    {
+        if(!empty($brands)){
+            $query->whereIn('mp.brand_id', $brands);
+        }
+    }
+
     public function scopeLanguage($query, $language)
     {
         if(!empty($language)){
