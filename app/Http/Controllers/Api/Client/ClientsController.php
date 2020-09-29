@@ -119,7 +119,7 @@ class ClientsController extends Controller
         ->language($this->language)
         ->paginate(8);
 
-        $brands = Product::select('mp.brand_id')
+        $brands = Product::select('mp.brand_id', 'vp.price')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
@@ -140,6 +140,10 @@ class ClientsController extends Controller
 
         $brands_collect = collect($brands)->pluck('brand_id');
 
+        $min = collect($brands)->min('price');
+        $max = collect($brands)->max('price');
+
+
         $brands_count = collect($brands_collect)->countBy()->sortKeys();
 
         $all_brands = Brand::whereIn('id', $brands_collect)->get();
@@ -149,7 +153,7 @@ class ClientsController extends Controller
         }
 
 
-        return response()->json(['response' => $products, 'brands' => $all_brands], 200);
+        return response()->json(['response' => $products, 'brands' => $all_brands, 'min' => $min, 'max' => $max], 200);
     }
 
     public function productsListDetail($id)
