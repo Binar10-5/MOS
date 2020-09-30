@@ -97,7 +97,9 @@ class ProductsController extends Controller
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75|unique:m_products,id',
             'state_id' => 'required|integer|min:0|max:1',
-            'category3_id' => 'required|integer|exists:m_categories_3,id',
+            'category1_id' => 'integer',
+            'category2_id' => 'integer',
+            'category3_id' => 'integer',
             'brand_id' => 'required|integer|exists:brands,id',
         ]);
         if($validator->fails())
@@ -106,14 +108,14 @@ class ProductsController extends Controller
         }
 
         $category_3 = MCategory3::find(request('category3_id'));
-        $category_2 = MCategory2::find($category_3->category2_id);
-        $category_1 = MCategory1::find($category_2->category1_id);
+        $category_2 = MCategory2::find(request('category2_id'));
+        $category_1 = MCategory1::find(request('category1_id'));
 
         $m_product = MProduct::create([
             'name' => request('name'),
             'category1_id' => $category_1->id,
             'category2_id' => $category_2->id,
-            'category3_id' => request('category3_id'),
+            'category3_id' => $category_3->id,
             'brand_id' => request('brand_id'),
             'state_id' => request('state_id'),
         ]);
