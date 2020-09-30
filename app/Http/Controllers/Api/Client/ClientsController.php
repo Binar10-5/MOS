@@ -156,6 +156,34 @@ class ClientsController extends Controller
         return response()->json(['response' => $products, 'brands' => $all_brands, 'min' => $min, 'max' => $max], 200);
     }
 
+    public function minAndMax(Request $request)
+    {
+        $brands = Product::select('mp.brand_id', 'vp.price')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
+        #->vState(request('v_state'))
+        ->category1(request('category1_id'))
+        ->category2(request('category2_id'))
+        ->category3(request('category3_id'))
+        ->priceRange(request('min'), request('max'))
+        ->where('mp.state_id', 1)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $brands_collect = collect($brands)->pluck('brand_id');
+
+        $min = collect($brands)->min('price');
+        $max = collect($brands)->max('price');
+
+
+        return response()->json(['min' => $min, 'max' => $max], 200);
+
+    }
+
     public function productsListDetail($id)
     {
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',

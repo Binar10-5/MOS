@@ -40,6 +40,9 @@ Route::middleware('clint')->group(function () {
     # Lista de productos
     Route::get('productsList', 'Api\Client\ClientsController@productsList');
 
+    # Min y Max de precios
+    Route::get('minAndMax', 'Api\Client\ClientsController@minAndMax');
+
     # Detalle de productos
     Route::get('productsList/{id}', 'Api\Client\ClientsController@productsListDetail');
 
