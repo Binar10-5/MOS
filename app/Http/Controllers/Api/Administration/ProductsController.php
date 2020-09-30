@@ -110,12 +110,29 @@ class ProductsController extends Controller
         $category_3 = MCategory3::find(request('category3_id'));
         $category_2 = MCategory2::find(request('category2_id'));
         $category_1 = MCategory1::find(request('category1_id'));
+        if($category_1){
+            $category1 = $category_1->id;
+        }else{
+            $category1 = null;
+        }
+
+        if($category_2){
+            $category2 = $category_2->id;
+        }else{
+            $category2 = null;
+        }
+
+        if($category_3){
+            $category3 = $category_3->id;
+        }else{
+            $category3 = null;
+        }
 
         $m_product = MProduct::create([
             'name' => request('name'),
-            'category1_id' => $category_1->id,
-            'category2_id' => $category_2->id,
-            'category3_id' => $category_3->id,
+            'category1_id' => $category1,
+            'category2_id' => $category2,
+            'category3_id' => $category3,
             'brand_id' => request('brand_id'),
             'state_id' => request('state_id'),
         ]);
@@ -640,10 +657,28 @@ class ProductsController extends Controller
         $category_2 = MCategory2::find(request('category2_id'));
         $category_1 = MCategory1::find(request('category1_id'));
 
+        if($category_1){
+            $category1 = $category_1->id;
+        }else{
+            $category1 = null;
+        }
+
+        if($category_2){
+            $category2 = $category_2->id;
+        }else{
+            $category2 = null;
+        }
+
+        if($category_3){
+            $category3 = $category_3->id;
+        }else{
+            $category3 = null;
+        }
+
         $master->name = request('name');
-        $master->category3_id = $category_3->id;
-        $master->category2_id = $category_2->id;
-        $master->category1_id = $category_1->id;
+        $master->category3_id = $category3;
+        $master->category2_id = $category2;
+        $master->category1_id = $category1;
         $master->brand_id = request('brand_id');
         $master->state_id = request('state_id');
         $master->update();
