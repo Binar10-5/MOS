@@ -166,8 +166,6 @@ class ClientsController extends Controller
         ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
         #->vState(request('v_state'))
         ->category1(request('category1_id'))
-        ->category2(request('category2_id'))
-        ->category3(request('category3_id'))
         ->priceRange(request('min'), request('max'))
         ->where('mp.state_id', 1)
         ->where('products.state_id', 1)
