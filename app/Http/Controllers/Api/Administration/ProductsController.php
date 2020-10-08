@@ -41,12 +41,7 @@ class ProductsController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $products = MProduct::select('m_products.id', 'm_products.name as product_name', 'm_products.state_id', 'mc1.id as category1_id', 'mc1.name as category1_name',
-            'mc2.id as category2_id', 'mc2.name as category2_name',
-            'mc3.id as category3_id', 'mc3.name as category3_name', 'b.id as brand_id', 'b.name as brand_name')
-            ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
-            ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
-            ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
+            $products = MProduct::select('m_products.id', 'm_products.name as product_name', 'm_products.state_id','b.id as brand_id', 'b.name as brand_name')
             ->join('brands as b', 'm_products.brand_id', 'b.id')
             ->name(request('name'))
             ->mState(request('m_state'))
