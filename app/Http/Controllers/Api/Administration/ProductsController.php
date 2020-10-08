@@ -208,13 +208,6 @@ class ProductsController extends Controller
                     return response()->json(['response' => ['error' => ['La variante de el producto ya tiene un registro con este idioma.']]], 400);
                 }else{
                     $variant_id = $product_variant->id;
-                    if($this->language == 1){
-                        return response()->json(['Si' => $this->language], 400);
-                        $product_variant->name = request('name');
-                        $product_variant->update();
-                    }else{
-                        return response()->json(['No' => $this->language], 400);
-                    }
                 }
             }else{
                 # Obtener el maximo de las posiciones por cat, para ponerlo en el ultimo lugar
@@ -511,6 +504,10 @@ class ProductsController extends Controller
         );
         DB::beginTransaction();
         try {
+            if($this->language == 1){
+                $variant->name = request('name');
+                $variant->update();
+            }
             $variant->color_code = request('color_code');
             $variant->color = request('color');
             $variant->principal_id = request('principal_id');
