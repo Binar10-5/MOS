@@ -209,8 +209,11 @@ class ProductsController extends Controller
                 }else{
                     $variant_id = $product_variant->id;
                     if($this->language == 1){
+                        return response()->json(['Si' => $this->language], 400);
                         $product_variant->name = request('name');
                         $product_variant->update();
+                    }else{
+                        return response()->json(['No' => $this->language], 400);
                     }
                 }
             }else{
