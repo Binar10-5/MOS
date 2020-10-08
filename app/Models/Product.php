@@ -65,7 +65,7 @@ class Product extends Model
     public function scopeCategory3($query, $category3)
     {
         if(!empty($category3)){
-            $query->where('mc3.id', $category3)
+            $query->where('mp.category3_id', $category3)
             ->orderBy('category1_order', 'asc');
         }
     }

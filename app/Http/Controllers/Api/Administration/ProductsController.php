@@ -52,6 +52,27 @@ class ProductsController extends Controller
             ->mState(request('m_state'))
             ->paginate(8);
 
+            foreach ($products as $product) {
+                $cat1 = MProduct::select('mc1.id as category1_id', 'mc1.name as category1_name')
+                ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
+                ->where('m_products', $product->id)
+                ->get();
+
+                $cat2 = MProduct::select('mc2.id as category2_id', 'mc2.name as category2_name')
+                ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
+                ->where('m_products', $product->id)
+                ->get();
+
+                $cat3 = MProduct::select('mc3.id as category3_id', 'mc3.name as category3_name')
+                ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
+                ->where('m_products', $product->id)
+                ->get();
+
+                $product->categories1 = $cat1;
+                $product->categories2 = $cat2;
+                $product->categories3 = $cat3;
+            }
+
             /*$products = Product::select('mp.id as principal_id', 'mp.name', 'mp.created_at', 'mp.updated_at')
             ->join('product_variants as vp', 'products.variant_id', 'vp.id')
             ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -71,6 +92,27 @@ class ProductsController extends Controller
             ->name(request('name'))
             ->mState(request('m_state'))
             ->get();
+
+            foreach ($products as $product) {
+                $cat1 = MProduct::select('mc1.id as category1_id', 'mc1.name as category1_name')
+                ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
+                ->where('m_products', $product->id)
+                ->get();
+
+                $cat2 = MProduct::select('mc2.id as category2_id', 'mc2.name as category2_name')
+                ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
+                ->where('m_products', $product->id)
+                ->get();
+
+                $cat3 = MProduct::select('mc3.id as category3_id', 'mc3.name as category3_name')
+                ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
+                ->where('m_products', $product->id)
+                ->get();
+
+                $product->categories1 = $cat1;
+                $product->categories2 = $cat2;
+                $product->categories3 = $cat3;
+            }
             /*$products = Product::select('mp.id as principal_id', 'mp.name', 'mp.created_at', 'mp.updated_at')
             ->join('product_variants as vp', 'products.variant_id', 'vp.id')
             ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -364,6 +406,7 @@ class ProductsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
         #->vState(request('v_state'))
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
