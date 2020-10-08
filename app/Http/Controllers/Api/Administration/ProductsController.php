@@ -55,17 +55,17 @@ class ProductsController extends Controller
             foreach ($products as $product) {
                 $cat1 = MProduct::select('mc1.id as category1_id', 'mc1.name as category1_name')
                 ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
-                ->where('m_products', $product->id)
+                ->where('m_products.id', $product->id)
                 ->get();
 
                 $cat2 = MProduct::select('mc2.id as category2_id', 'mc2.name as category2_name')
                 ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
-                ->where('m_products', $product->id)
+                ->where('m_products.id', $product->id)
                 ->get();
 
                 $cat3 = MProduct::select('mc3.id as category3_id', 'mc3.name as category3_name')
                 ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
-                ->where('m_products', $product->id)
+                ->where('m_products.id', $product->id)
                 ->get();
 
                 $product->categories1 = $cat1;
