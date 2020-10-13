@@ -233,7 +233,7 @@ class ProductsController extends Controller
                 return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
 
-                $m_product = MProduct::find($product_variant->principal_id);
+                $m_product = MProduct::find(request('principal_id'));
 
                 $max_cat1 = ProductVariant::select('product_variants.id', 'product_variants.category1_order')
                 ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
