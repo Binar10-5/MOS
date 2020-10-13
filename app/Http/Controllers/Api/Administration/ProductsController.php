@@ -527,6 +527,10 @@ class ProductsController extends Controller
         );
         DB::beginTransaction();
         try {
+            if($this->language == 1){
+                $variant->name = request('name');
+                $variant->update();
+            }
             $variant->color_code = request('color_code');
             $variant->color = request('color');
             $variant->principal_id = request('principal_id');

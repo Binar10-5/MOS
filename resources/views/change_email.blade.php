@@ -8,7 +8,7 @@
 </head>
 <body>
     <H2>Hola {{$data['name']}} Email: {{$data['email']}}</H2>
-    <H1><a href="https://mosbeautyshop.com/forgetPass/{{$data['email_code']}}/">Link de verificación de cuenta</a></H1>
+    <H1><a href="https://mosbeautyshop.com/forgetPass/{{$data['email_code']}}/5">Link de verificación de cuenta</a></H1>
 </body>
 </html>
 
