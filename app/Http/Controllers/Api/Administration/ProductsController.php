@@ -48,19 +48,25 @@ class ProductsController extends Controller
             ->paginate(8);
 
             foreach ($products as $product) {
-                $cat1 = MProduct::select('mc1.id as category1_id', 'mc1.name as category1_name')
+                $cat1 = MProduct::select('c1.id as category1_id', 'c1.name as category1_name')
                 ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
+                ->join('categories_1 as c1', 'mc1.id', 'c1.principal_id')
                 ->where('m_products.id', $product->id)
+                ->language($this->language)
                 ->first();
 
-                $cat2 = MProduct::select('mc2.id as category2_id', 'mc2.name as category2_name')
+                $cat2 = MProduct::select('c2.id as category2_id', 'c2.name as category2_name')
                 ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
+                ->join('categories_2 as c2', 'mc2.id', 'c2.principal_id')
                 ->where('m_products.id', $product->id)
+                ->language($this->language)
                 ->first();
 
-                $cat3 = MProduct::select('mc3.id as category3_id', 'mc3.name as category3_name')
+                $cat3 = MProduct::select('c3.id as category3_id', 'c3.name as category3_name')
                 ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
+                ->join('categories_3 as c3', 'mc3.id', 'c3.principal_id')
                 ->where('m_products.id', $product->id)
+                ->language($this->language)
                 ->first();
 
                 $product->categories1 = $cat1;
@@ -89,19 +95,25 @@ class ProductsController extends Controller
             ->get();
 
             foreach ($products as $product) {
-                $cat1 = MProduct::select('mc1.id as category1_id', 'mc1.name as category1_name')
+                $cat1 = MProduct::select('c1.id as category1_id', 'c1.name as category1_name')
                 ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
+                ->join('categories_1 as c1', 'mc1.id', 'c1.principal_id')
                 ->where('m_products', $product->id)
+                ->language($this->language)
                 ->get();
 
-                $cat2 = MProduct::select('mc2.id as category2_id', 'mc2.name as category2_name')
+                $cat2 = MProduct::select('c2.id as category2_id', 'c2.name as category2_name')
                 ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
+                ->join('categories_2 as c2', 'mc2.id', 'c2.principal_id')
                 ->where('m_products', $product->id)
+                ->language($this->language)
                 ->get();
 
-                $cat3 = MProduct::select('mc3.id as category3_id', 'mc3.name as category3_name')
+                $cat3 = MProduct::select('c3.id as category3_id', 'c3.name as category3_name')
                 ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
+                ->join('categories_3 as c3', 'mc3.id', 'c3.principal_id')
                 ->where('m_products', $product->id)
+                ->language($this->language)
                 ->get();
 
                 $product->categories1 = $cat1;
@@ -455,8 +467,8 @@ class ProductsController extends Controller
             'principal_id' => 'required|integer|exists:m_products,id',
             'quantity' => 'required|integer',
             'price' => 'required',
-            'state_id' => 'required|integer|min:0|max:1',
-            'variant_state' => 'required|integer|min:0|max:1',
+            'state_id' => 'required|integer|min:1|max:2',
+            'variant_state' => 'required|integer|min:1|max:2',
             'change_img_1' => 'required|boolean',
             'change_img_2' => 'required|boolean',
             'change_img_3' => 'required|boolean',
@@ -504,10 +516,6 @@ class ProductsController extends Controller
         );
         DB::beginTransaction();
         try {
-            if($this->language == 1){
-                $variant->name = request('name');
-                $variant->update();
-            }
             $variant->color_code = request('color_code');
             $variant->color = request('color');
             $variant->principal_id = request('principal_id');

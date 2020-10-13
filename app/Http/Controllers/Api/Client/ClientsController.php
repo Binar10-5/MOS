@@ -189,13 +189,52 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
-        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('vp.id', $id)
         ->where('products.state_id', 1)
         ->language($this->language)
         ->first();
+
+        $cat1 = Product::select('mc1.id', 'c1.name', 'c1.description')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('categories_1 as c1', 'mc1.id', 'c1.principal_id')
+        #->vState(request('v_state'))
+        ->where('mc1.state_id', 1)
+        ->where('vp.id', $id)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $cat2 = Product::select('mc2.id', 'c2.name', 'c2.description')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('categories_2 as c2', 'mc2.id', 'c2.principal_id')
+        #->vState(request('v_state'))
+        ->where('mc2.state_id', 1)
+        ->where('vp.id', $id)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $cat3 = Product::select('mc3.id', 'c3.name', 'c3.description')
+        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+        ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
+        ->join('categories_3 as c3', 'mc3.id', 'c3.principal_id')
+        #->vState(request('v_state'))
+        ->where('mc3.state_id', 1)
+        ->where('vp.id', $id)
+        ->where('products.state_id', 1)
+        ->language($this->language)
+        ->get();
+
+        $product->categories_1 = $cat1;
+        $product->categories_2 = $cat2;
+        $product->categories_3 = $cat3;
 
         if(!$product){
             return response()->json(['response' => ['error' => 'Producto no encontrado']], 400);
@@ -208,7 +247,6 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
-        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('mp.id', $product->principal_id)
