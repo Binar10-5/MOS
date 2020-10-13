@@ -52,21 +52,21 @@ class ProductsController extends Controller
                 ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
                 ->join('categories_1 as c1', 'mc1.id', 'c1.principal_id')
                 ->where('m_products.id', $product->id)
-                ->language($this->language)
+                ->languageC1($this->language)
                 ->first();
 
                 $cat2 = MProduct::select('c2.id as category2_id', 'c2.name as category2_name')
                 ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
                 ->join('categories_2 as c2', 'mc2.id', 'c2.principal_id')
                 ->where('m_products.id', $product->id)
-                ->language($this->language)
+                ->languageC2($this->language)
                 ->first();
 
                 $cat3 = MProduct::select('c3.id as category3_id', 'c3.name as category3_name')
                 ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
                 ->join('categories_3 as c3', 'mc3.id', 'c3.principal_id')
                 ->where('m_products.id', $product->id)
-                ->language($this->language)
+                ->languageC3($this->language)
                 ->first();
 
                 $product->categories1 = $cat1;
