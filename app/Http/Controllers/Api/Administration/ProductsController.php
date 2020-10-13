@@ -225,7 +225,7 @@ class ProductsController extends Controller
                 # Obtener el maximo de las posiciones por cat, para ponerlo en el ultimo lugar
 
                 $validator=\Validator::make($request->all(),[
-                    'quantity' => 'required|integer|max:1000001',
+                    'quantity' => 'required|integer|max:1000000',
                     'price' => 'required',
                 ]);
                 if($validator->fails())
