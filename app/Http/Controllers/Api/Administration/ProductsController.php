@@ -99,21 +99,21 @@ class ProductsController extends Controller
                 ->join('m_categories_1 as mc1', 'm_products.category1_id', 'mc1.id')
                 ->join('categories_1 as c1', 'mc1.id', 'c1.principal_id')
                 ->where('m_products', $product->id)
-                ->language($this->language)
+                ->languageC1($this->language)
                 ->get();
 
                 $cat2 = MProduct::select('c2.id as category2_id', 'c2.name as category2_name')
                 ->join('m_categories_2 as mc2', 'm_products.category2_id', 'mc2.id')
                 ->join('categories_2 as c2', 'mc2.id', 'c2.principal_id')
                 ->where('m_products', $product->id)
-                ->language($this->language)
+                ->languageC2($this->language)
                 ->get();
 
                 $cat3 = MProduct::select('c3.id as category3_id', 'c3.name as category3_name')
                 ->join('m_categories_3 as mc3', 'm_products.category3_id', 'mc3.id')
                 ->join('categories_3 as c3', 'mc3.id', 'c3.principal_id')
                 ->where('m_products', $product->id)
-                ->language($this->language)
+                ->languageC3($this->language)
                 ->get();
 
                 $product->categories1 = $cat1;
@@ -233,9 +233,18 @@ class ProductsController extends Controller
                 return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
 
-                $max_cat1 = ProductVariant::max('category1_order');
-                $max_cat2 = ProductVariant::max('category2_order');
-                $max_cat3 = ProductVariant::max('category3_order');
+                $max_cat1 = ProductVariant::select('product_variants.id', 'product_variants.category2_order')
+                ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
+                ->where('mp.category1_id', 'mp.category1_id')
+                ->max('category1_order');
+                $max_cat2 = ProductVariant::select('product_variants.id', 'product_variants.category2_order')
+                ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
+                ->where('mp.category2_id', 'mp.category2_id')
+                ->max('category2_order');
+                $max_cat3 = ProductVariant::select('product_variants.id', 'product_variants.category2_order')
+                ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
+                ->where('mp.category3_id', 'mp.category3_id')
+                ->max('category3_order');
 
                 $variant = ProductVariant::create([
                     'name' => request('name'),

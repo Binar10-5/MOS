@@ -24,4 +24,25 @@ class MProduct extends Model
             $query->where('m_products.state_id', $state_id);
         }
     }
+
+    public function scopeLanguageC1($query, $language)
+    {
+        if(!empty($language)){
+            $query->where('c1.language_id', $language);
+        }
+    }
+
+    public function scopeLanguageC2($query, $language)
+    {
+        if(!empty($language)){
+            $query->where('c2.language_id', $language);
+        }
+    }
+
+    public function scopeLanguageC3($query, $language)
+    {
+        if(!empty($language)){
+            $query->where('c3.language_id', $language);
+        }
+    }
 }
