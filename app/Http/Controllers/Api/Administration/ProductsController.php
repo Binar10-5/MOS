@@ -203,7 +203,7 @@ class ProductsController extends Controller
             'favorite' => 'required',
             'new_product' => 'required',
             'cruelty_free' => 'required',
-            'state_id' => 'required|integer|min:0|max:1',
+            'state_id' => 'required|integer|min:0|max:2',
         ]);
         if($validator->fails())
         {
