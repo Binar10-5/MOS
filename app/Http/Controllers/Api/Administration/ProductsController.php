@@ -233,17 +233,19 @@ class ProductsController extends Controller
                 return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
 
-                $max_cat1 = ProductVariant::select('product_variants.id', 'product_variants.category2_order')
+                $m_product = MProduct::find($product_variant->principal_id);
+
+                $max_cat1 = ProductVariant::select('product_variants.id', 'product_variants.category1_order')
                 ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
-                ->where('mp.category1_id', 'mp.category1_id')
+                ->where('mp.category1_id', $m_product->category1_id)
                 ->max('category1_order');
                 $max_cat2 = ProductVariant::select('product_variants.id', 'product_variants.category2_order')
                 ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
-                ->where('mp.category2_id', 'mp.category2_id')
+                ->where('mp.category2_id', $m_product->category2_id)
                 ->max('category2_order');
-                $max_cat3 = ProductVariant::select('product_variants.id', 'product_variants.category2_order')
+                $max_cat3 = ProductVariant::select('product_variants.id', 'product_variants.category3_order')
                 ->join('m_products as mp', 'product_variants.principal_id', 'mp.id')
-                ->where('mp.category3_id', 'mp.category3_id')
+                ->where('mp.category3_id', $m_product->category3_id)
                 ->max('category3_order');
 
                 $variant = ProductVariant::create([
