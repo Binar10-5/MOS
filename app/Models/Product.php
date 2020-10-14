@@ -8,7 +8,8 @@ class Product extends Model
 {
     protected $table = 'products';
     protected $fillable = [
-        'id', 'name', 'description', 'color', 'color_code', 'variant_id', 'language_id', 'tracking', 'image1', 'image2', 'image3', 'image4', 'image5', 'public_id', 'state_id'
+        'id', 'name', 'description', 'color', 'color_code', 'benefits', 'how_to_use', 'variant_id', 'language_id', 'tracking', 'image1',
+        'image2', 'image3', 'image4', 'image5', 'public_id', 'state_id'
     ];
 
     public function scopeName($query, $name)

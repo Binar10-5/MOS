@@ -98,7 +98,8 @@ class ClientsController extends Controller
     public function productsList()
     {
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.benefits', 'products.how_to_use',
+        'products.state_id', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
         'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product', 'vp.cruelty_free')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -183,7 +184,8 @@ class ClientsController extends Controller
     public function productsListDetail($id)
     {
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.benefits', 'products.how_to_use',
+        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
         'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product', 'vp.cruelty_free')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -241,7 +243,8 @@ class ClientsController extends Controller
         }
 
         $colors = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.benefits', 'products.how_to_use',
+        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
         'vp.category1_order', 'vp.category2_order', 'vp.category3_order', 'vp.new_product', 'vp.favorite', 'vp.new_product', 'vp.cruelty_free')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')

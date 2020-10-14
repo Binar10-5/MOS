@@ -198,6 +198,8 @@ class ProductsController extends Controller
             'description' => 'required',
             'color_code' => 'required',
             'color' => 'required',
+            'how_to_use' => 'required',
+            'benefits' => 'required',
             'principal_id' => 'required|integer|exists:m_products,id',
             'img_1' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
             'favorite' => 'required',
@@ -362,6 +364,8 @@ class ProductsController extends Controller
                 'description' => request('description'),
                 'color' => request('color'),
                 'color_code' => request('color_code'),
+                'benefits' => request('benefits'),
+                'how_to_use' => request('how_to_use'),
                 'variant_id' => $variant_id,
                 'language_id' => $this->language,
                 'tracking' => null,
@@ -417,9 +421,11 @@ class ProductsController extends Controller
 
     public function variantListCategory(Request $request)
     {
-        $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free',
-        'vp.category1_order', 'vp.category2_order', 'vp.category3_order')
+        $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code',
+        'products.benefits', 'products.how_to_use', 'products.variant_id', 'products.language_id', 'products.tracking', 'products.image1', 'products.image2',
+        'products.image3', 'products.image4',
+        'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.category1_order', 'vp.category2_order', 'vp.category3_order')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
@@ -450,7 +456,8 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
+        $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color',
+        'products.color_code', 'products.variant_id', 'products.language_id', 'products.benefits', 'products.how_to_use',
         'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
@@ -475,6 +482,8 @@ class ProductsController extends Controller
             'description' => 'required',
             'color_code' => 'required',
             'color' => 'required',
+            'benefits' => 'required',
+            'how_to_use' => 'required',
             'principal_id' => 'required|integer|exists:m_products,id',
             'quantity' => 'required|integer',
             'price' => 'required',
@@ -511,6 +520,8 @@ class ProductsController extends Controller
             'description' => $variant_language->description,
             'color_code' => $variant->color_code,
             'color' => $variant->color,
+            'benefits' => $variant->benefits,
+            'how_to_use' => $variant->how_to_use,
             'principal_id' => $variant->principal_id,
             'quantity' => $variant->quantity,
             'price' => $variant->price,
@@ -546,6 +557,8 @@ class ProductsController extends Controller
             $variant_language->description = request('description');
             $variant_language->color = request('color');
             $variant_language->color_code = request('color_code');
+            $variant_language->benefits = request('benefits');
+            $variant_language->how_to_use = request('how_to_use');
             $variant_language->state_id = request('state_id');
 
 
@@ -655,6 +668,8 @@ class ProductsController extends Controller
                 'description' => $variant_language->description,
                 'color_code' => $variant->color_code,
                 'color' => $variant->color,
+                'benefits' => $variant->benefits,
+                'how_to_use' => $variant->how_to_use,
                 'principal_id' => $variant->principal_id,
                 'quantity' => $variant->quantity,
                 'price' => $variant->price,
