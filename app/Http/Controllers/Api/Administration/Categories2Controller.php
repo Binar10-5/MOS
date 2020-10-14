@@ -38,7 +38,7 @@ class Categories2Controller extends Controller
     public function index()
     {
         if(request('paginate')){
-            $categories = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id')
+            $categories = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id', 'categories_2.image')
             ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
             ->name(request('name'))
             ->mState(request('m_state'))
@@ -46,7 +46,7 @@ class Categories2Controller extends Controller
             ->language($this->language)
             ->paginate(8);
         }else{
-            $categories = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id')
+            $categories = Category2::select('mc2.id as principal_id', 'mc2.name', 'mc2.state_id as entity_state_id', 'categories_2.image')
             ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
             ->name(request('name'))
             ->mState(request('m_state'))
@@ -147,7 +147,7 @@ class Categories2Controller extends Controller
      */
     public function show($id)
     {
-        $category = Category2::select('categories_2.id as son_id', 'categories_2.name', 'categories_2.description', 'categories_2.list_order', 'categories_2.principal_id', 'categories_2.language_id', 'mc2.state_id as entity_state_id', 'categories_2.state_id', 'mc2.category1_id')
+        $category = Category2::select('categories_2.id as son_id', 'categories_2.name', 'categories_2.description', 'categories_2.list_order', 'categories_2.principal_id', 'categories_2.language_id', 'mc2.state_id as entity_state_id', 'categories_2.state_id', 'mc2.category1_id', 'categories_2.image')
         ->join('m_categories_2 as mc2', 'categories_2.principal_id', 'mc2.id')
         #->name(request('name'))
         #->state(request('state'))
