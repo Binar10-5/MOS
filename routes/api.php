@@ -87,6 +87,12 @@ Route::middleware('auth:api')->group(function () {
     # Administración de vídeos de el home
     Route::apiResource('videosHome', 'Api\Administration\VideosHomeController');
 
+    # Administración de ciudades
+    Route::apiResource('cities', 'Api\Administration\CitiesController');
+
+    # Administración de transportadoras
+    Route::apiResource('transportationCompanies', 'Api\Administration\TransportationCompaniesController');
+
     Route::get('moduleValidator', 'Api\Administration\MenuController@modulegeneral');
     # Categorías Nivel 1
     Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
