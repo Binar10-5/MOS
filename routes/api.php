@@ -61,6 +61,9 @@ Route::middleware('clint')->group(function () {
     # Lista de banners
     Route::get('bannersByCategoryList/{id}', 'Api\Client\ClientsController@bannersByCatgoryList');
 
+    # Lista de ciudades
+    Route::get('citiesList', 'Api\Client\ClientsController@citiesList');
+
 });
 
 

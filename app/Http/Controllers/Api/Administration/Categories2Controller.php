@@ -220,7 +220,7 @@ class Categories2Controller extends Controller
                 # Here we upload the new image
                 $upload = \Cloudinary\Uploader::upload(request('image'),
                 array(
-                    "folder" => "MOS/products/".$language->name,
+                    "folder" => "MOS/categories-2/".$language->name,
                     # Here we must put the same public_id that the previous resource has
                     "public_id" => $category->public_id,
                     "invalidate"=> true

@@ -334,4 +334,13 @@ class ClientsController extends Controller
 
         return response()->json(['response' => 'Success'], 200);
     }
+
+    public function citiesList(Request $request)
+    {
+        $cities = City::select('name', 'department_name', 'delivery_fee', 'delivery_time')
+        ->where('state', 1)
+        ->get();
+
+        return response()->json(['response' => $cities], 200);
+    }
 }
