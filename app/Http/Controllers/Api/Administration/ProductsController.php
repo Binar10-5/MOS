@@ -475,7 +475,7 @@ class ProductsController extends Controller
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color',
         'products.color_code', 'products.variant_id', 'products.language_id', 'products.benefits', 'products.how_to_use',
         'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at',
-        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.discount', 'vp.final_price',)
+        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.discount', 'vp.final_price')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->language($this->language)
