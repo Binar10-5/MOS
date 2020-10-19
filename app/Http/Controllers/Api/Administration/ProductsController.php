@@ -226,13 +226,16 @@ class ProductsController extends Controller
             }else{
                 # Obtener el maximo de las posiciones por cat, para ponerlo en el ultimo lugar
 
+                // Validar que el discount sea de 0 a 1 con 0.01, 0.02... 0.99
+                $regex = "/^\d+(\.\d{1,2})?$/";
                 $validator=\Validator::make($request->all(),[
                     'quantity' => 'required|integer|max:1000000',
                     'price' => 'required',
+                    'discount' => 'required|numeric|regex:'.$regex,
                 ]);
                 if($validator->fails())
                 {
-                return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+                    return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
 
                 $m_product = MProduct::find(request('principal_id'));
@@ -250,6 +253,17 @@ class ProductsController extends Controller
                 ->where('mp.category3_id', $m_product->category3_id)
                 ->max('category3_order');
 
+                if(request('discount') != 0){
+                    if(request('discount') >= 2){
+                        $discount = 1;
+                    }else{
+                        $discount = request('discount');
+                    }
+                    $final_price = request('price') * request('discount');
+                }else{
+                    $final_price = request('price');
+                }
+
                 $variant = ProductVariant::create([
                     'name' => request('name'),
                     'color_code' => request('color_code'),
@@ -257,6 +271,8 @@ class ProductsController extends Controller
                     'principal_id' => request('principal_id'),
                     'quantity' => request('quantity'),
                     'price' => request('price'),
+                    'discount' => request('discount'),
+                    'final_price' => $final_price,
                     'category1_order' => $max_cat1+1,
                     'category2_order' => $max_cat2+1,
                     'category3_order' => $max_cat3+1,
@@ -364,8 +380,8 @@ class ProductsController extends Controller
                 'description' => request('description'),
                 'color' => request('color'),
                 'color_code' => request('color_code'),
-                'benefits' => request('benefits'),
                 'how_to_use' => request('how_to_use'),
+                'benefits' => request('benefits'),
                 'variant_id' => $variant_id,
                 'language_id' => $this->language,
                 'tracking' => null,

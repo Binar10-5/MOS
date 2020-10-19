@@ -9,7 +9,7 @@ class ProductVariant extends Model
     protected $table = 'product_variants';
     protected $fillable = [
         'id', 'name', 'color_code', 'color', 'principal_id', 'quantity', 'price', 'category1_order', 'category2_order', 'category3_order', 'state_id',
-        'new_product', 'favorite', 'cruelty_free'
+        'new_product', 'favorite', 'cruelty_free', 'discount', 'final_price', 'benefits', 'how_to_use'
     ];
 
     public function scopeName($query, $name)
