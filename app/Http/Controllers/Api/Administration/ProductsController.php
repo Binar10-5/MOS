@@ -271,7 +271,7 @@ class ProductsController extends Controller
                     'principal_id' => request('principal_id'),
                     'quantity' => request('quantity'),
                     'price' => request('price'),
-                    'discount' => request('discount'),
+                    'discount' => $discount,
                     'final_price' => $final_price,
                     'category1_order' => $max_cat1+1,
                     'category2_order' => $max_cat2+1,
@@ -439,7 +439,7 @@ class ProductsController extends Controller
     {
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code',
         'products.benefits', 'products.how_to_use', 'products.variant_id', 'products.language_id', 'products.tracking', 'products.image1', 'products.image2',
-        'products.image3', 'products.image4',
+        'products.image3', 'products.image4', 'vp.discount', 'vp.final_price',
         'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
         'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.category1_order', 'vp.category2_order', 'vp.category3_order')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
@@ -474,7 +474,8 @@ class ProductsController extends Controller
     {
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color',
         'products.color_code', 'products.variant_id', 'products.language_id', 'products.benefits', 'products.how_to_use',
-        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free')
+        'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at',
+        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.discount', 'vp.final_price',)
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->language($this->language)
@@ -493,6 +494,8 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $regex = "/^\d+(\.\d{1,2})?$/";
+
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75|unique:product_variants,id',
             'description' => 'required',
@@ -503,6 +506,7 @@ class ProductsController extends Controller
             'principal_id' => 'required|integer|exists:m_products,id',
             'quantity' => 'required|integer',
             'price' => 'required',
+            'discount' => 'required|regex:'.$regex,
             'state_id' => 'required|integer|min:1|max:2',
             'variant_state' => 'required|integer|min:1|max:2',
             'change_img_1' => 'required|boolean',
@@ -563,6 +567,18 @@ class ProductsController extends Controller
             $variant->principal_id = request('principal_id');
             $variant->quantity = request('quantity');
             $variant->price = request('price');
+            if(request('discount') != 0){
+                if(request('discount') >= 2){
+                    $discount = 1;
+                }else{
+                    $discount = request('discount');
+                }
+                $final_price = request('price') * request('discount');
+            }else{
+                $final_price = request('price');
+            }
+            $variant->discount = $discount;
+            $variant->final_price = $final_price;
             $variant->state_id = request('variant_state');
             $variant->new_product = request('new_product');
             $variant->favorite = request('favorite');
@@ -689,6 +705,8 @@ class ProductsController extends Controller
                 'principal_id' => $variant->principal_id,
                 'quantity' => $variant->quantity,
                 'price' => $variant->price,
+                'discount' => $variant->discount,
+                'final_price' => $variant->final_price,
                 'variant_state_id' => $variant->state_id,
                 'favorite' => $variant->favorite,
                 'new_product' => $variant->new_product,
