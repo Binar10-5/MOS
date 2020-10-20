@@ -261,6 +261,7 @@ class ProductsController extends Controller
                     }
                     $final_price = request('price') * request('discount');
                 }else{
+                    $discount = 0;
                     $final_price = request('price');
                 }
 
@@ -575,6 +576,7 @@ class ProductsController extends Controller
                 }
                 $final_price = request('price') * request('discount');
             }else{
+                $discount = 0;
                 $final_price = request('price');
             }
             $variant->discount = $discount;
