@@ -8,7 +8,7 @@ class Category2 extends Model
 {
     protected $table = 'categories_2';
     protected $fillable = [
-        'id', 'name', 'description', 'list_order', 'principal_id', 'language_id', 'state_id'
+        'id', 'name', 'description', 'list_order', 'principal_id', 'language_id', 'state_id', 'image', 'public_id'
     ];
 
     public function scopeName($query, $name)

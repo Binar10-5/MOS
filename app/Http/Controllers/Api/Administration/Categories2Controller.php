@@ -226,7 +226,7 @@ class Categories2Controller extends Controller
                     "invalidate"=> true
                 ));
 
-                $category->image1 = $upload['secure_url'];
+                $category->image = $upload['secure_url'];
             }
             $category->update();
 
