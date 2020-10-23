@@ -103,12 +103,12 @@ class CuponsController extends Controller
     public function update(Request $request, $id)
     {
         $validator=\Validator::make($request->all(),[
-            'name' => 'required|min:1|max:200',
+            /*'name' => 'required|min:1|max:200',
             'description' => 'required',
             'code' => 'bail|required|max:20',
             'uses_number' => 'bail|required|integer',
             'minimal_cost' => 'required|max:20',
-            'discount_amount' => 'required|max:20',
+            'discount_amount' => 'required|max:20',*/
             'state' => 'required|min:1|max:2',
         ]);
         if($validator->fails())
@@ -116,21 +116,17 @@ class CuponsController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        if(request('discount_amount') > request('minimal_cost')){
-            return response()->json(['response' => ['error' => ['El descuento no puede ser mayor a el costo minimo de el pedido']]], 400);
-        }
-
         $cupon = Cupon::find($id);
         if(!$cupon){
             return response()->json(['response' => ['error' => ['Cupón no encontrado']]], 400);
         }
 
-        $cupon->name = request('name');
+        /*$cupon->name = request('name');
         $cupon->description = request('description');
         $cupon->code = request('code');
         $cupon->uses_number = request('uses_number');
         $cupon->minimal_cost = request('minimal_cost');
-        $cupon->discount_amount = request('discount_amount');
+        $cupon->discount_amount = request('discount_amount');*/
         $cupon->state = request('state');
         $cupon->update();
 
