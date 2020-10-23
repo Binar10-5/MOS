@@ -74,6 +74,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('rolePermission', 'Api\Administration\RolePermissionController');
     # Get(Lista de banners), Get/id(Detalle del banner), Post(Creación del banner), DELETE(Eliminar el banner)
     Route::get('permissions', 'Api\Administration\PermissionsControler@index');
+    Route::apiResource('cupons', 'Api\Administration\CuponsController');
 
     Route::apiResource('banners', 'Api\Administration\BannerController');
 

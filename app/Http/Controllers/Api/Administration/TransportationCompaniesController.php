@@ -33,9 +33,15 @@ class TransportationCompaniesController extends Controller
      */
     public function index()
     {
-        $transportations = TransportationCompany::name(request('name'))
-        ->state(request('state'))
-        ->get();
+        if(request('paginate')){
+            $transportations = TransportationCompany::name(request('name'))
+            ->state(request('state'))
+            ->paginate(8);
+        }else{
+            $transportations = TransportationCompany::name(request('name'))
+            ->state(request('state'))
+            ->get();
+        }
 
         return response()->json(['response' => $transportations], 200);
     }
