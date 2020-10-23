@@ -33,9 +33,15 @@ class CuponsController extends Controller
      */
     public function index()
     {
-        $cupons = Cupon::name(request('name'))
+        if(request('paginate')){
+            $cupons = Cupon::name(request('name'))
+        ->state(request('state'))
+        ->paginate(8);
+        }else{
+            $cupons = Cupon::name(request('name'))
         ->state(request('state'))
         ->get();
+        }
 
         return response()->json(['response' => $cupons], 200);
     }
