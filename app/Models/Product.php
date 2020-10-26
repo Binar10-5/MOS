@@ -29,7 +29,7 @@ class Product extends Model
     public function scopeVState($query, $state_id)
     {
         if(!empty($state_id)){
-            $query->where('pv.state_id', $state_id);
+            $query->where('vp.state_id', $state_id);
         }
     }
 
@@ -37,6 +37,13 @@ class Product extends Model
     {
         if(!empty($state_id)){
             $query->where('products.state_id', $state_id);
+        }
+    }
+
+    public function scopeDiscount($query, $discount)
+    {
+        if(!empty($discount)){
+            $query->where('vp.discount', '>', 0);
         }
     }
 

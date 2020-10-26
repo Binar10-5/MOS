@@ -451,6 +451,7 @@ class ProductsController extends Controller
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
         ->category3(request('category3_id'))
+        ->discount(request('discount'))
         ->language($this->language)
         ->paginate(8);
 
