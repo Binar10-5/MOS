@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class SubscribersController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $this->middleware('permission:/list_subscribers')->only(['show', 'index']);
+    }
     /**
      * Display a listing of the resource.
      *

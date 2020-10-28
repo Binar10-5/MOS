@@ -163,7 +163,6 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
-        ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
         #->vState(request('v_state'))
         ->category1(request('category1_id'))
         ->priceRange(request('min'), request('max'))
