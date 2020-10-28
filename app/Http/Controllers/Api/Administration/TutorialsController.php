@@ -84,6 +84,7 @@ class TutorialsController extends Controller
             'image' => 'required',
             'content' => 'required',
             'slider' => 'bail',
+            'change_slider' => 'bail|required',
             'principal_id' => 'bail',
             'products_list' => 'bail',
             'state' => 'bail|required'
@@ -122,6 +123,16 @@ class TutorialsController extends Controller
                 "folder" => "MOS/tutorials/".$language->name,
                 "public_id" => $public_id
             ));
+
+            if(request('change_slider')){
+                $slider_array = array();
+                foreach (request('slider') as $slider) {
+
+
+
+                    array_push($slider_array, $slider);
+                }
+            }
 
 
             $tutorial = Tutorial::create([
@@ -252,7 +263,7 @@ class TutorialsController extends Controller
                 }
                 $language = Language::find($request->header('language-key'));
                 # Here we upload the new image
-                $upload = \Cloudinary\Uploader::upload(request('img_short'),
+                $upload = \Cloudinary\Uploader::upload(request('image'),
                 array(
                     "folder" => "MOS/Tutorials/.$language->name",
                     # Here we must put the same public_id that the previous resource has
