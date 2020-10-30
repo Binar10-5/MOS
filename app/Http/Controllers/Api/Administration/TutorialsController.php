@@ -16,9 +16,9 @@ class TutorialsController extends Controller
 {
     public function __construct(Request $request)
     {
-        /*$this->middleware('permission:/list_tutorials')->only(['show', 'index']);
+        $this->middleware('permission:/list_tutorials')->only(['show', 'index']);
         $this->middleware('permission:/create_tutorials')->only(['store']);
-        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);*/
+        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);
 
         // Get the languaje id
         $language = Language::find($request->header('language-key'));
