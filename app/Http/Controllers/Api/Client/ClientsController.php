@@ -350,9 +350,9 @@ class ClientsController extends Controller
         return response()->json(['response' => $cities], 200);
     }
 
-    public function validateCupon(Request $request, $id)
+    public function validateCupon(Request $request, $code)
     {
-        $cupon = Cupon::where('state', 1)->where('code', request('code'))->first();
+        $cupon = Cupon::where('state', 1)->where('code', $code)->first();
 
         if(!$cupon){
             return response()->json(['response' => ['error' => ['El cupón no existe o está inactivo']]], 400);
