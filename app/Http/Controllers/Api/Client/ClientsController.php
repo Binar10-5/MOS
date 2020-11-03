@@ -355,11 +355,11 @@ class ClientsController extends Controller
         $cupon = Cupon::where('state', 1)->where('code', request('code'))->first();
 
         if(!$cupon){
-            return response()->json(['response' => ['rrror' => ['El cupón no existe o está inactivo']]], 400);
+            return response()->json(['response' => ['error' => ['El cupón no existe o está inactivo']]], 400);
         }
 
         if($cupon->uses_number <= 0){
-            return response()->json(['response' => ['rrror' => ['El cupón ya alcanzó el máximo de usos']]], 400);
+            return response()->json(['response' => ['error' => ['El cupón ya alcanzó el máximo de usos']]], 400);
         }
 
         return response()->json(['response' => $cupon], 200);
