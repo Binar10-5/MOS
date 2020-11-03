@@ -39,14 +39,14 @@ class TutorialsController extends Controller
     public function index(Request $request)
     {
         if(request('paginate')){
-            $tutorials = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description', 'tutorials.image')
+            $tutorials = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
             ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
             ->name(request('title'))
             ->state(request('state'))
             ->language($this->language)
             ->paginate(8);
         }else{
-            $tutorials = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description', 'tutorials.image')
+            $tutorials = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
             ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
             ->name(request('title'))
             ->state(request('state'))
