@@ -60,6 +60,7 @@ class CuponsController extends Controller
             'code' => 'bail|required|max:20',
             'uses_number' => 'bail|required|integer',
             'minimal_cost' => 'required|max:20',
+            'maximum_uses' => 'required',
             'discount_amount' => 'required|max:20',
             'state' => 'required|min:1|max:2',
         ]);
@@ -77,6 +78,7 @@ class CuponsController extends Controller
             'description' => request('description'),
             'code' => request('code'),
             'uses_number' => request('uses_number'),
+            'maximum_uses' => request('maximum_uses'),
             'minimal_cost' => request('minimal_cost'),
             'discount_amount' => request('discount_amount'),
             'state' => request('state'),

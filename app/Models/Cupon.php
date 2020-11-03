@@ -8,7 +8,7 @@ class Cupon extends Model
 {
     protected $table = 'cupons';
     protected $fillable = [
-        'name', 'description', 'code', 'uses_number', 'minimal_cost', 'discount_amount' ,'state'
+        'name', 'description', 'code', 'uses_number', 'minimal_cost', 'discount_amount' ,'state', 'maximum uses'
     ];
 
     public function scopeName($query, $name)
