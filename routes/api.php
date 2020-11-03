@@ -64,6 +64,9 @@ Route::middleware('clint')->group(function () {
     # Lista de ciudades
     Route::get('citiesList', 'Api\Client\ClientsController@citiesList');
 
+    # Validar cupones (TEST)
+    Route::post('validateCupon/{id}', 'Api\Client\ClientsController@validateCupon');
+
 });
 
 

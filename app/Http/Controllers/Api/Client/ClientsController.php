@@ -13,6 +13,7 @@ use App\Models\City;
 use App\Models\Language;
 use App\Models\Product;
 use App\Models\ClientEmail;
+use App\Models\Cupon;
 use App\Models\VideoHome;
 use Illuminate\Http\Request;
 
@@ -348,4 +349,20 @@ class ClientsController extends Controller
 
         return response()->json(['response' => $cities], 200);
     }
+
+    public function validateCupon(Request $request, $id)
+    {
+        $cupon = Cupon::where('state', 1)->find($id);
+
+        if(!$cupon){
+            return response()->json(['response' => ['rrror' => ['El cupón no existe o está inactivo']]], 400);
+        }
+
+        if($cupon->uses_number <= 0){
+            return response()->json(['response' => ['rrror' => ['El cupón ya alcanzó el máximo de usos']]], 400);
+        }
+
+        return response()->json(['response' => $cupon], 200);
+    }
+
 }
