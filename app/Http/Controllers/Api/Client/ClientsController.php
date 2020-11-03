@@ -358,7 +358,7 @@ class ClientsController extends Controller
             return response()->json(['response' => ['error' => ['El cupón no existe o está inactivo']]], 400);
         }
 
-        if($cupon->uses_number <= 0){
+        if($cupon->uses_number > $cupon->maximum_uses){
             return response()->json(['response' => ['error' => ['El cupón ya alcanzó el máximo de usos']]], 400);
         }
 
