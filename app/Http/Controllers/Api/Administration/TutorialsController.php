@@ -16,9 +16,9 @@ class TutorialsController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware('permission:/list_tutorials')->only(['show', 'index']);
+        /*$this->middleware('permission:/list_tutorials')->only(['show', 'index']);
         $this->middleware('permission:/create_tutorials')->only(['store']);
-        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);
+        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);*/
 
         // Get the languaje id
         $language = Language::find($request->header('language-key'));
@@ -36,13 +36,13 @@ class TutorialsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if(request('paginate')){
             $tutorials = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description')
             ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
             ->name(request('title'))
-            ->request(request('state'))
+            ->state(request('state'))
             ->language($this->language)
             ->paginate(8);
         }else{
