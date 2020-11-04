@@ -129,7 +129,7 @@ class TutorialsController extends Controller
             $slider_array = array();
             foreach (request('slider') as $slider) {
 
-                $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.$slider['title']);
+                $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
 
                 # Here we upload an image 1
                 $slider_img = \Cloudinary\Uploader::upload($slider['image'],
@@ -138,7 +138,6 @@ class TutorialsController extends Controller
                     "public_id" => $slider_public_id
                 ));
                 array_push($slider_array, [
-                    "title" => $slider['tile'],
                     "image" => $slider_img['secure_url'],
                     "public_id" => $slider_public_id,
                     "is_change" => 0,
@@ -272,7 +271,7 @@ class TutorialsController extends Controller
                     if($slider['is_change']){
 
                         $language = Language::find($request->header('language-key'));
-                        $slider_public_id = str_replace(' ', '-', $language->name.'-'.$id.'-'.$slider['title']);
+                        $slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
 
                         # Here we upload an image 1
                         $slider_img = \Cloudinary\Uploader::upload($slider['image'],
@@ -281,7 +280,6 @@ class TutorialsController extends Controller
                             "public_id" => $slider_public_id
                         ));
                         array_push($slider_array, [
-                            "title" => $slider['tile'],
                             "image" => $slider_img['secure_url'],
                             "public_id" => $slider_public_id,
                             "is_change" => 0,
