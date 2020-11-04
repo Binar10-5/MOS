@@ -61,6 +61,7 @@ class TutorialsController extends Controller
             ->join('product_variants as vp', 'products.variant_id', 'vp.id')
             ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
             ->language($this->language)
+            ->where('tp.tutorial_id', $tutorial->principal_id)
             ->get();
 
             $tutorial->products = $products;
@@ -210,17 +211,23 @@ class TutorialsController extends Controller
         ->name(request('title'))
         ->state(request('state'))
         ->language($this->language)
-        ->find($id);
+        ->where('mt.id', $id)
+        ->first();
 
-        $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
-        'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5',
-        'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free')
-        ->join('product_variants as vp', 'products.variant_id', 'vp.id')
-        ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
-        ->language($this->language)
-        ->get();
 
-        $tutorial->products = $products;
+
+        if($tutorial){
+            $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
+            'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5',
+            'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free')
+            ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+            ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
+            ->where('tp.tutorial_id', $tutorial->principal_id)
+            ->language($this->language)
+            ->get();
+
+            $tutorial->products = $products;
+        }
 
         return response()->json(['response' => $tutorial], 200);
 
