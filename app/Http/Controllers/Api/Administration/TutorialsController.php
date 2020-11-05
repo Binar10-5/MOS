@@ -85,7 +85,6 @@ class TutorialsController extends Controller
             'image' => 'required',
             'content' => 'required',
             'slider' => 'bail',
-            'change_slider' => 'bail|required',
             'principal_id' => 'bail',
             'products_list' => 'bail',
             'state' => 'bail|required'

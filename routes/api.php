@@ -79,6 +79,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('permissions', 'Api\Administration\PermissionsControler@index');
     Route::apiResource('cupons', 'Api\Administration\CuponsController');
     Route::apiResource('tutorials', 'Api\Administration\TutorialsController');
+    Route::post('tutorials/{id}', 'Api\Administration\TutorialsController@Update');
 
     Route::apiResource('banners', 'Api\Administration\BannerController');
 
