@@ -26,6 +26,13 @@ class Product extends Model
         }
     }
 
+    public function scopeVariantName($query, $name)
+    {
+        if(!empty($name)){
+            $query->where('vp.name', 'LIKE', '%'.$name.'%');
+        }
+    }
+
     public function scopeVState($query, $state_id)
     {
         if(!empty($state_id)){

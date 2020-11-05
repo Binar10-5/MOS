@@ -448,6 +448,7 @@ class ProductsController extends Controller
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
         #->vState(request('v_state'))
+        ->variantName(request('name'))
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
         ->category3(request('category3_id'))
