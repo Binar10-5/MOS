@@ -246,6 +246,7 @@ class TutorialsController extends Controller
             'title' => 'required|min:1|max:100',
             'description' => 'required',
             'change_img' => 'required|boolean',
+            'change_slider' => 'required|boolean',
             'content' => 'required',
             'slider' => 'bail',
             'products_add' => 'bail|array',
@@ -265,11 +266,29 @@ class TutorialsController extends Controller
         DB::beginTransaction();
         try{
 
+            $slider_array = request('slider');
             if(request('change_slider')){
-                $slider_array = array();
-                foreach (request('slider') as $slider) {
-                    if($slider['is_change']){
+                foreach ($slider_array as $slider) {
+                    if($slider['is_change'] == 1){
 
+                        $language = Language::find($request->header('language-key'));
+                        #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
+
+                        # Here we upload an image 1
+                        $slider_img = \Cloudinary\Uploader::upload($slider['image'],
+                        array(
+                            "folder" => "MOS/tutorials/Sliders/".$language->name,
+                            "public_id" => $slider['public_id']
+                        ));
+                        $slider['image'] = $slider_img['secure_url'];
+                        $slider['public_id'] = $slider['public_id'];
+                        $slider['is_change'] = 0;
+                        /*array_push($slider_array, [
+                            "image" => $slider_img['secure_url'],
+                            "public_id" => $slider_img['public_id'],
+                            "is_change" => 0,
+                        ]);*/
+                    }else if($slider['is_change'] == 2){
                         $language = Language::find($request->header('language-key'));
                         $slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
 
@@ -281,13 +300,12 @@ class TutorialsController extends Controller
                         ));
                         array_push($slider_array, [
                             "image" => $slider_img['secure_url'],
-                            "public_id" => $slider_public_id,
+                            "public_id" => $slider_img['public_id'],
                             "is_change" => 0,
                         ]);
                     }
                 }
             }
-
             $tutorial->title = request('title');
             $tutorial->description = request('description');
             $tutorial->content = request('content');
