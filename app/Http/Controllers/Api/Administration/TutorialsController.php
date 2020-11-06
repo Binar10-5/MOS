@@ -130,7 +130,7 @@ class TutorialsController extends Controller
                 $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
 
                 # Here we upload an image 1
-                $slider_img = \Cloudinary\Uploader::upload(request('silider_'.$i),
+                $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
                 array(
                     "folder" => "MOS/tutorials/Sliders/".$language->name,
                     "public_id" => $slider_public_id
