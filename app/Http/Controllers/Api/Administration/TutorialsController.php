@@ -126,7 +126,7 @@ class TutorialsController extends Controller
 
 
             $slider_array = array();
-            foreach (request('slider') as $slider) {
+            foreach (json_encode(request('slider')) as $slider) {
 
                 $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
 
