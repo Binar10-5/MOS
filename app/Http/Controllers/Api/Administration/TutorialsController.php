@@ -120,26 +120,28 @@ class TutorialsController extends Controller
             # Here we upload an image 1
             $img = \Cloudinary\Uploader::upload(request('image'),
             array(
-                "folder" => "MOS/tutorials/".$language->name,
+                "folder" => "MOS/tutorials/".$principal_id.'/'.$language->name,
                 "public_id" => $public_id
             ));
 
 
             $slider_array = array();
             for ($i=1; $i <= 10; $i++) {
-                $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
+                if(!empty(request('slider_'.$i))){
+                    $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
 
-                # Here we upload an image 1
-                $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
-                array(
-                    "folder" => "MOS/tutorials/Sliders/".$language->name,
-                    "public_id" => $slider_public_id
-                ));
-                array_push($slider_array, [
-                    "image" => $slider_img['secure_url'],
-                    "public_id" => $slider_public_id,
-                    "is_change" => 0,
-                ]);
+                    # Here we upload an image 1
+                    $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
+                    array(
+                        "folder" => "MOS/tutorials/Sliders/".$principal_id.'/'.$language->name,
+                        "public_id" => $slider_public_id
+                    ));
+                    array_push($slider_array, [
+                        "image" => $slider_img['secure_url'],
+                        "public_id" => $slider_public_id,
+                        "is_change" => 0,
+                    ]);
+                }
             }
 
             /*foreach (request('slider') as $slider) {
