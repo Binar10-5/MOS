@@ -170,7 +170,7 @@ class TutorialsController extends Controller
                 'image' => $img['secure_url'],
                 'public_id' => $public_id,
                 'content' => request('content'),
-                'slider' => $slider_array,
+                'slider' => json_encode($slider_array),
                 'principal_id' => $principal_id,
                 'language_id' => $this->language,
                 'state' => request('state'),
