@@ -126,7 +126,23 @@ class TutorialsController extends Controller
 
 
             $slider_array = array();
-            foreach (request('slider') as $slider) {
+            for ($i=1; $i <= 10; $i++) {
+                $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
+
+                # Here we upload an image 1
+                $slider_img = \Cloudinary\Uploader::upload(request('silider_'.$i),
+                array(
+                    "folder" => "MOS/tutorials/Sliders/".$language->name,
+                    "public_id" => $slider_public_id
+                ));
+                array_push($slider_array, [
+                    "image" => $slider_img['secure_url'],
+                    "public_id" => $slider_public_id,
+                    "is_change" => 0,
+                ]);
+            }
+
+            /*foreach (request('slider') as $slider) {
 
                 $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
 
@@ -142,7 +158,7 @@ class TutorialsController extends Controller
                     "is_change" => 0,
                 ]);
 
-            }
+            }*/
 
 
 
@@ -248,6 +264,7 @@ class TutorialsController extends Controller
             'change_slider' => 'required|boolean',
             'content' => 'required',
             'slider' => 'bail',
+            'change_slider' => 'bail',
             'products_add' => 'bail|array',
             'products_remove' => 'bail|array',
             'state' => 'bail|required'
