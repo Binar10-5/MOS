@@ -93,7 +93,7 @@ class TutorialsController extends Controller
         {
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
-
+        return response()->json(['response' => ['error' => [request('products_list')]]], 400);
         DB::beginTransaction();
         try{
             $principal_tutorial = MTutorial::find(request('principal_id'));
@@ -180,7 +180,7 @@ class TutorialsController extends Controller
                 return response()->json(['response' => ['error' => ['Error al crear el tutorial']]], 400);
             }
             $valid_data = array();
-            foreach (json_encode(request('products_list')) as $product) {
+            foreach (request('products_list') as $product) {
 
                 $variant = ProductVariant::find($product);
 
