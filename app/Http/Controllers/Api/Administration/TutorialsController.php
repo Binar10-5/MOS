@@ -128,7 +128,7 @@ class TutorialsController extends Controller
             $slider_array = array();
             for ($i=1; $i <= 10; $i++) {
                 if(!empty(request('slider_'.$i))){
-                    $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id);
+                    $slider_public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.$i);
 
                     # Here we upload an image 1
                     $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
@@ -180,7 +180,7 @@ class TutorialsController extends Controller
                 return response()->json(['response' => ['error' => ['Error al crear el tutorial']]], 400);
             }
             $valid_data = array();
-            foreach (request('products_list') as $product) {
+            foreach ((array)request('products_list') as $product) {
 
                 $variant = ProductVariant::find($product);
 
