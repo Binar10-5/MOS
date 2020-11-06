@@ -115,7 +115,7 @@ class TutorialsController extends Controller
             }
 
             $language = Language::find($request->header('language-key'));
-            $public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.request('name'));
+            $public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.request('title'));
 
             # Here we upload an image 1
             $img = \Cloudinary\Uploader::upload(request('image'),
