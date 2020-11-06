@@ -16,9 +16,9 @@ class TutorialsController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware('permission:/list_tutorials')->only(['show', 'index']);
+        /*$this->middleware('permission:/list_tutorials')->only(['show', 'index']);
         $this->middleware('permission:/create_tutorials')->only(['store']);
-        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);
+        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);*/
 
         // Get the languaje id
         $language = Language::find($request->header('language-key'));
@@ -93,7 +93,6 @@ class TutorialsController extends Controller
         {
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
-        return response()->json(['response' => ['error' => [request('products_list')]]], 400);
         DB::beginTransaction();
         try{
             $principal_tutorial = MTutorial::find(request('principal_id'));
@@ -180,7 +179,7 @@ class TutorialsController extends Controller
                 return response()->json(['response' => ['error' => ['Error al crear el tutorial']]], 400);
             }
             $valid_data = array();
-            foreach (request('products_list') as $product) {
+            foreach (json_decode(request('products_list')) as $product) {
 
                 $variant = ProductVariant::find($product);
 
