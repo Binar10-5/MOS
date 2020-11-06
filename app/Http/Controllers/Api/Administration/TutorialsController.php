@@ -180,7 +180,7 @@ class TutorialsController extends Controller
                 return response()->json(['response' => ['error' => ['Error al crear el tutorial']]], 400);
             }
             $valid_data = array();
-            foreach ((array)request('products_list') as $product) {
+            foreach (json_decode(request('products_list')) as $product) {
 
                 $variant = ProductVariant::find($product);
 
