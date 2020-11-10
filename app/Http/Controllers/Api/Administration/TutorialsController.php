@@ -44,6 +44,7 @@ class TutorialsController extends Controller
             ->name(request('title'))
             ->state(request('state'))
             ->language($this->language)
+            ->orderBy('created_at', 'desc')
             ->paginate(8);
         }else{
             $tutorials = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
@@ -62,6 +63,7 @@ class TutorialsController extends Controller
             ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
             ->language($this->language)
             ->where('tp.tutorial_id', $tutorial->principal_id)
+            ->orderBy('created_at', 'desc')
             ->get();
 
             $tutorial->products = $products;
