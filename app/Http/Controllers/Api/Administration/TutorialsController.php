@@ -16,9 +16,9 @@ class TutorialsController extends Controller
 {
     public function __construct(Request $request)
     {
-        /*$this->middleware('permission:/list_tutorials')->only(['show', 'index']);
+        $this->middleware('permission:/list_tutorials')->only(['show', 'index']);
         $this->middleware('permission:/create_tutorials')->only(['store']);
-        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);*/
+        $this->middleware('permission:/update_tutorials')->only(['update', 'destroy']);
 
         // Get the languaje id
         $language = Language::find($request->header('language-key'));
@@ -268,8 +268,8 @@ class TutorialsController extends Controller
             'content' => 'required',
             'slider' => 'bail',
             'change_slider' => 'bail',
-            'products_add' => 'bail|array',
-            'products_remove' => 'bail|array',
+            'products_add' => 'bail',
+            'products_remove' => 'bail',
             'state' => 'bail|required'
         ]);
         if($validator->fails())
@@ -285,50 +285,51 @@ class TutorialsController extends Controller
         DB::beginTransaction();
         try{
 
-            $slider_array = request('slider');
-            if(request('change_slider')){
-                foreach ($slider_array as $slider) {
-                    if($slider['is_change'] == 1){
+            $slider_array = json_decode($tutorial->slider);
+            for ($i=1; $i <= 10; $i++) {
+                if(!empty(request('public_id_'.$i))){
+                    foreach (json_decode($tutorial->slider) as $slider) {
+                        if($slider->public_id == request('public_id_'.$i)){
+                            $language = Language::find($request->header('language-key'));
+                            #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
 
+                            # Here we upload an image 1
+                            $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
+                            array(
+                                "folder" => "MOS/tutorials/Sliders/".$language->name,
+                                "public_id" => $slider->public_id
+                            ));
+                            $slider->image = $slider_img['secure_url'];
+                        }
+                    }
+                    $slider_array = json_decode($tutorial->slider);
+                }else{
+                    if(!empty(request('slider_'.$i))){
                         $language = Language::find($request->header('language-key'));
-                        #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
+                        $slider_public_id = str_replace(' ', '-', $language->name.'-'.$tutorial->principal_id.'-'.$i);
 
                         # Here we upload an image 1
-                        $slider_img = \Cloudinary\Uploader::upload($slider['image'],
-                        array(
-                            "folder" => "MOS/tutorials/Sliders/".$language->name,
-                            "public_id" => $slider['public_id']
-                        ));
-                        $slider['image'] = $slider_img['secure_url'];
-                        $slider['public_id'] = $slider['public_id'];
-                        $slider['is_change'] = 0;
-                        /*array_push($slider_array, [
-                            "image" => $slider_img['secure_url'],
-                            "public_id" => $slider_img['public_id'],
-                            "is_change" => 0,
-                        ]);*/
-                    }else if($slider['is_change'] == 2){
-                        $language = Language::find($request->header('language-key'));
-                        $slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
-
-                        # Here we upload an image 1
-                        $slider_img = \Cloudinary\Uploader::upload($slider['image'],
+                        $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
                         array(
                             "folder" => "MOS/tutorials/Sliders/".$language->name,
                             "public_id" => $slider_public_id
                         ));
+
+                        $image_url = $slider_img['secure_url'];
                         array_push($slider_array, [
-                            "image" => $slider_img['secure_url'],
-                            "public_id" => $slider_img['public_id'],
+                            "image" => $image_url,
+                            "public_id" => $slider_public_id,
                             "is_change" => 0,
                         ]);
                     }
                 }
+
             }
+
             $tutorial->title = request('title');
             $tutorial->description = request('description');
             $tutorial->content = request('content');
-            $tutorial->slider = $slider_array;
+            $tutorial->slider = json_encode($slider_array);
             $tutorial->state = request('state');
 
             if(request('change_img')){
@@ -352,7 +353,7 @@ class TutorialsController extends Controller
 
             }
 
-            foreach (request('products_remove') as $delete_array) {
+            foreach (json_decode(request('products_remove')) as $delete_array) {
 
                 $variant = ProductVariant::find($delete_array);
 
@@ -367,7 +368,7 @@ class TutorialsController extends Controller
                 }
             }
             $valid_data = array();
-            foreach (request('products_add') as $product) {
+            foreach (json_decode(request('products_add')) as $product) {
 
                 $variant = ProductVariant::find($product);
 
