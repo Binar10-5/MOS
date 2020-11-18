@@ -299,6 +299,8 @@ class TutorialsController extends Controller
                                 $tutorial->slider = $new_tutorials_dec;
                             }else{
                                 #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
+                                $max_id = collect($slider_array)->max('id') + 1;
+                                $slider_public_id = str_replace(' ', '-', $language->name.'-'.$tutorial->principal_id.'-'.$max_id);
 
                                 # Here we upload an image 1
                                 $api = new \Cloudinary\Api();
@@ -306,9 +308,10 @@ class TutorialsController extends Controller
                                 $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
                                 array(
                                     "folder" => "MOS/tutorials/Sliders/".$tutorial->principal_id."/".$language->name,
-                                    "public_id" => $slider->public_id
+                                    "public_id" => $slider_public_id
                                 ));
                                 $slider->image = $slider_img['secure_url'];
+                                $slider->public_id = $slider_public_id;
                             }
                         }
                     }
