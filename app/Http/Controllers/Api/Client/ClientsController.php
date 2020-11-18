@@ -14,6 +14,7 @@ use App\Models\Language;
 use App\Models\Product;
 use App\Models\ClientEmail;
 use App\Models\Cupon;
+use App\Models\Tutorial;
 use App\Models\VideoHome;
 use Illuminate\Http\Request;
 
@@ -363,6 +364,70 @@ class ClientsController extends Controller
         }
 
         return response()->json(['response' => $cupon], 200);
+    }
+
+    public function tutorialsList(Request $request)
+    {
+        if(request('paginate')){
+            $tutorials = Tutorial::select('tutorials.title', 'mt.id as principal_id', 'mt.state', 'tutorials.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
+            ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
+            ->name(request('title'))
+            ->where('mt.state', 1)
+            ->language($this->language)
+            ->orderBy('mt.created_at', 'desc')
+            ->paginate(8);
+        }else{
+            $tutorials = Tutorial::select('tutorials.title', 'mt.id as principal_id', 'mt.state', 'tutorials.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
+            ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
+            ->state(request('state'))
+            ->where('mt.state', 1)
+            ->language($this->language)
+            ->orderBy('mt.created_at', 'desc')
+            ->get();
+        }
+
+        foreach ($tutorials as $tutorial) {
+            $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
+            'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5',
+            'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free')
+            ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+            ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
+            ->language($this->language)
+            ->where('tp.tutorial_id', $tutorial->principal_id)
+            ->get();
+
+            $tutorial->products = $products;
+        }
+
+        return response()->json(['response' => $tutorials], 200);
+    }
+
+    public function tutorialsDetail(Request $request, $id)
+    {
+        $tutorial = Tutorial::select('tutorials.title', 'mt.id as principal_id', 'mt.state', 'tutorials.description', 'tutorials.image', 'tutorials.content', 'tutorials.slider',
+        'tutorials.principal_id', 'tutorials.language_id', 'tutorials.state')
+        ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
+        ->where('mt.state', 1)
+        ->language($this->language)
+        ->where('mt.id', $id)
+        ->first();
+
+
+
+        if($tutorial){
+            $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
+            'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5',
+            'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free')
+            ->join('product_variants as vp', 'products.variant_id', 'vp.id')
+            ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
+            ->where('tp.tutorial_id', $tutorial->principal_id)
+            ->language($this->language)
+            ->get();
+
+            $tutorial->products = $products;
+        }
+
+        return response()->json(['response' => $tutorial], 200);
     }
 
 }

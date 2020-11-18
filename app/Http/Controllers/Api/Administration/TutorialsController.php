@@ -223,7 +223,7 @@ class TutorialsController extends Controller
      */
     public function show($id)
     {
-        $tutorial = Tutorial::select('mt.title', 'mt.id as principal_id', 'mt.state', 'mt.description', 'tutorials.image', 'tutorials.content', 'tutorials.slider',
+        $tutorial = Tutorial::select('tutorials.title', 'mt.id as principal_id', 'mt.state', 'tutorials.description', 'tutorials.image', 'tutorials.content', 'tutorials.slider',
         'tutorials.principal_id', 'tutorials.language_id', 'tutorials.state')
         ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
         ->name(request('title'))
