@@ -311,9 +311,9 @@ class BannerController extends Controller
            foreach ($banners as $banner) {
                 # Delete the img of Clouddinary
                 $api = new \Cloudinary\Api();
-                $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-short'));
-                $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-median'));
-                $api->delete_resources(array('GIMED/banners/'.$banner->public_id.'-big'));
+                $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-short'));
+                $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-median'));
+                $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-big'));
                 $banners_order = Banner::where('order_by', '>', $banner->order_by)->where('language_id', $banner->language_id)->get();
                 foreach ($banners_order as $banner_order) {
                     $banner_order->order_by = $banner_order->order_by - 1;

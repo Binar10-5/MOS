@@ -267,7 +267,6 @@ class TutorialsController extends Controller
             'change_slider' => 'required|boolean',
             'content' => 'required',
             'slider' => 'bail',
-            'change_slider' => 'bail',
             'products_add' => 'bail',
             'products_remove' => 'bail',
             'state' => 'bail|required'
@@ -291,15 +290,24 @@ class TutorialsController extends Controller
                     foreach (json_decode($tutorial->slider) as $slider) {
                         if($slider->public_id == request('public_id_'.$i)){
                             $language = Language::find($request->header('language-key'));
-                            #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
 
-                            # Here we upload an image 1
-                            $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
-                            array(
-                                "folder" => "MOS/tutorials/Sliders/".$language->name,
-                                "public_id" => $slider->public_id
-                            ));
-                            $slider->image = $slider_img['secure_url'];
+                            if(empty(request('slider_'.$i))){
+                                $new_tutorials = collect(json_decode($tutorial->slider))->where('public_id', '!=', $slider->public_id)->all();
+                                $api = new \Cloudinary\Api();
+                                $api->delete_resources(array('MOS/tutorials/Sliders/'.$language->name.'/'.$slider->public_id));
+                                $new_tutorials_dec = json_encode($new_tutorials);
+                                $tutorial->slider = $new_tutorials_dec;
+                            }else{
+                                #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
+
+                                # Here we upload an image 1
+                                $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
+                                array(
+                                    "folder" => "MOS/tutorials/Sliders/".$language->name,
+                                    "public_id" => $slider->public_id
+                                ));
+                                $slider->image = $slider_img['secure_url'];
+                            }
                         }
                     }
                     $slider_array = json_decode($tutorial->slider);
