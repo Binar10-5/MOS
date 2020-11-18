@@ -307,7 +307,8 @@ class TutorialsController extends Controller
                                 $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
                                 array(
                                     "folder" => "MOS/tutorials/Sliders/".$tutorial->principal_id."/".$language->name,
-                                    "public_id" => $slider_public_id
+                                    "public_id" => $slider_public_id,
+                                    "invalidate" => true
                                 ));
                                 $slider->id = $max_id;
                                 $slider->image = $slider_img['secure_url'];
@@ -326,7 +327,8 @@ class TutorialsController extends Controller
                         $slider_img = \Cloudinary\Uploader::upload(request('slider_'.$i),
                         array(
                             "folder" => "MOS/tutorials/Sliders/".$tutorial->principal_id."/".$language->name,
-                            "public_id" => $slider_public_id
+                            "public_id" => $slider_public_id,
+                            "invalidate" => true
                         ));
 
                         $image_url = $slider_img['secure_url'];
