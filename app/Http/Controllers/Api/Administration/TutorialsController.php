@@ -264,7 +264,6 @@ class TutorialsController extends Controller
             'title' => 'required|min:1|max:100',
             'description' => 'required',
             'change_img' => 'required|boolean',
-            'change_slider' => 'required|boolean',
             'content' => 'required',
             'slider' => 'bail',
             'products_add' => 'bail',
