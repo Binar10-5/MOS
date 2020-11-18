@@ -294,7 +294,7 @@ class TutorialsController extends Controller
                                 $new_tutorials = collect(json_decode($tutorial->slider))->where('public_id', '!=', $slider->public_id)->all();
                                 $api = new \Cloudinary\Api();
                                 $api->delete_resources(array('MOS/tutorials/Sliders/'.$language->name.'/'.$slider->public_id));
-                                $new_tutorials_dec = json_encode($new_tutorials);
+                                $new_tutorials_dec = json_encode(collect($new_tutorials)->values());
                                 $tutorial->slider = $new_tutorials_dec;
                             }else{
                                 #$slider_public_id = str_replace(' ', '-', $language->name.'-'.$id);
