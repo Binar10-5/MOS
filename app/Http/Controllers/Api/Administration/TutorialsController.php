@@ -285,7 +285,7 @@ class TutorialsController extends Controller
 
             $slider_array = json_decode($tutorial->slider);
             for ($i=1; $i <= 10; $i++) {
-                if(!empty(request('public_id_'.$i))){
+                if(!empty(request('public_id_'.$i)) || request('public_id_'.$i) != ''){
                     foreach (json_decode($tutorial->slider) as $slider) {
                         if($slider->public_id == request('public_id_'.$i)){
                             $language = Language::find($request->header('language-key'));
