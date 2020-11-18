@@ -310,6 +310,7 @@ class TutorialsController extends Controller
                                     "folder" => "MOS/tutorials/Sliders/".$tutorial->principal_id."/".$language->name,
                                     "public_id" => $slider_public_id
                                 ));
+                                $slider->id = $max_id;
                                 $slider->image = $slider_img['secure_url'];
                                 $slider->public_id = $slider_public_id;
                             }
