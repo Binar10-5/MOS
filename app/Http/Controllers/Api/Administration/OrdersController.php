@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Administration;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Order;
+use App\Models\OrderProducts;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -70,7 +71,19 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::find($id);
+
+        if(!$order){
+            return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
+        }
+
+        $order->products = OrderProducts::select('pv.name', 'pv.color', 'pv.principal_id', 'pv.price', 'pv.discount', 'pv.final_price', 'orders_products.quantity')
+        ->join('product_variants as pv', 'orders_products.product_id', 'pv.id')
+        ->join('orders as o', 'orders_products.order_id', 'o.id')
+        ->where('o.id', $order->id)
+        ->get();
+
+        return response()->json(['response' => $order], 200);
     }
 
     /**
