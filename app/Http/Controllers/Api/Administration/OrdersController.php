@@ -32,12 +32,21 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = Order::code(request('code'))
-        ->state(request('state_id'))
-        ->total(request('total_min'), request('total_max'))
-        ->subtotal(request('subtotal_min'), request('subtotal_max'))
-        ->created(request('date_start'), request('date_end'))
-        ->get();
+        if(request('paginate')){
+            $orders = Order::code(request('code'))
+            ->state(request('state_id'))
+            ->total(request('total_min'), request('total_max'))
+            ->subtotal(request('subtotal_min'), request('subtotal_max'))
+            ->created(request('date_start'), request('date_end'))
+            ->paginate(8);
+        }else{
+            $orders = Order::code(request('code'))
+            ->state(request('state_id'))
+            ->total(request('total_min'), request('total_max'))
+            ->subtotal(request('subtotal_min'), request('subtotal_max'))
+            ->created(request('date_start'), request('date_end'))
+            ->get();
+        }
 
         return response()->json(['response' => $orders], 200);
     }
