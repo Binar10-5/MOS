@@ -190,7 +190,7 @@ class OrdersController extends Controller
         'orders.client_email', 'orders.subtotal', 'orders.total', 'orders.state_id', 'orders.coupon_id', 'orders.transportation_company_id',
         'orders.tracking_number', 'orders.language_id', 'orders.payment_data', 'orders.city_id', 'c.name as city_name', 'c.department_name')
         ->join('city as c', 'order.city_id', 'c.id')
-        ->where('order.id', $id)
+        ->where('orders.id', $id)
         ->first();
 
         if(!$order){
