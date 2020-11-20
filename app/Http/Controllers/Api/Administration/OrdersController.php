@@ -189,7 +189,7 @@ class OrdersController extends Controller
         $order = Order::select('orders.order_number', 'orders.client_name', 'orders.client_last_name', 'orders.client_address', 'orders.client_cell_phone',
         'orders.client_email', 'orders.subtotal', 'orders.total', 'orders.state_id', 'orders.coupon_id', 'orders.transportation_company_id',
         'orders.tracking_number', 'orders.language_id', 'orders.payment_data', 'orders.city_id', 'c.name as city_name', 'c.department_name')
-        ->join('city as c', 'order.city_id', 'c.id')
+        ->join('city as c', 'orders.city_id', 'c.id')
         ->where('orders.id', $id)
         ->first();
 
