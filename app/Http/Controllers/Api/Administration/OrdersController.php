@@ -71,7 +71,8 @@ class OrdersController extends Controller
             'client_cell_phone' => 'bail|required',
             'client_email' => 'bail|required',
             'products_list' => 'bail|required|array',
-            'coupon' => 'bail'
+            'coupon' => 'bail',
+            'city_id' => 'bail|required'
         ]);
         if($validator->fails())
         {
@@ -136,6 +137,7 @@ class OrdersController extends Controller
                 'total' => $total,
                 'state_id' => 1,
                 'coupon_id' => $coupon,
+                'city_id' => request('city_id'),
                 'language_id' => $this->language
             ]);
 
@@ -184,7 +186,12 @@ class OrdersController extends Controller
     public function show($id)
     {
 
-        $order = Order::find($id);
+        $order = Order::select('orders.order_number', 'orders.client_name', 'orders.client_last_name', 'orders.client_address', 'orders.client_cell_phone',
+        'orders.client_email', 'orders.subtotal', 'orders.total', 'orders.state_id', 'orders.coupon_id', 'orders.transportation_company_id',
+        'orders.tracking_number', 'orders.language_id', 'orders.payment_data', 'orders.city_id', 'c.name as city_name', 'c.department_name')
+        ->join('city as c', 'order.city_id', 'c.id')
+        ->where('order.id', $id)
+        ->first();
 
         if(!$order){
             return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
