@@ -417,7 +417,7 @@ class ClientsController extends Controller
         if($tutorial){
             $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
             'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5',
-            'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free')
+            'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free', 'vp.discount', 'vp.price', 'vp.final_price')
             ->join('product_variants as vp', 'products.variant_id', 'vp.id')
             ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
             ->where('tp.tutorial_id', $tutorial->principal_id)
