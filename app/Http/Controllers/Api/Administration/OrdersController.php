@@ -223,6 +223,20 @@ class OrdersController extends Controller
         {
             return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
+
+        $order = Order::find($id);
+
+        if(!$order){
+            return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
+        }
+
+        if($order->state_id != 3){
+            return response()->json(['response' => ['error' => ['El pedido no está facturado']]], 400);
+        }
+
+        $order->transportation_company_id = request('transportation_company_id');
+        $order->tracking_number = request('tracking_number');
+        $order->update();
     }
 
     /**
