@@ -20,6 +20,7 @@ use App\Models\ProductVariant;
 use App\Models\Tutorial;
 use App\Models\VideoHome;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {

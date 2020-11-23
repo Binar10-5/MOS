@@ -215,7 +215,14 @@ class OrdersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator=\Validator::make($request->all(),[
+            'transportation_company_id' => 'required',
+            'tracking_number' => 'required'
+        ]);
+        if($validator->fails())
+        {
+            return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
     }
 
     /**
