@@ -344,7 +344,7 @@ class ClientsController extends Controller
 
     public function citiesList(Request $request)
     {
-        $cities = City::select('name', 'department_name', 'delivery_fee', 'delivery_time')
+        $cities = City::select('id', 'name', 'department_name', 'delivery_fee', 'delivery_time')
         ->where('state', 1)
         ->get();
 
