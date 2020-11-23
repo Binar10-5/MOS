@@ -73,6 +73,10 @@ Route::middleware('clint')->group(function () {
     # Detalle de tutoriales
     Route::get('tutorialsList/{id}', 'Api\Client\ClientsController@tutorialsDetail');
 
+    # Solicitar orden
+    Route::post('orders', 'Api\Administration\OrdersController@store');
+
+
 });
 
 
