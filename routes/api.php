@@ -74,7 +74,7 @@ Route::middleware('clint')->group(function () {
     Route::get('tutorialsList/{id}', 'Api\Client\ClientsController@tutorialsDetail');
 
     # Solicitar orden
-    Route::post('orders', 'Api\Administration\OrdersController@store');
+    Route::post('orders', 'Api\Administration\ClientsController@requestOrder');
 
 
 });
