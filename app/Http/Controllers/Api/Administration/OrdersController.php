@@ -237,6 +237,9 @@ class OrdersController extends Controller
         $order->transportation_company_id = request('transportation_company_id');
         $order->tracking_number = request('tracking_number');
         $order->update();
+
+        return response()->json(['response' => 'Success'], 200);
+
     }
 
     /**
