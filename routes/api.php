@@ -112,7 +112,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('moduleValidator', 'Api\Administration\MenuController@modulegeneral');
     # Pedidos
-    Route::apiResource('orders', 'Api\Administration\OrdersController');
+    Route::apiResource('orders', 'Api\Administration\OrdersController')->only(['index', 'show']);
 
     # Categorías Nivel 1
     Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
