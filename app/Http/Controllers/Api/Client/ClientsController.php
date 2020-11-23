@@ -14,6 +14,9 @@ use App\Models\Language;
 use App\Models\Product;
 use App\Models\ClientEmail;
 use App\Models\Cupon;
+use App\Models\Order;
+use App\Models\OrderProducts;
+use App\Models\ProductVariant;
 use App\Models\Tutorial;
 use App\Models\VideoHome;
 use Illuminate\Http\Request;
@@ -428,6 +431,121 @@ class ClientsController extends Controller
         }
 
         return response()->json(['response' => $tutorial], 200);
+    }
+
+    public function requestOrder(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'client_name' => 'required',
+            'client_last_name' => 'required',
+            'client_address' => 'bail|required',
+            'client_cell_phone' => 'bail|required',
+            'client_email' => 'bail|required',
+            'products_list' => 'bail|required|array',
+            'coupon' => 'bail',
+            'city_id' => 'bail|required'
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $subtotal = 0;
+        foreach (request('products_list') as $product) {
+
+            $variant = ProductVariant::find($product['id']);
+
+            if(!$variant){
+                return response()->json(['response' => ['error' => ['La variante de el producto no existe', $product]]], 400);
+            }
+
+
+            if($variant->quantity < $product['quantity']){
+                return response()->json(['response' => ['error' => ['Lo sentimos en el momento de efectuar la compra nos quedamos sin la existencia de el productos solictado.', $product]]], 400);
+            }
+            # MIRAR AQUÍ
+            # Poner el final price en el precio
+            $subtotal += $variant->price * $product['quantity'];
+
+        }
+        DB::beginTransaction();
+        try{
+            $total = $subtotal;
+            $coupon = null;
+            if(!empty(request('coupon'))){
+                $validate_coupon = Cupon::where('code', request('coupon'))->first();
+
+                if(!$validate_coupon){
+                    return response()->json(['response' => ['error' => ['El cupón no existe']]], 400);
+                }
+
+                if($validate_coupon->uses_number <= 0){
+                    return response()->json(['response' => ['error' => ['El cupón ya alcanzó un limite de usos']]], 400);
+                }
+
+                if($validate_coupon->minimal_cost > $subtotal){
+                    return response()->json(['response' => ['error' => ['El costo de el pedido tiene que ser mayor a '.$validate_coupon->minimal_cost.' para poder usar el cupón']]], 400);
+                }
+
+                $validate_coupon->uses_number -= 1;
+                $total -= $validate_coupon->discount_amount;
+                $coupon = $validate_coupon->id;
+                $validate_coupon->update();
+            }
+
+
+            $order_number = Order::max('order_number') + 1;
+
+
+            $order = Order::create([
+                'order_number' => $order_number,
+                'client_name' => request('client_name'),
+                'client_last_name' => request('client_last_name'),
+                'client_address' => request('client_address'),
+                'client_cell_phone' => request('client_cell_phone'),
+                'client_email' => request('client_email'),
+                'subtotal' => $subtotal,
+                'total' => $total,
+                'state_id' => 1,
+                'coupon_id' => $coupon,
+                'city_id' => request('city_id'),
+                'language_id' => $this->language
+            ]);
+
+
+            $valid_data = array();
+            foreach (request('products_list') as $product) {
+
+                $variant = ProductVariant::find($product['id']);
+
+                if(!$variant){
+                    return response()->json(['response' => ['error' => ['La variante de el producto no existe', $product]]], 400);
+                }
+
+
+                $validate_product = OrderProducts::where('order_id', $order->id)->where('product_id', $product['id'])->first();
+
+                if(!$validate_product){
+                    array_push($valid_data, [
+                        'order_id' => $order->id,
+                        'product_id' => $product['id'],
+                        'quantity' => $product['quantity'],
+                    ]);
+                }
+
+                $variant->quantity -= $product['quantity'];
+                $variant->update();
+
+            }
+
+            $order_products = OrderProducts::insert($valid_data);
+
+        }catch(Exception $e){
+            DB::rollback();
+            return response()->json(['response' => ['error' => [$e->getMessage()]]], 400);
+        }
+        DB::commit();
+        return response()->json(['response' => $order->id], 200);
     }
 
 }
