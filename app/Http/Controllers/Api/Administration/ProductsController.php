@@ -269,7 +269,6 @@ class ProductsController extends Controller
                     $final_price = request('price');
                 }
 
-                return response()->json(['response' => ['error' => $final_price]], 400);
                 $variant = ProductVariant::create([
                     'name' => request('name'),
                     'color_code' => request('color_code'),
@@ -581,7 +580,10 @@ class ProductsController extends Controller
                 }else{
                     $discount = request('discount');
                 }
-                $final_price = request('price') * request('discount');
+                $price = request('price');
+                $price_discount = ($price * int($discount));
+
+                $final_price = $price - $price_discount;
             }else{
                 $discount = 0;
                 $final_price = request('price');
