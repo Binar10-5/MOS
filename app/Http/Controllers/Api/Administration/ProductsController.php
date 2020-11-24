@@ -268,8 +268,8 @@ class ProductsController extends Controller
                     $discount = 0;
                     $final_price = request('price');
                 }
-                return response()->json(['response' => ['error' => $final_price]], 400);
 
+                return response()->json(['response' => ['error' => $final_price]], 400);
                 $variant = ProductVariant::create([
                     'name' => request('name'),
                     'color_code' => request('color_code'),
