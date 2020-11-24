@@ -263,12 +263,12 @@ class ProductsController extends Controller
                     $price_discount = ($price * int($discount));
 
                     $final_price = $price - $price_discount;
-                    return response()->json(['response' => ['error' => $final_price]], 400);
 
                 }else{
                     $discount = 0;
                     $final_price = request('price');
                 }
+                return response()->json(['response' => ['error' => $final_price]], 400);
 
                 $variant = ProductVariant::create([
                     'name' => request('name'),
