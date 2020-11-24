@@ -71,7 +71,7 @@ Route::middleware('clint')->group(function () {
     Route::get('tutorialsList', 'Api\Client\ClientsController@tutorialsList');
 
     # Solicitar orden
-    Route::put('orders/{id}', 'Api\Client\ClientsController@requestOrder');
+    Route::post('orders', 'Api\Client\ClientsController@requestOrder');
 
     # Detalle de tutoriales
     Route::get('tutorialsList/{id}', 'Api\Client\ClientsController@tutorialsDetail');
@@ -112,7 +112,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('moduleValidator', 'Api\Administration\MenuController@modulegeneral');
     # Pedidos
-    Route::apiResource('orders', 'Api\Administration\OrdersController')->only(['index', 'show']);
+    Route::apiResource('orders', 'Api\Administration\OrdersController')->only(['index', 'show', 'update']);
 
     # Categorías Nivel 1
     Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
