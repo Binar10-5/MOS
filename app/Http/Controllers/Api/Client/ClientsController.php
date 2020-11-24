@@ -496,9 +496,11 @@ class ClientsController extends Controller
 
             // Si el sub total de la compra es mayor a 80, el delivery free de la ciudad es 0, osea que no se le suma a el total
             $city = City::find(request('city_id'));
-
+            $delivery_fee = $city->delivery_fee;
             if($total < 80000){
-                $total += $city->delivery_fee;
+                $total += $delivery_fee;
+            }else{
+                $delivery_fee = 0;
             }
             $order_number = Order::max('order_number') + 1;
 
@@ -512,6 +514,7 @@ class ClientsController extends Controller
                 'client_email' => request('client_email'),
                 'subtotal' => $subtotal,
                 'total' => $total,
+                'delivery_fee' => $delivery_fee,
                 'state_id' => 1,
                 'coupon_id' => $coupon,
                 'city_id' => request('city_id'),

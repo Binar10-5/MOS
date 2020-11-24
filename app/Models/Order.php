@@ -9,7 +9,7 @@ class Order extends Model
     protected $table = 'orders';
     protected $fillable = [
         'order_number', 'client_name', 'client_last_name', 'client_address', 'client_cell_phone', 'client_email', 'subtotal', 'total', 'state_id'
-        , 'coupon_id', 'payment_data', 'language_id', 'transportation_company_id' ,'tracking_number', 'city_id'
+        , 'coupon_id', 'payment_data', 'language_id', 'transportation_company_id' ,'tracking_number', 'city_id', 'delivery_fee'
     ];
 
     public function scopeCode($query, $order_number)
