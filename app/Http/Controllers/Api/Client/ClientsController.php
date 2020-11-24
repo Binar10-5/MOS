@@ -466,7 +466,7 @@ class ClientsController extends Controller
             }
             # MIRAR AQUÍ
             # Poner el final price en el precio
-            $subtotal += $variant->price * $product['quantity'];
+            $subtotal += $variant->final_price * $product['quantity'];
 
         }
         DB::beginTransaction();
@@ -494,7 +494,12 @@ class ClientsController extends Controller
                 $validate_coupon->update();
             }
 
+            // Si el sub total de la compra es mayor a 80, el delivery free de la ciudad es 0, osea que no se le suma a el total
+            $city = City::find(request('city_id'));
 
+            if($total < 80000){
+                $total += $city->delivery_fee;
+            }
             $order_number = Order::max('order_number') + 1;
 
 
