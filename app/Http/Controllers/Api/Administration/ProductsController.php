@@ -260,7 +260,9 @@ class ProductsController extends Controller
                         $discount = request('discount');
                     }
                     $price = request('price');
-                    $final_price = $price - int((request('price') * $discount));
+                    $price_discount = int(($price * $discount));
+
+                    $final_price = $price - $price_discount;
                 }else{
                     $discount = 0;
                     $final_price = request('price');
