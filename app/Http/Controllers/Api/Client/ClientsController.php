@@ -557,4 +557,12 @@ class ClientsController extends Controller
         return response()->json(['response' => $order->id], 200);
     }
 
+    public function deliveryFeeClient()
+    {
+        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->first();
+
+        return response()->json(['response' => $delivery], 200);
+
+    }
+
 }

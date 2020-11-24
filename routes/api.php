@@ -65,6 +65,9 @@ Route::middleware('clint')->group(function () {
     # Lista de ciudades
     Route::get('citiesList', 'Api\Client\ClientsController@citiesList');
 
+    # Valor minimo de el costo de envio
+    Route::get('cityDeliveryFee', 'Api\Client\ClientsController@deliveryFeeClient');
+
     # Validar cupones (TEST)
     Route::post('validateCupon/{code}', 'Api\Client\ClientsController@validateCupon');
 
@@ -107,6 +110,9 @@ Route::middleware('auth:api')->group(function () {
 
     # Administración de ciudades
     Route::apiResource('cities', 'Api\Administration\CitiesController');
+
+    # Actualizar el minimo de costo de el envio
+    Route::put('deliveryFee', 'Api\Administration\CitiesController@deliveryFee');
 
     # Administración de transportadoras
     Route::apiResource('transportationCompanies', 'Api\Administration\TransportationCompaniesController');

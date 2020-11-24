@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Administration;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CitiesController extends Controller
 {
@@ -13,7 +14,7 @@ class CitiesController extends Controller
     {
         $this->middleware('permission:/list_cities')->only(['show', 'index']);
         $this->middleware('permission:/create_cities')->only(['store']);
-        $this->middleware('permission:/update_cities')->only(['update', 'destroy']);
+        $this->middleware('permission:/update_cities')->only(['update', 'destroy', 'deliveryFee']);
 
         // Get the languaje id
         /*$language = Language::find($request->header('language-key'));
@@ -113,5 +114,20 @@ class CitiesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function deliveryFee(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'delivery_fee' => 'required',
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->update(['delivery_fee' => request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
+
+        return response()->json(['response' => 'Success'], 200);
     }
 }
