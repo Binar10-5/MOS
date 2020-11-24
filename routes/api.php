@@ -30,6 +30,7 @@ Route::post('forgetPass', 'Api\Helpers\ValidationController@forgetPassword');
 # Ruta para la validación del cambio de correo electronico
 Route::post('validateNewEmail', 'Api\Helpers\ValidationController@validateNewEmail');
 
+Route::post('getOrderStatus', 'Api\Administration\ExternalConnections\PayURequestController@getPaymentState');
 
 # Rutas para el cliente
 Route::middleware('clint')->group(function () {
