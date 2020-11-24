@@ -43,6 +43,7 @@ class OrdersController extends Controller
             ->total(request('total_min'), request('total_max'))
             ->subtotal(request('subtotal_min'), request('subtotal_max'))
             ->created(request('date_start'), request('date_end'))
+            ->orderBy('id', 'DESC')
             ->paginate(8);
         }else{
             $orders = Order::code(request('code'))
@@ -50,6 +51,7 @@ class OrdersController extends Controller
             ->total(request('total_min'), request('total_max'))
             ->subtotal(request('subtotal_min'), request('subtotal_max'))
             ->created(request('date_start'), request('date_end'))
+            ->orderBy('id', 'DESC')
             ->get();
         }
 
