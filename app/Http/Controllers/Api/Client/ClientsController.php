@@ -466,7 +466,7 @@ class ClientsController extends Controller
             }
             # MIRAR AQUÍ
             # Poner el final price en el precio
-            $subtotal += $variant->final_price * $product['quantity'];
+            $subtotal += (int)$variant->final_price * $product['quantity'];
 
         }
         DB::beginTransaction();
@@ -498,7 +498,7 @@ class ClientsController extends Controller
             $city = City::find(request('city_id'));
             $delivery_fee = $city->delivery_fee;
             if($total < 80000){
-                $total += $delivery_fee;
+                $total += (int)$delivery_fee;
             }else{
                 $delivery_fee = 0;
             }
