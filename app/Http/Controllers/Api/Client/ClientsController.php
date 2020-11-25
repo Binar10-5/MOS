@@ -547,11 +547,9 @@ class ClientsController extends Controller
                         'product_id' => $product['id'],
                         'quantity' => $product['quantity'],
                     ]);
+                    $variant->quantity -= $product['quantity'];
+                    $variant->update();
                 }
-
-                $variant->quantity -= $product['quantity'];
-                $variant->update();
-
             }
 
             $order_products = OrderProducts::insert($valid_data);
