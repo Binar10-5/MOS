@@ -114,6 +114,9 @@ Route::middleware('auth:api')->group(function () {
     # Actualizar el minimo de costo de el envio
     Route::put('deliveryFee', 'Api\Administration\CitiesController@deliveryFee');
 
+    # Ver el minimo de costo de el envio
+    Route::get('deliveryFeeGet', 'Api\Administration\CitiesController@deliveryFeeGet');
+
     # Administración de transportadoras
     Route::apiResource('transportationCompanies', 'Api\Administration\TransportationCompaniesController');
 

@@ -14,7 +14,7 @@ class CitiesController extends Controller
     {
         $this->middleware('permission:/list_cities')->only(['show', 'index']);
         $this->middleware('permission:/create_cities')->only(['store']);
-        $this->middleware('permission:/update_cities')->only(['update', 'destroy', 'deliveryFee']);
+        $this->middleware('permission:/update_cities')->only(['update', 'destroy', 'deliveryFee', 'deliveryFeeGet']);
 
         // Get the languaje id
         /*$language = Language::find($request->header('language-key'));
@@ -129,5 +129,13 @@ class CitiesController extends Controller
         $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->update(['delivery_fee' => request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
 
         return response()->json(['response' => 'Success'], 200);
+    }
+
+    public function deliveryFeeGet()
+    {
+
+        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->first();
+
+        return response()->json(['response' => $delivery], 200);
     }
 }

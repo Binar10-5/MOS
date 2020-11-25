@@ -538,6 +538,12 @@ class ClientsController extends Controller
                 if(!$validate_product){
                     array_push($valid_data, [
                         'order_id' => $order->id,
+                        'name' => $variant->name,
+                        'color_code' => $variant->color_code,
+                        'color_code' => $variant->color_code,
+                        'price' => $variant->price,
+                        'discount' => $variant->discount,
+                        'final_price' => $variant->final_price,
                         'product_id' => $product['id'],
                         'quantity' => $product['quantity'],
                     ]);
@@ -555,7 +561,7 @@ class ClientsController extends Controller
             return response()->json(['response' => ['error' => [$e->getMessage()]]], 400);
         }
         DB::commit();
-        return response()->json(['response' => $order->id], 200);
+        return response()->json(['response' => $order->order_number], 200);
     }
 
     public function deliveryFeeClient()
