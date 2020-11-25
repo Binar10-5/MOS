@@ -539,7 +539,7 @@ class ClientsController extends Controller
                     array_push($valid_data, [
                         'order_id' => $order->id,
                         'name' => $variant->name,
-                        'color_code' => $variant->color_code,
+                        'color' => $variant->color,
                         'color_code' => $variant->color_code,
                         'price' => $variant->price,
                         'discount' => $variant->discount,
