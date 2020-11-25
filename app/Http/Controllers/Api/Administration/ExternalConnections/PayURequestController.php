@@ -28,7 +28,7 @@ class PayURequestController extends Controller
 
         if(!$order){
             Error::cretae([
-                'description'=> 'No se encontró la orden que manda el reference_sale de payU',
+                'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
                 'type'=> 1
             ]);
             return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
