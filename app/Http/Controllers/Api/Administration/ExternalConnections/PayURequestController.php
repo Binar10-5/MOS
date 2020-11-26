@@ -17,9 +17,12 @@ class PayURequestController extends Controller
 {
     public function getPaymentState(Request $request)
     {
+        $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
 
         if(!$order){
+            $error = 1;
+            throw new Exception("No se encontró la orden que manda el reference_sale de payU '.request('reference_sale')");
             Error::create([
                 'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
                 'type'=> 1
@@ -37,11 +40,13 @@ class PayURequestController extends Controller
                     $variant = ProductVariant::find($product->id);
 
                     if(!$variant){
+                        $error = 2;
+                        throw new Exception("No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: ".$product->id);
                         Error::create([
                             'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->id,
                             'type'=> 2
                         ]);
-                        return response()->json(['response' => ['error' => ['Variante de producto no encontrada']]], 400);
+                        return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
                     }
 
                     $variant->quantity += $product->quantity;
@@ -71,6 +76,7 @@ class PayURequestController extends Controller
                 $order->state_id = 2;
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
+
             }else{
 
                 if($order->coupon_id != null || $order->coupon_id != ''){
@@ -102,7 +108,23 @@ class PayURequestController extends Controller
             }
 
         }catch(Exception $e){
-            DB::rollback();
+            if($error == 1){
+                DB::rollback();
+                Error::create([
+                    'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
+                    'type'=> 1
+                ]);
+                return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
+            }else if($error == 2){
+                DB::rollback();
+                Error::create([
+                    'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->id,
+                    'type'=> 2
+                ]);
+
+                return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
+            }
+
             Error::create([
                 'description'=> 'Error en recibir de payU '. $e->getMessage(),
                 'type'=> 5
