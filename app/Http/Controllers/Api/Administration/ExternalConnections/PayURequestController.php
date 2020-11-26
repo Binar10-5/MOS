@@ -130,7 +130,7 @@ class PayURequestController extends Controller
 
                 return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
             }
-
+            DB::rollback();
             Error::create([
                 'description'=> 'Error en recibir de payU '. $e->getMessage(),
                 'type'=> 5
