@@ -68,7 +68,7 @@ class PayURequestController extends Controller
 
                 $state = OrderState::find($order->state_id);
                 $new_state = OrderState::find(2);
-                $new_tracking = json_decode($order->tracking);
+                $new_tracking = $order->tracking;
 
                 array_push($new_tracking, array(
                     'last_id'=> $state->id,
