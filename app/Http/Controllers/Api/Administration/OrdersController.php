@@ -246,7 +246,7 @@ class OrdersController extends Controller
 
         $state = OrderState::find($order->state_id);
         $new_state = OrderState::find(5);
-        $new_tracking = json_encode($order->tracking);
+        $new_tracking = json_decode($order->tracking);
 
         array_push($new_tracking, array(
             'last_id'=> $state->id,
@@ -285,7 +285,7 @@ class OrdersController extends Controller
 
         $state = OrderState::find($order->state_id);
         $new_state = OrderState::find(4);
-        $new_tracking = json_encode($order->tracking);
+        $new_tracking = json_decode($order->tracking);
 
         array_push($new_tracking, array(
             'last_id'=> $state->id,
@@ -340,7 +340,7 @@ class OrdersController extends Controller
 
         $state = OrderState::find($order->state_id);
         $new_state = OrderState::find(6);
-        $new_tracking = json_encode($order->tracking);
+        $new_tracking = json_decode($order->tracking);
 
         array_push($new_tracking, array(
             'last_id'=> $state->id,

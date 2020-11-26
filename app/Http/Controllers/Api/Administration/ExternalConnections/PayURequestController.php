@@ -30,6 +30,7 @@ class PayURequestController extends Controller
         DB::beginTransaction();
         try{
             if(request('response_message_pol') != 'APPROVED'){
+
                 $products = OrderProducts::where('order_id', $order->id)->get();
 
                 foreach ($products as $product) {
@@ -55,7 +56,7 @@ class PayURequestController extends Controller
 
                 $state = OrderState::find($order->state_id);
                 $new_state = OrderState::find(2);
-                $new_tracking = decode($order->tracking);
+                $new_tracking = json_decode($order->tracking);
 
                 array_push($new_tracking, array(
                     'last_id'=> $state->id,
@@ -71,6 +72,7 @@ class PayURequestController extends Controller
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
             }else{
+
                 if($order->coupon_id != null || $order->coupon_id != ''){
                     $coupon = Cupon::find($order->coupon_id);
                     if($coupon->uses_number >= $coupon->maximum_uses){
@@ -81,7 +83,7 @@ class PayURequestController extends Controller
 
                 $state = OrderState::find($order->state_id);
                 $new_state = OrderState::find(3);
-                $new_tracking = json_encode($order->tracking);
+                $new_tracking = json_decode($order->tracking);
 
                 array_push($new_tracking, array(
                     'last_id'=> $state->id,
@@ -105,6 +107,7 @@ class PayURequestController extends Controller
                 'description'=> 'Error en recibir de payU '. $e->getMessage(),
                 'type'=> 5
             ]);
+            return response()->json(['response' => ['error' => ['Error de servisor']]], 400);
         }
 
         DB::commit();
