@@ -17,6 +17,12 @@ class PayURequestController extends Controller
 {
     public function getPaymentState(Request $request)
     {
+
+        $order = Order::where('id', 1)->first();
+        $order->payment_data = json_encode($request->all());
+        $order->update();
+        return response()->json(['response' => 'Success'], 200);
+
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
 
