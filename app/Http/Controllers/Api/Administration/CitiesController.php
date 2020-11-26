@@ -126,7 +126,7 @@ class CitiesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->update(['delivery_fee' => request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
+        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->update(['delivery_fee' => int(request('delivery_fee')), 'updated_at' => date('Y-m-d H:i:s')]);
 
         return response()->json(['response' => 'Success'], 200);
     }

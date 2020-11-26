@@ -547,6 +547,8 @@ class ClientsController extends Controller
                         'product_id' => $product['id'],
                         'quantity' => $product['quantity'],
                     ]);
+
+
                     $variant->quantity -= $product['quantity'];
                     $variant->update();
                 }
