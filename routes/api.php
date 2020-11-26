@@ -124,6 +124,12 @@ Route::middleware('auth:api')->group(function () {
     # Pedidos
     Route::apiResource('orders', 'Api\Administration\OrdersController')->only(['index', 'show', 'update']);
 
+    # Colocar estado de entregado de la oreden
+    Route::put('orderDelivered/{id}', 'Api\Administration\OrdersController@orderDelivered');
+
+    # Colocar estado de devuelto de la oreden
+    Route::put('orderReturn/{id}', 'Api\Administration\OrdersController@orderReturn');
+
     # Categorías Nivel 1
     Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
 

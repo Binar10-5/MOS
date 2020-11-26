@@ -7,6 +7,7 @@ use App\Models\Cupon;
 use App\Models\Error;
 use App\Models\Order;
 use App\Models\OrderProducts;
+use App\Models\OrderState;
 use App\Models\ProductVariant;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,14 +17,6 @@ class PayURequestController extends Controller
 {
     public function getPaymentState(Request $request)
     {
-
-        $order = Order::find(1);
-
-        $order->payment_data = json_encode($request->all());
-        $order->update();
-        return response()->json(['response' => 'Success'], 200);
-
-
         $order = Order::where('order_number', request('reference_sale'))->first();
 
         if(!$order){
@@ -60,8 +53,22 @@ class PayURequestController extends Controller
                     $coupon->update();
                 }
 
+                $state = OrderState::find($order->state_id);
+                $new_state = OrderState::find(2);
+                $new_tracking = json_encode($order->tracking);
+
+                array_push($new_tracking, array(
+                    'last_id'=> $state->id,
+                    'last_state'=> $state->name,
+                    'state_id'=> $new_state->id,
+                    'state'=> $new_state->name,
+                    'state_date'=> date('Y-m-d H:i:s'),
+                    'reason'=> request('error_message_bank')
+                ));
+
                 $order->payment_data = json_encode($request->all());
                 $order->state_id = 2;
+                $order->tracking = json_encode($new_tracking);
                 $order->update();
             }else{
                 if($order->coupon_id != null || $order->coupon_id != ''){
@@ -72,8 +79,23 @@ class PayURequestController extends Controller
                     }
                 }
 
+                $state = OrderState::find($order->state_id);
+                $new_state = OrderState::find(3);
+                $new_tracking = json_encode($order->tracking);
+
+                array_push($new_tracking, array(
+                    'last_id'=> $state->id,
+                    'last_state'=> $state->name,
+                    'state_id'=> $new_state->id,
+                    'state'=> $new_state->name,
+                    'state_date'=> date('Y-m-d H:i:s'),
+                    'reason'=> ''
+                ));
+
                 $order->payment_data = json_encode($request->all());
                 $order->state_id = 3;
+                $order->facturation_date = date('Y-m-d H:i:s');
+                $order->tracking = json_encode($new_tracking);
                 $order->update();
             }
 

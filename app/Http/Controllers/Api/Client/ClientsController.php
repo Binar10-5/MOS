@@ -505,6 +505,17 @@ class ClientsController extends Controller
             }
             $order_number = Order::max('order_number') + 1;
 
+            $new_state = OrderState::find(1);
+
+            $tracking = array(
+                'last_id' => 0,
+                'last_state'=> 'No creado',
+                'state_id'=> $new_state->id,
+                'state'=> $new_state->name,
+                'state_date'=> date('Y-m-d H:i:s'),
+                'reason'=> ''
+            );
+
 
             $order = Order::create([
                 'order_number' => $order_number,
@@ -517,6 +528,7 @@ class ClientsController extends Controller
                 'total' => $total,
                 'delivery_fee' => $delivery_fee,
                 'state_id' => 1,
+                'tracking'=> json_decode($tracking),
                 'coupon_id' => $coupon,
                 'city_id' => request('city_id'),
                 'language_id' => $this->language

@@ -243,23 +243,119 @@ class OrdersController extends Controller
             return response()->json(['response' => ['error' => ['El pedido no está facturado']]], 400);
         }
 
+        $state = OrderState::find($order->state_id);
+        $new_state = OrderState::find(5);
+        $new_tracking = json_encode($order->tracking);
+
+        array_push($new_tracking, array(
+            'last_id'=> $state->id,
+            'last_state'=> $state->name,
+            'state_id'=> $new_state->id,
+            'state'=> $new_state->name,
+            'state_date'=> date('Y-m-d H:i:s'),
+            'reason'=> ''
+        ));
+
         $order->transportation_company_id = request('transportation_company_id');
         $order->tracking_number = request('tracking_number');
         $order->state_id = 5;
+        $order->tracking = json_encode($new_tracking);
         $order->update();
 
         return response()->json(['response' => 'Success'], 200);
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function orderDelivered(Request $request, $id)
     {
-        //
+        $validator=\Validator::make($request->all(),[
+            'reason' => 'bail'
+        ]);
+        if($validator->fails())
+        {
+            return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $order = Order::find($id);
+
+        if(!$order){
+            return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
+        }
+
+        $state = OrderState::find($order->state_id);
+        $new_state = OrderState::find(4);
+        $new_tracking = json_encode($order->tracking);
+
+        array_push($new_tracking, array(
+            'last_id'=> $state->id,
+            'last_state'=> $state->name,
+            'state_id'=> $new_state->id,
+            'state'=> $new_state->name,
+            'state_date'=> date('Y-m-d H:i:s'),
+            'reason'=> request('reason')
+        ));
+
+        $order->state = $state->id;
+        $order->tracking = json_encode($new_tracking);
+        $order->update();
+
+        return response()->json(['response' => 'Success'], 200);
+
     }
+
+    public function orderReturn(Request $request, $id)
+    {
+
+        $validator=\Validator::make($request->all(),[
+            'reason' => 'bail'
+        ]);
+        if($validator->fails())
+        {
+            return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $order = Order::find($id);
+        if(!$order){
+            return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
+        }
+        $products = OrderProducts::where('order_id', $order->id)->get();
+
+        foreach ($products as $product) {
+            $variant = ProductVariant::find($product->id);
+
+            if(!$variant){
+                return response()->json(['response' => ['error' => ['Variante de producto no encontrada']]], 400);
+            }
+
+            $variant->quantity += $product->quantity;
+            $variant->update();
+        }
+
+        if($order->coupon_id != null || $order->coupon_id != ''){
+            $coupon = Cupon::find($order->coupon_id);
+            $coupon->uses_number -= 1;
+            $coupon->update();
+        }
+
+        $state = OrderState::find($order->state_id);
+        $new_state = OrderState::find(6);
+        $new_tracking = json_encode($order->tracking);
+
+        array_push($new_tracking, array(
+            'last_id'=> $state->id,
+            'last_state'=> $state->name,
+            'state_id'=> $new_state->id,
+            'state'=> $new_state->name,
+            'state_date'=> date('Y-m-d H:i:s'),
+            'reason'=> request('reason')
+        ));
+
+        $order->state_id = 6;
+        $order->tracking = json_encode($new_tracking);
+        $order->update();
+
+        return response()->json(['response' => 'Success'], 200);
+
+    }
+
 }
