@@ -529,7 +529,7 @@ class ClientsController extends Controller
                 'total' => $total,
                 'delivery_fee' => $delivery_fee,
                 'state_id' => 1,
-                'tracking'=> json_decode($tracking),
+                'tracking'=> json_encode($tracking),
                 'coupon_id' => $coupon,
                 'city_id' => request('city_id'),
                 'language_id' => $this->language
