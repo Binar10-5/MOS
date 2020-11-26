@@ -18,26 +18,27 @@ class PayURequestController extends Controller
     public function getPaymentState(Request $request)
     {
 
-        $order = Order::where('id', 1)->first();
+        /*$order = Order::where('id', 1)->first();
         $order->payment_data = json_encode($request->all());
         $order->update();
-        return response()->json(['response' => 'Success'], 200);
+        return response()->json(['response' => 'Success'], 200);*/
 
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
 
-        if(!$order){
-            $error = 1;
-            throw new Exception("No se encontró la orden que manda el reference_sale de payU '.request('reference_sale')");
-            Error::create([
-                'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
-                'type'=> 1
-            ]);
-            return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
-        }
+
 
         DB::beginTransaction();
         try{
+            if(!$order){
+                $error = 1;
+                throw new Exception("No se encontró la orden que manda el reference_sale de payU '.request('reference_sale')");
+                Error::create([
+                    'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
+                    'type'=> 1
+                ]);
+                return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
+            }
             if(request('response_message_pol') != 'APPROVED'){
 
                 $products = OrderProducts::where('order_id', $order->id)->get();
