@@ -9,8 +9,36 @@ class Order extends Model
     protected $table = 'orders';
     protected $fillable = [
         'order_number', 'client_name', 'client_last_name', 'client_address', 'client_cell_phone', 'client_email', 'subtotal', 'total', 'state_id'
-        , 'coupon_id', 'payment_data', 'language_id', 'transportation_company_id' ,'tracking_number', 'city_id', 'delivery_fee'
+        , 'coupon_id', 'payment_data', 'language_id', 'transportation_company_id' ,'tracking_number', 'city_id', 'delivery_fee', 'facturation_date'
     ];
+
+    public function scopeName($query, $client_name)
+    {
+        if(!empty($client_name)){
+            $query->where('orders.client_name', $client_name);
+        }
+    }
+
+    public function scopeLastName($query, $client_last_name)
+    {
+        if(!empty($client_last_name)){
+            $query->where('orders.client_last_name', $client_last_name);
+        }
+    }
+
+    public function scopeCity($query, $city_id)
+    {
+        if(!empty($city_id)){
+            $query->where('orders.city_id', $city_id);
+        }
+    }
+
+    public function scopeFacturation($query, $start, $end)
+    {
+        if(!empty($start) && !empty($end)){
+            $query->whereBetween('orders.facturation_date', [$start, $end]);
+        }
+    }
 
     public function scopeCode($query, $order_number)
     {

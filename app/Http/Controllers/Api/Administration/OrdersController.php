@@ -8,6 +8,7 @@ use App\Models\Language;
 use App\Models\Order;
 use App\Models\OrderProducts;
 use App\Models\ProductVariant;
+use App\Models\TransportationCompany;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -227,6 +228,8 @@ class OrdersController extends Controller
         }
 
         $order = Order::find($id);
+
+        $transportation = TransportationCompany::where('state', 1)->find(request('transportation_company_id'));
 
         if(!$order){
             return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
