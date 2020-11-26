@@ -523,6 +523,7 @@ class ClientsController extends Controller
             ]);
 
 
+            $valid_array = array();
             $valid_data = array();
             foreach (request('products_list') as $product) {
 
@@ -533,9 +534,8 @@ class ClientsController extends Controller
                 }
 
 
-                $validate_product = OrderProducts::where('order_id', $order->id)->where('product_id', $product['id'])->first();
 
-                if(!$validate_product){
+                if(!in_array($product['id'], $valid_array)){
                     array_push($valid_data, [
                         'order_id' => $order->id,
                         'name' => $variant->name,
@@ -552,6 +552,7 @@ class ClientsController extends Controller
                     $variant->quantity -= $product['quantity'];
                     $variant->update();
                 }
+                array_push($valid_array, $product['id']);
             }
 
             $order_products = OrderProducts::insert($valid_data);

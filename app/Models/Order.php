@@ -29,7 +29,7 @@ class Order extends Model
     public function scopeTotal($query, $min, $max)
     {
         if(!empty($min) && !empty($max)){
-            $query->whereBetween('orders.total', [$min, $max]);
+            $query->whereBetween('orders.total', [(int)$min, (int)$max]);
         }
     }
 
