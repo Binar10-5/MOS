@@ -133,7 +133,7 @@ class PayURequestController extends Controller
             }
             DB::rollback();
             Error::create([
-                'description'=> 'Error en recibir de payU '. $e->getMessage(),
+                'description'=> 'Error en recibir de payU '. $e->getMessage() . $e->getLine(),
                 'type'=> 5
             ]);
             return response()->json(['response' => ['error' => ['Error de servisor']]], 400);
