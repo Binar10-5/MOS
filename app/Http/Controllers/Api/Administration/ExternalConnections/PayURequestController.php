@@ -20,7 +20,7 @@ class PayURequestController extends Controller
         $order = Order::where('order_number', request('reference_sale'))->first();
 
         if(!$order){
-            Error::cretae([
+            Error::crete([
                 'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
                 'type'=> 1
             ]);
@@ -36,7 +36,7 @@ class PayURequestController extends Controller
                     $variant = ProductVariant::find($product->id);
 
                     if(!$variant){
-                        Error::cretae([
+                        Error::crete([
                             'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->id,
                             'type'=> 2
                         ]);
@@ -101,7 +101,7 @@ class PayURequestController extends Controller
 
         }catch(Exception $e){
             DB::rollback();
-            Error::cretae([
+            Error::crete([
                 'description'=> 'Error en recibir de payU '. $e->getMessage(),
                 'type'=> 5
             ]);
