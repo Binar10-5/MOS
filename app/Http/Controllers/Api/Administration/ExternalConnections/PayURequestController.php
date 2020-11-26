@@ -101,6 +101,10 @@ class PayURequestController extends Controller
 
         }catch(Exception $e){
             DB::rollback();
+            Error::cretae([
+                'description'=> 'Error en recibir de payU '. $e->getMessage(),
+                'type'=> 5
+            ]);
         }
 
         DB::commit();
