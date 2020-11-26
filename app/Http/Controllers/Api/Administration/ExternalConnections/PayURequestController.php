@@ -37,13 +37,13 @@ class PayURequestController extends Controller
                 $products = OrderProducts::where('order_id', $order->id)->get();
 
                 foreach ($products as $product) {
-                    $variant = ProductVariant::find($product->id);
+                    $variant = ProductVariant::find($product->product_id);
 
                     if(!$variant){
                         $error = 2;
-                        throw new Exception("No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: ".$product->id);
+                        throw new Exception("No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: ".$product->product_id);
                         Error::create([
-                            'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->id,
+                            'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->product_id,
                             'type'=> 2
                         ]);
                         return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);

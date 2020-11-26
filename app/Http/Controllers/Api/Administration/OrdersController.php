@@ -322,7 +322,7 @@ class OrdersController extends Controller
         $products = OrderProducts::where('order_id', $order->id)->get();
 
         foreach ($products as $product) {
-            $variant = ProductVariant::find($product->id);
+            $variant = ProductVariant::find($product->product_id);
 
             if(!$variant){
                 return response()->json(['response' => ['error' => ['Variante de producto no encontrada']]], 400);
