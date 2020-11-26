@@ -463,7 +463,7 @@ class ClientsController extends Controller
 
 
             if($variant->quantity < $product['quantity']){
-                return response()->json(['response' => ['error' => ['Lo sentimos en el momento de efectuar la compra nos quedamos sin la existencia de el productos solictado.', $product]]], 400);
+                return response()->json(['response' => ['error' => ['Lo sentimos en el momento de efectuar la compra nos quedamos sin la existencia de el productos solictado.', $variant]]], 400);
             }
             # MIRAR AQUÍ
             # Poner el final price en el precio
