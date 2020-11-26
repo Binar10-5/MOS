@@ -220,7 +220,7 @@ class OrdersController extends Controller
     {
         $validator=\Validator::make($request->all(),[
             'transportation_company_id' => 'required',
-            'tracking_number' => 'required'
+            'tracking_number' => 'bail'
         ]);
         if($validator->fails())
         {
@@ -230,6 +230,10 @@ class OrdersController extends Controller
         $order = Order::find($id);
 
         $transportation = TransportationCompany::where('state', 1)->find(request('transportation_company_id'));
+
+        if(!$transportation){
+            return response()->json(['response' => ['error' => ['La tansportadora está inactiva o no existe']]], 400);
+        }
 
         if(!$order){
             return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
@@ -241,6 +245,7 @@ class OrdersController extends Controller
 
         $order->transportation_company_id = request('transportation_company_id');
         $order->tracking_number = request('tracking_number');
+        $order->state_id = 5;
         $order->update();
 
         return response()->json(['response' => 'Success'], 200);
