@@ -41,6 +41,10 @@ class OrdersController extends Controller
     {
         if(request('paginate')){
             $orders = Order::code(request('code'))
+            ->name(request('name'))
+            ->dNI(request('dni'))
+            ->city(request('city'))
+            ->facturation(request('f_date_start'), request('f_date_end'))
             ->state(request('state_id'))
             ->total(request('total_min'), request('total_max'))
             ->subtotal(request('subtotal_min'), request('subtotal_max'))

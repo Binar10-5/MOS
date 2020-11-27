@@ -15,14 +15,14 @@ class Order extends Model
     public function scopeName($query, $client_name)
     {
         if(!empty($client_name)){
-            $query->where('orders.client_name', $client_name);
+            $query->where('orders.client_name', 'LIKE', '%'.$client_name.'%');
         }
     }
 
-    public function scopeDNI($query, $client_last_name)
+    public function scopeDNI($query, $client_dni)
     {
-        if(!empty($client_last_name)){
-            $query->where('orders.client_last_name', $client_last_name);
+        if(!empty($client_dni)){
+            $query->where('orders.client_dni', 'LIKE', '%'.$client_dni.'%');
         }
     }
 
@@ -43,7 +43,7 @@ class Order extends Model
     public function scopeCode($query, $order_number)
     {
         if(!empty($order_number)){
-            $query->where('orders.order_number', $order_number);
+            $query->where('orders.order_number', 'LIKE', '%'.$order_number.'%');
         }
     }
 
