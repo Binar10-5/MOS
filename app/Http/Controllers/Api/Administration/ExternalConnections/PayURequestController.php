@@ -124,6 +124,19 @@ class PayURequestController extends Controller
                 $order->facturation_date = date('Y-m-d H:i:s');
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
+
+                # We generate the data to send the mail to the factured pay
+                $data = array(
+                    'name' => $order->client_name,
+                    'order_number' => $order->order_number
+                );
+
+                # Send Notification
+                $mail = Mail::to($order->client_email)->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
+
+                if($mail){
+                    return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
+                }
             }
 
         }catch(Exception $e){
@@ -151,18 +164,6 @@ class PayURequestController extends Controller
             return response()->json(['response' => ['error' => ['Error de servisor']]], 400);
         }
 
-        # We generate the data to send the mail to the factured pay
-        $data = array(
-            'name' => $order->client_name,
-            'order_number' => $order->order_number
-        );
-
-        # Send Notification
-        $mail = Mail::to($order->client_email)->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
-
-        if($mail){
-            return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
-        }
 
         DB::commit();
         return response()->json(['response' => 'Success'], 200);
