@@ -27,6 +27,19 @@ class PayURequestController extends Controller
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
 
+        # We generate the data to send the mail to the factured pay
+        $data = array(
+            'name' => 'Ronaldo',
+            'order_number' => $order->order_number
+        );
+
+        # Send Notification
+        $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
+        return 1;
+        if($mail){
+            return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
+        }
+
         DB::beginTransaction();
         try{
             if(!$order){
@@ -115,7 +128,7 @@ class PayURequestController extends Controller
                 # We generate the data to send the mail to the factured pay
                 $data = array(
                     'name' => $order->client_name,
-                    'order_number' => $order->order_number
+                    'order_number' => '#'.$order->order_number
                 );
 
                 # Send Notification
