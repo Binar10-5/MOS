@@ -439,6 +439,7 @@ class ClientsController extends Controller
     {
         $validator=\Validator::make($request->all(),[
             'client_name' => 'required',
+            'client_dni' => 'required',
             'client_last_name' => 'required',
             'client_address' => 'bail|required',
             'client_cell_phone' => 'bail|required',
@@ -521,6 +522,7 @@ class ClientsController extends Controller
             $order = Order::create([
                 'order_number' => $order_number,
                 'client_name' => request('client_name'),
+                'client_dni' => request('client_dni'),
                 'client_last_name' => request('client_last_name'),
                 'client_address' => request('client_address'),
                 'client_cell_phone' => request('client_cell_phone'),

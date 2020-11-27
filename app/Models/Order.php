@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $table = 'orders';
     protected $fillable = [
-        'order_number', 'client_name', 'client_last_name', 'client_address', 'client_cell_phone', 'client_email', 'subtotal', 'total', 'state_id'
+        'order_number', 'client_name', 'client_last_name', 'client_dni', 'client_address', 'client_cell_phone', 'client_email', 'subtotal', 'total', 'state_id'
         , 'coupon_id', 'payment_data', 'language_id', 'transportation_company_id' ,'tracking_number', 'city_id', 'delivery_fee', 'facturation_date', 'tracking'
     ];
 
@@ -19,7 +19,7 @@ class Order extends Model
         }
     }
 
-    public function scopeLastName($query, $client_last_name)
+    public function scopeDNI($query, $client_last_name)
     {
         if(!empty($client_last_name)){
             $query->where('orders.client_last_name', $client_last_name);
