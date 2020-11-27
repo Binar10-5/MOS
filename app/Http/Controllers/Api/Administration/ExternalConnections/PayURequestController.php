@@ -30,7 +30,8 @@ class PayURequestController extends Controller
         # We generate the data to send the mail to the factured pay
         $data = array(
             'name' => 'Ronaldo',
-            'order_number' => $order->order_number
+            'order_number' => $order->order_number,
+            'numeral' => '#',
         );
 
         # Send Notification
@@ -128,7 +129,8 @@ class PayURequestController extends Controller
                 # We generate the data to send the mail to the factured pay
                 $data = array(
                     'name' => $order->client_name,
-                    'order_number' => '#'.$order->order_number
+                    'order_number' => $order->order_number,
+                    'numeral' => '#',
                 );
 
                 # Send Notification

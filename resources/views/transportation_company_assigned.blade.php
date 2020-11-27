@@ -9,7 +9,7 @@
 <body>
     <H2>Saludos, {{$data['name']}}</H2><br>
     <p>
-        Te informamos que tu pedido ha sido despachado por la transporatadora {{$data['transportation_name']}}, el número de guía es: {{$data['tracking_number']}}.
+        Te informamos que tu pedido ha sido despachado por la transporatadora {{$data['transportation_name']}}, el número de guía es: {{$data['numeral']}}{{$data['tracking_number']}}.
         <H3>Atentamente, equipo MOS.</H3>
     </p>
 </body>
