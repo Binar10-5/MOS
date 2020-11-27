@@ -26,6 +26,7 @@ class PayURequestController extends Controller
 
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
+
         DB::beginTransaction();
         try{
             if(!$order){

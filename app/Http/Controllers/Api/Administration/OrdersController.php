@@ -279,7 +279,7 @@ class OrdersController extends Controller
         $data = array(
             'name' => $order->client_name,
             'transportation_name' => $transportation->name,
-            'tracking_number' => $order->tracking_number
+            'tracking_number' => '#'.$order->tracking_number
         );
         if($transportation->id == 1){
             # Send Notification

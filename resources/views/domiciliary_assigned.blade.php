@@ -7,7 +7,7 @@
     <title>'new email'</title>
 </head>
 <body>
-    <H2>Saludos {{$data['name']}},</H2><br>
+    <H2>Saludos, {{$data['name']}}</H2><br>
     <p>
         Te informamos que tu pedido ha sido despachado y llegará pronto.
         <H3>Atentamente, equipo MOS.</H3>
