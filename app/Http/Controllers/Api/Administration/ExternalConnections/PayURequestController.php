@@ -12,7 +12,8 @@ use App\Models\ProductVariant;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Helpers\SendEmails;
 class PayURequestController extends Controller
 {
     public function getPaymentState(Request $request)
@@ -26,7 +27,18 @@ class PayURequestController extends Controller
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
 
+        # We generate the data to send the mail to the factured pay
+        $data = array(
+            'name' => 'Ronaldo',
+            'order_number' => $order->order_number
+        );
 
+        # Send Notification
+        $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
+        return 1;
+        if($mail){
+            return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
+        }
 
         DB::beginTransaction();
         try{
@@ -137,6 +149,19 @@ class PayURequestController extends Controller
                 'type'=> 5
             ]);
             return response()->json(['response' => ['error' => ['Error de servisor']]], 400);
+        }
+
+        # We generate the data to send the mail to the factured pay
+        $data = array(
+            'name' => $order->client_name,
+            'order_number' => $order->order_number
+        );
+
+        # Send Notification
+        $mail = Mail::to($order->client_email)->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
+
+        if($mail){
+            return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
         }
 
         DB::commit();

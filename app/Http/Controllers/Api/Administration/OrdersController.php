@@ -13,6 +13,8 @@ use App\Models\TransportationCompany;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Helpers\SendEmails;
 
 class OrdersController extends Controller
 {
