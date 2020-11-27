@@ -40,7 +40,7 @@ class PayURequestController extends Controller
                 return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
             }
             if(request('response_message_pol') != 'APPROVED'){
-
+/*
                 $products = OrderProducts::where('order_id', $order->id)->get();
 
                 foreach ($products as $product) {
@@ -83,7 +83,7 @@ class PayURequestController extends Controller
                 $order->state_id = 2;
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
-
+*/
             }else{
 
                 if($order->coupon_id != null || $order->coupon_id != ''){
@@ -115,7 +115,7 @@ class PayURequestController extends Controller
             }
 
         }catch(Exception $e){
-            if($error == 1){
+            /*if($error == 1){
                 DB::rollback();
                 Error::create([
                     'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
@@ -130,7 +130,7 @@ class PayURequestController extends Controller
                 ]);
 
                 return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
-            }
+            }*/
             DB::rollback();
             Error::create([
                 'description'=> 'Error en recibir de payU '. $e->getMessage() . $e->getLine(),
