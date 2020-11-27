@@ -54,6 +54,20 @@ class Order extends Model
         }
     }
 
+    public function scopeFacturationOrder($query, $date)
+    {
+        if(!empty($date)){
+            $query->orderBy('orders.facturation_date', $date);
+        }
+    }
+
+    public function scopeTotalOrder($query, $total)
+    {
+        if(!empty($total)){
+            $query->orderBy('orders.total', $total);
+        }
+    }
+
     public function scopeTotal($query, $min, $max)
     {
         if(!empty($min) && !empty($max)){

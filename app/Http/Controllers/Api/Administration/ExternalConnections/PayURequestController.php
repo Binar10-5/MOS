@@ -28,18 +28,18 @@ class PayURequestController extends Controller
         $order = Order::where('order_number', request('reference_sale'))->first();
 
         # We generate the data to send the mail to the factured pay
-        $data = array(
+        /*$data = array(
             'name' => 'Ronaldo',
             'order_number' => $order->order_number,
             'numeral' => '#',
         );
 
         # Send Notification
-        $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
+        $mail = Mail::to('projectmanager@binar10.co')->send(new SendEmails('payment_approved', 'Pago aprobado.', 'noreply@mosbeautyshop.com', $data));
         return 1;
         if($mail){
             return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
-        }
+        }*/
 
         DB::beginTransaction();
         try{
