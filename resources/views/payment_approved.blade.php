@@ -9,7 +9,7 @@
 <body>
     <H2>Saludos {{$data['name']}},</H2><br>
     <p>
-        Te informamos que el pago para tu pedido {{$data['order_number']}} ha sido aprobado exitosamente. Pronto te estaremos informando cuando sea despachado.
+        Te informamos que el pago para tu pedido '#'{{$data['order_number']}} ha sido aprobado exitosamente. Pronto te estaremos informando cuando sea despachado.
         <H3>Atentamente, equipo MOS.</H3>
     </p>
 </body>
