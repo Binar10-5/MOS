@@ -41,6 +41,7 @@ class OrdersController extends Controller
     {
         if(request('paginate')){
             $orders = Order::code(request('code'))
+            ->code(request('code'))
             ->name(request('name'))
             ->dNI(request('dni'))
             ->city(request('city'))
@@ -53,6 +54,11 @@ class OrdersController extends Controller
             ->paginate(8);
         }else{
             $orders = Order::code(request('code'))
+            ->code(request('code'))
+            ->name(request('name'))
+            ->dNI(request('dni'))
+            ->city(request('city'))
+            ->facturation(request('f_date_start'), request('f_date_end'))
             ->state(request('state_id'))
             ->total(request('total_min'), request('total_max'))
             ->subtotal(request('subtotal_min'), request('subtotal_max'))
@@ -266,6 +272,29 @@ class OrdersController extends Controller
         $order->state_id = 5;
         $order->tracking = json_encode($new_tracking);
         $order->update();
+
+        # We generate the data to send the mail to the asign tracking
+        $data = array(
+            'name' => $order->client_name,
+            'transportation_name' => $transportation->name,
+            'tracking_number' => $order->tracking_number
+        );
+        if($transportation->id == 1){
+            # Send Notification
+            $mail = Mail::to($order->client_email)->send(new SendEmails('domiciliary_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
+
+            if($mail){
+                return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
+            }
+        }else{
+            # Send Notification
+            $mail = Mail::to($order->client_email)->send(new SendEmails('transportation_company_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
+
+            if($mail){
+                return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
+            }
+        }
+
 
         return response()->json(['response' => 'Success'], 200);
 

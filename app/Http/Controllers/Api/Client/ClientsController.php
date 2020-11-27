@@ -577,21 +577,6 @@ class ClientsController extends Controller
             return response()->json(['response' => ['error' => [$e->getMessage()]]], 400);
         }
 
-        # We generate the data to send the mail to the created user
-        /*$data = array(
-            'password_code' => $password_code,
-            'email_code' => $email_code,
-            'name' => $user->name." ".$user->last_name,
-            'email' => $user->email,
-        );
-
-        # Send Notification
-        $mail = Mail::to($user->email)->send(new SendEmails('email_verify', 'Correo de verificación de cuenta.', 'noreply@mosbeautyshop.com', $data));
-
-        if($mail){
-            return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
-        }*/
-
         DB::commit();
         return response()->json(['response' => $order->order_number, 'total' => $order->total], 200);
     }
