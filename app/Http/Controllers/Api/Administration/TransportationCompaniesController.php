@@ -106,7 +106,7 @@ class TransportationCompaniesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $transportation = TransportationCompany::find($id);
+        $transportation = TransportationCompany::where('id', '!=', 1)->find($id);
 
         if(!$transportation){
             return response()->json(['response' => ['error' => ['Transportadora, no encontrada']]], 400);
