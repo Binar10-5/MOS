@@ -20,7 +20,7 @@ class OrdersController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware('permission:/list_orders')->only(['show', 'index']);
+        $this->middleware('permission:/list_orders')->only(['show', 'index', 'orderStatesList']);
         #$this->middleware('permission:/create_orders')->only(['store']);
         $this->middleware('permission:/update_orders')->only(['update']);
 
@@ -405,4 +405,10 @@ class OrdersController extends Controller
 
     }
 
+    public function orderStatesList()
+    {
+        $states = OrderState::get();
+
+        return response()->json(['response' => $states], 200);
+    }
 }

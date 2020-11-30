@@ -132,6 +132,8 @@ Route::middleware('auth:api')->group(function () {
     # Pedidos
     Route::apiResource('orders', 'Api\Administration\OrdersController')->only(['index', 'show', 'update']);
 
+    Route::get('orderState', 'Api\Administration\OrdersController@orderStatesList');
+
     # Colocar estado de entregado de la oreden
     Route::put('orderDelivered/{id}', 'Api\Administration\OrdersController@orderDelivered');
 
