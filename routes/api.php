@@ -85,6 +85,7 @@ Route::middleware('clint')->group(function () {
 
 
 
+
 });
 
 
@@ -160,6 +161,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('orderProducts', 'Api\Administration\ProductsController@orderProducts');
     Route::get('variantsByCategory', 'Api\Administration\ProductsController@variantListCategory');
 
+    # PQRS
+    Route::apiResource('pqrsAdmin', 'Api\Administration\PQRSController');
 
     # Listar variantes de el producto
     Route::get('productVariants/{id}', 'Api\Administration\ProductsController@variantList');
