@@ -417,8 +417,6 @@ class ClientsController extends Controller
         ->where('mt.id', $id)
         ->first();
 
-
-
         if($tutorial){
             $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code', 'products.variant_id', 'products.language_id',
             'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5',
