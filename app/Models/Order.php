@@ -77,7 +77,7 @@ class Order extends Model
 
     public function scopeSubtotal($query, $min, $max)
     {
-        if(!empty($min) && !empty($max)){
+        if(!empty($max)){
             $query->whereBetween('orders.subtotal', [$min, $max]);
         }
     }
