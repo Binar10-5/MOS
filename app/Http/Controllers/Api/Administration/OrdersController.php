@@ -357,6 +357,10 @@ class OrdersController extends Controller
         if(!$order){
             return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
         }
+
+        if($order->state_id != 3){
+            return response()->json(['response' => ['error' => ['El pedido solo se puede cancelar cuando está facturado.']]], 400);
+        }
         $products = OrderProducts::where('order_id', $order->id)->get();
 
         foreach ($products as $product) {
