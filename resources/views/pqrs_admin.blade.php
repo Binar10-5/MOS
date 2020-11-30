@@ -7,8 +7,9 @@
     <title>'new email'</title>
 </head>
 <body>
-    <H2>Saludos, {{$data['name']}}</H2><br>
+    <H2>Saludos, {{$data['admin_name']}}</H2><br>
     <p>
+        Cliente: {{$data['name']}} <br>
         Correo: {{$data['email']}} <br>
         Celular: {{$data['cell_phone']}}<br>
         Asunto: {{$data['subject']}}<br>
