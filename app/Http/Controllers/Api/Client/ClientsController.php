@@ -490,8 +490,8 @@ class ClientsController extends Controller
 
                 /*$validate_coupon->uses_number += 1;
                 $total -= $validate_coupon->discount_amount;
-                $coupon = $validate_coupon->id;
                 $validate_coupon->update();*/
+                $coupon = $validate_coupon->id;
             }
 
             // Si el sub total de la compra es mayor a 80, el delivery free de la ciudad es 0, osea que no se le suma a el total
@@ -584,6 +584,14 @@ class ClientsController extends Controller
         $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->first();
 
         return response()->json(['response' => $delivery], 200);
+
+    }
+
+    public function orderStateId()
+    {
+        $state = OrderState::get();
+
+        return response()->json(['response' => $state], 200);
 
     }
 

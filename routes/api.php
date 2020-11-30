@@ -68,6 +68,9 @@ Route::middleware('clint')->group(function () {
     # Valor minimo de el costo de envio
     Route::get('cityDeliveryFee', 'Api\Client\ClientsController@deliveryFeeClient');
 
+    # Lista de estados de la orden
+    Route::get('orderStateList', 'Api\Client\ClientsController@orderStateId');
+
     # Validar cupones (TEST)
     Route::post('validateCupon/{code}', 'Api\Client\ClientsController@validateCupon');
 
