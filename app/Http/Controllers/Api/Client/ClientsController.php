@@ -688,4 +688,12 @@ class ClientsController extends Controller
         return response()->json(['response' => 'Su solicitud a sido recibida, pronto estaremos en contacto con usted.'], 200);
     }
 
+    public function pqrsType()
+    {
+        $pqrs = DB::table('contact_type')->get();
+
+        return response()->json(['response' => $pqrs], 200);
+
+    }
+
 }

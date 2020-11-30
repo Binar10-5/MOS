@@ -86,6 +86,9 @@ Route::middleware('clint')->group(function () {
     # Crear PQRS
     Route::post('clientPQRS', 'Api\Client\ClientsController@pqrsClient');
 
+    # Lista de tipos de pqrs
+    Route::get('pqrsType', 'Api\Client\ClientsController@pqrsType');
+
 
 });
 
