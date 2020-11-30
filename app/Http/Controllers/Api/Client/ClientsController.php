@@ -561,6 +561,7 @@ class ClientsController extends Controller
                         'price' => $variant->price,
                         'discount' => $variant->discount,
                         'final_price' => $variant->final_price,
+                        'total' => (int)$variant->final_price * $product['quantity'],
                         'product_id' => $product['id'],
                         'quantity' => $product['quantity'],
                     ]);

@@ -216,7 +216,7 @@ class OrdersController extends Controller
             return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
         }
 
-        $order->products = OrderProducts::select('orders_products.name', 'orders_products.color', 'pv.principal_id', 'orders_products.price', 'orders_products.discount', 'orders_products.final_price', 'orders_products.quantity')
+        $order->products = OrderProducts::select('orders_products.name', 'orders_products.color', 'pv.principal_id', 'orders_products.price', 'orders_products.discount', 'orders_products.final_price', 'orders_products.quantity', 'orders_products.total as total_price')
         ->join('product_variants as pv', 'orders_products.product_id', 'pv.id')
         ->join('orders as o', 'orders_products.order_id', 'o.id')
         ->where('o.id', $order->id)
