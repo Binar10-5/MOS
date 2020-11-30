@@ -49,7 +49,7 @@ class PQRSController extends Controller
      */
     public function store(Request $request)
     {
-        $validator=\Validator::make($request->all(),[
+        /*$validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75',
             'last_name' => 'required|min:1|max:75',
             'email' => 'required|email',
@@ -96,10 +96,10 @@ class PQRSController extends Controller
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
             }
 
-            /*$send_email = SendEmailHelper::sendEmail('Correo de pqrs.', TemplatesHelper::pqrsData($data), $principal_email, array());
+            $send_email = SendEmailHelper::sendEmail('Correo de pqrs.', TemplatesHelper::pqrsData($data), $principal_email, array());
             if($send_email != 1){
                 return response()->json(['response' => ['error' => [$send_email]]], 400);
-            }*/
+            }
 
             # We generate the data to send the mail to the created user
             $data_2 = array(
@@ -122,18 +122,18 @@ class PQRSController extends Controller
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
             }
 
-            /*# Send email to admin
+            # Send email to admin
             $send_email = SendEmailHelper::sendEmail('Nuevo pqrs # '.$client_id, TemplatesHelper::pqrsDataAdmin($data_2), $principal_email, array());
             if($send_email != 1){
                 return response()->json(['response' => ['error' => [$send_email]]], 400);
-            }*/
+            }
         }catch(Exception $e){
             DB::rollback();
             return response()->json( ['response' => ['error' => ['Error al crear el cliente'], 'data' => [$e->getMessage(), $e->getFile(), $e->getLine()]]], 400);
         }
 
         DB::commit();
-        return response()->json(['response' => 'Su solicitud a sido recibida, pronto estaremos en contacto con usted.'], 200);
+        return response()->json(['response' => 'Su solicitud a sido recibida, pronto estaremos en contacto con usted.'], 200);*/
     }
 
     /**

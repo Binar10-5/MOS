@@ -83,7 +83,8 @@ Route::middleware('clint')->group(function () {
     # Detalle de tutoriales
     Route::get('tutorialsList/{id}', 'Api\Client\ClientsController@tutorialsDetail');
 
-
+    # Crear PQRS
+    Route::post('clientPQRS', 'Api\Client\ClientsController@pqrsClient');
 
 
 });
