@@ -274,7 +274,9 @@ class OrdersController extends Controller
         ));
 
         $order->transportation_company_id = request('transportation_company_id');
-        $order->tracking_number = request('tracking_number');
+        if(request('transportation_company_id') != 1){
+            $order->tracking_number = request('tracking_number');
+        }
         $order->state_id = 5;
         $order->tracking = json_encode($new_tracking);
         $order->update();
