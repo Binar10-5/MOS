@@ -114,13 +114,13 @@ class PayURequestController extends Controller
                         return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
                     }
 
-                    $variant->quantity += $product->quantity;
+                    $variant->quantity -= $product->quantity;
                     $variant->update();
                 }
 
                 if($order->coupon_id != null || $order->coupon_id != ''){
                     $coupon = Cupon::find($order->coupon_id);
-                    $coupon->uses_number -= 1;
+                    $coupon->uses_number += 1;
                     $coupon->update();
                 }
 

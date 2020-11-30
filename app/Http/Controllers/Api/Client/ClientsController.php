@@ -488,10 +488,10 @@ class ClientsController extends Controller
                     return response()->json(['response' => ['error' => ['El costo de el pedido tiene que ser mayor a '.$validate_coupon->minimal_cost.' para poder usar el cupón']]], 400);
                 }
 
-                $validate_coupon->uses_number -= 1;
+                /*$validate_coupon->uses_number += 1;
                 $total -= $validate_coupon->discount_amount;
                 $coupon = $validate_coupon->id;
-                $validate_coupon->update();
+                $validate_coupon->update();*/
             }
 
             // Si el sub total de la compra es mayor a 80, el delivery free de la ciudad es 0, osea que no se le suma a el total
@@ -562,8 +562,8 @@ class ClientsController extends Controller
                     ]);
 
 
-                    $variant->quantity -= $product['quantity'];
-                    $variant->update();
+                    /*$variant->quantity -= $product['quantity'];
+                    $variant->update();*/
                 }
                 array_push($valid_array, $product['id']);
             }
