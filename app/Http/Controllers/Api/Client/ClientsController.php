@@ -643,7 +643,7 @@ class ClientsController extends Controller
             # Send email
 
             # Send Notification
-            $mail = Mail::to(request('email'))->send(new SendEmails('pqrs_client', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
+            $mail = Mail::to(request('email'))->send(new SendEmails('pqrs_client', 'PQRS MOS.', 'noreply@mosbeautyshop.com', $data));
 
             if($mail){
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
