@@ -656,7 +656,7 @@ class ClientsController extends Controller
 
             # We generate the data to send the mail to the created user
             $data_2 = array(
-                'admin_name' => 'admin_name',
+                'admin_name' => 'Admin PQRS',
                 'name' => request('name')." ".request('last_name'),
                 'email' => request('email'),
                 'cell_phone' => request('cell_phone'),
@@ -666,6 +666,7 @@ class ClientsController extends Controller
                 'pqrs_id' => $client_id,
                 'message' => request('message')
             );
+            #$principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
             $principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
