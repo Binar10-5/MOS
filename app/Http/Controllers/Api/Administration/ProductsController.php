@@ -45,6 +45,14 @@ class ProductsController extends Controller
             ->join('brands as b', 'm_products.brand_id', 'b.id')
             ->name(request('name'))
             ->mState(request('m_state'))
+            ->category1(request('category1_id'))
+            ->category2(request('category2_id'))
+            ->category3(request('category3_id'))
+            #->priceRange(request('min'), request('max'))
+            #->favorite(request('favorite'))
+            #->newProduct(request('new_product'))
+            ->brand(request('brand'))
+            #->discount(request('discount'))
             ->paginate(8);
 
             foreach ($products as $product) {
