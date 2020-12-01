@@ -72,7 +72,7 @@ Route::middleware('clint')->group(function () {
     Route::get('orderStateList', 'Api\Client\ClientsController@orderStateId');
 
     # Vlidar existencia de los productos
-    Route::get('validateProductExistence', 'Api\Client\ClientsController@validateProductExistence');
+    Route::post('validateProductExistence', 'Api\Client\ClientsController@validateProductExistence');
 
     # Validar cupones (TEST)
     Route::post('validateCupon/{code}', 'Api\Client\ClientsController@validateCupon');
