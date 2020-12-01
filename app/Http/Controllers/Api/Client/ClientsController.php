@@ -698,4 +698,19 @@ class ClientsController extends Controller
 
     }
 
+    public function validateProductExistence(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'products' => 'required|array'
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $products = ProductVariant::whereIn('id', request('products'))->get();
+
+        return response()->json(['response' => $products], 200);
+    }
+
 }
