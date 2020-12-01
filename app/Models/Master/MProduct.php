@@ -28,21 +28,21 @@ class MProduct extends Model
     public function scopeCategory1($query, $category1)
     {
         if(!empty($category1)){
-            $query->where('c1.category1_id', $category1);
+            $query->where('m_products.category1_id', $category1);
         }
     }
 
     public function scopeCategory2($query, $category2)
     {
         if(!empty($category2)){
-            $query->where('c2.category2_id', $category2);
+            $query->where('m_products.category2_id', $category2);
         }
     }
 
     public function scopeCategory3($query, $category3)
     {
         if(!empty($category3)){
-            $query->where('c3.category3_id', $category3);
+            $query->where('m_products.category3_id', $category3);
         }
     }
 
