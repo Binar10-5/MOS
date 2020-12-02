@@ -128,7 +128,7 @@ class ClientsController extends Controller
         ->brand(json_decode(request('brands')))
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->paginate(8);
 
