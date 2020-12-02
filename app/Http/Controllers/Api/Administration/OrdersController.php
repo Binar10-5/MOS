@@ -258,7 +258,7 @@ class OrdersController extends Controller
             return response()->json(['response' => ['error' => ['Pedido no encontrado']]], 400);
         }
 
-        if($order->state_id != 3 && $order->state_id != 4 && $order->state_id != 5){
+        if($order->state_id != 3 && $order->state_id != 5){
             return response()->json(['response' => ['error' => ['El pedido no está facturado']]], 400);
         }
 
