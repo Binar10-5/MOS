@@ -54,6 +54,7 @@ class OrdersController extends Controller
             ->created(request('date_start'), request('date_end'))
             ->facturationOrder(request('facturation_order'))
             ->totalOrder(request('total_order'))
+            ->orderBy('created_at', 'desc')
             ->paginate(8);
         }else{
             $orders = Order::code(request('code'))
@@ -68,6 +69,7 @@ class OrdersController extends Controller
             ->created(request('date_start'), request('date_end'))
             ->facturationOrder(request('facturation_order'))
             ->totalOrder(request('total_order'))
+            ->orderBy('created_at', 'desc')
             ->get();
         }
 

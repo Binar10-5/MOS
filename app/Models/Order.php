@@ -68,6 +68,13 @@ class Order extends Model
         }
     }
 
+    public function scopeOrdeByDate($query, $created_at)
+    {
+        if(!empty($created_at)){
+            $query->orderBy('orders.created_at', $created_at);
+        }
+    }
+
     public function scopeTotal($query, $min, $max)
     {
         if(!empty($max)){
