@@ -340,7 +340,7 @@ class OrdersController extends Controller
             'reason'=> request('reason')
         ));
 
-        $order->state_id = $state->id;
+        $order->state_id = $new_state->id;
         $order->tracking = json_encode($new_tracking);
         $order->update();
 
