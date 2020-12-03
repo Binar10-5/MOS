@@ -171,7 +171,7 @@ class ClientsController extends Controller
 
     public function minAndMax(Request $request)
     {
-        $brands = Product::select('mp.brand_id', 'vp.price')
+        $brands = Product::select('mp.brand_id', 'vp.final_price')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
@@ -190,8 +190,8 @@ class ClientsController extends Controller
 
         $brands_collect = collect($brands)->pluck('brand_id');
 
-        $min = collect($brands)->min('price');
-        $max = collect($brands)->max('price');
+        $min = collect($brands)->min('final_price');
+        $max = collect($brands)->max('final_price');
 
 
         return response()->json(['min' => $min, 'max' => $max], 200);

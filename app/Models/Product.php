@@ -102,7 +102,7 @@ class Product extends Model
     public function scopePriceRange($query, $min, $max)
     {
         if(!empty($min) && !empty($max)){
-            $query->whereBetween('vp.price', [$min, $max]);
+            $query->whereBetween('vp.final_price', [$min, $max]);
         }
     }
 
