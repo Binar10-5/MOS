@@ -146,6 +146,7 @@ class ClientsController extends Controller
         ->priceRange(request('min'), request('max'))
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
+        ->where('vp.state_id', 1)
         ->where('products.state_id', 1)
         ->language($this->language)
         ->get();
@@ -183,7 +184,7 @@ class ClientsController extends Controller
         ->brand(json_decode(request('brands')))
         ->discount(request('discount'))
         ->where('mp.state_id', 1)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->get();
 
@@ -210,7 +211,7 @@ class ClientsController extends Controller
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('vp.id', $id)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->first();
 
@@ -222,7 +223,7 @@ class ClientsController extends Controller
         #->vState(request('v_state'))
         ->where('mc1.state_id', 1)
         ->where('vp.id', $id)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->get();
 
@@ -234,7 +235,7 @@ class ClientsController extends Controller
         #->vState(request('v_state'))
         ->where('mc2.state_id', 1)
         ->where('vp.id', $id)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->get();
 
@@ -246,7 +247,7 @@ class ClientsController extends Controller
         #->vState(request('v_state'))
         ->where('mc3.state_id', 1)
         ->where('vp.id', $id)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->get();
 
@@ -269,7 +270,7 @@ class ClientsController extends Controller
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('mp.id', $product->principal_id)
-        ->where('products.state_id', 1)
+        ->where('vp.state_id', 1)
         ->language($this->language)
         ->get();
 
