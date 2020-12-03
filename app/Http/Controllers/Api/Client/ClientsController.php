@@ -494,8 +494,8 @@ class ClientsController extends Controller
                 }
 
                 /*$validate_coupon->uses_number += 1;
-                $total -= $validate_coupon->discount_amount;
                 $validate_coupon->update();*/
+                $total -= $validate_coupon->discount_amount;
                 $coupon = $validate_coupon->id;
             }
 
