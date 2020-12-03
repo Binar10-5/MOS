@@ -57,7 +57,7 @@ class CuponsController extends Controller
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:200',
             'description' => 'required',
-            'code' => 'bail|required|max:20',
+            'code' => 'bail|required|max:20|unique:cupons,code',
             'minimal_cost' => 'required|max:20',
             'maximum_uses' => 'required',
             'discount_amount' => 'required|max:20',
