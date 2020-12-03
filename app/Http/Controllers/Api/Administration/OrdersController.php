@@ -387,6 +387,9 @@ class OrdersController extends Controller
         if($order->coupon_id != null || $order->coupon_id != ''){
             $coupon = Cupon::find($order->coupon_id);
             $coupon->uses_number -= 1;
+            if($coupon->state == 2){
+                $coupon->state = 1;
+            }
             $coupon->update();
         }
 
