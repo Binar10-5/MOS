@@ -485,7 +485,7 @@ class ClientsController extends Controller
                     return response()->json(['response' => ['error' => ['El cupón no existe']]], 400);
                 }
 
-                if($validate_coupon->uses_number <= 0){
+                if($validate_coupon->uses_number >= $validate_coupon->maximum_uses){
                     return response()->json(['response' => ['error' => ['El cupón ya alcanzó un limite de usos']]], 400);
                 }
 
