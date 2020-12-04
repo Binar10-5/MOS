@@ -512,12 +512,12 @@ class ClientsController extends Controller
             }else{
                 $delivery_fee = 0;
             }
-            $order_number = Order::max('order_number');
+            $order_number = Order::orderBy('id', 'desc')->first();
 
-            if(substr($order_number, 4) <= 0){
+            if(substr($order_number->order_number, 4) <= 0){
                 $order_number = 100000;
             }else{
-                $order_number = substr(Order::max('order_number'), 4) + 1;
+                $order_number->order_number = substr(Order::max('order_number'), 4) + 1;
             }
 
             $new_state = OrderState::find(1);
