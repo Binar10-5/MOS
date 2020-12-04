@@ -36,10 +36,12 @@ class TransportationCompaniesController extends Controller
         if(request('paginate')){
             $transportations = TransportationCompany::name(request('name'))
             ->state(request('state'))
+            ->orderBy('id', 'desc')
             ->paginate(8);
         }else{
             $transportations = TransportationCompany::name(request('name'))
             ->state(request('state'))
+            ->orderBy('id', 'desc')
             ->get();
         }
 
