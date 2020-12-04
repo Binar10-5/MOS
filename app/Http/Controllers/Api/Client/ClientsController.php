@@ -508,7 +508,13 @@ class ClientsController extends Controller
             }else{
                 $delivery_fee = 0;
             }
-            $order_number = Order::max('order_number') + 1;
+            $order_number = Order::max('order_number');
+
+            if($order_number <= 0){
+                $order_number = 100000;
+            }else{
+                $order_number = Order::max('order_number') + 1;
+            }
 
             $new_state = OrderState::find(1);
 
