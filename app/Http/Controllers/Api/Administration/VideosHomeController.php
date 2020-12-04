@@ -166,7 +166,6 @@ class VideosHomeController extends Controller
             $video->name = request('name');
             $video->description = request('description');
             $video->video = request('video');
-            $video->language_id = $this->language;
             $video->update();
         }catch(Exception $e){
             DB::rollback();
