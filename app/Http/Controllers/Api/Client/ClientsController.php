@@ -166,7 +166,7 @@ class ClientsController extends Controller
         }
 
 
-        return response()->json(['response' => $products, 'brands' => $all_brands, 'min' => $min, 'max' => $max], 200);
+    return response()->json(['response' => $products, 'brands' => $all_brands/*, 'min' => $min, 'max' => $max*/], 200);
     }
 
     public function minAndMax(Request $request)
