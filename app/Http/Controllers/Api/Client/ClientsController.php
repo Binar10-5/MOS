@@ -251,9 +251,11 @@ class ClientsController extends Controller
         ->language($this->language)
         ->get();
 
-        $product->categories_1 = $cat1;
-        $product->categories_2 = $cat2;
-        $product->categories_3 = $cat3;
+        if($product){
+            $product->categories_1 = $cat1;
+            $product->categories_2 = $cat2;
+            $product->categories_3 = $cat3;
+        }
 
         if(!$product){
             return response()->json(['response' => ['error' => 'Producto no encontrado']], 400);
@@ -274,7 +276,9 @@ class ClientsController extends Controller
         ->language($this->language)
         ->get();
 
-        $product->colors = $colors;
+        if($product){
+            $product->colors = $colors;
+        }
 
         return response()->json(['response' => $product], 200);
     }
