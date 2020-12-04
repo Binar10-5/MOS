@@ -22,10 +22,12 @@ class SubscribersController extends Controller
         if(request('paginate')){
             $subscribers = ClientEmail::email(request('email'))
             ->range(request('date_start'), request('date_end'))
+            ->orderBy('id', 'desc')
             ->paginate(8);
         }else{
             $subscribers = ClientEmail::email(request('email'))
             ->range(request('date_start'), request('date_end'))
+            ->orderBy('id', 'desc')
             ->get();
         }
 
