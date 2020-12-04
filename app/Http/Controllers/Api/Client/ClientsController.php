@@ -513,7 +513,7 @@ class ClientsController extends Controller
             if($order_number <= 0){
                 $order_number = 100000;
             }else{
-                $order_number = Order::max('order_number') + 1;
+                $order_number = substr(Order::max('order_number'), -4) + 1;
             }
 
             $new_state = OrderState::find(1);
