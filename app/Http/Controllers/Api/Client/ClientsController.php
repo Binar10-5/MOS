@@ -251,9 +251,11 @@ class ClientsController extends Controller
         ->language($this->language)
         ->get();
 
-        $product->categories_1 = $cat1;
-        $product->categories_2 = $cat2;
-        $product->categories_3 = $cat3;
+        if($product){
+            $product->categories_1 = $cat1;
+            $product->categories_2 = $cat2;
+            $product->categories_3 = $cat3;
+        }
 
         if(!$product){
             return response()->json(['response' => ['error' => 'Producto no encontrado']], 400);
@@ -274,7 +276,9 @@ class ClientsController extends Controller
         ->language($this->language)
         ->get();
 
-        $product->colors = $colors;
+        if($product){
+            $product->colors = $colors;
+        }
 
         return response()->json(['response' => $product], 200);
     }
@@ -508,12 +512,12 @@ class ClientsController extends Controller
             }else{
                 $delivery_fee = 0;
             }
-            $order_number = Order::max('order_number');
+            $order_number = Order::orderBy('id', 'desc')->first();
 
-            if($order_number <= 0){
-                $order_number = 100000;
+            if(substr($order_number->order_number, 4) <= 0){
+                $new_order_number = 100000;
             }else{
-                $order_number = substr(Order::max('order_number'), -8) + 1;
+                $new_order_number = substr($order_number->order_number, 4) + 1;
             }
 
             $new_state = OrderState::find(1);
@@ -673,8 +677,8 @@ class ClientsController extends Controller
                 'pqrs_id' => $client_id,
                 'message' => request('message')
             );
-            #$principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
-            $principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
+            $principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
+            #$principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
             $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));
