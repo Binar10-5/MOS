@@ -21,6 +21,7 @@ use App\Models\PqrsClients;
 use App\Models\ProductVariant;
 use App\Models\Tutorial;
 use App\Models\VideoHome;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -722,6 +723,45 @@ class ClientsController extends Controller
         $products = ProductVariant::whereIn('id', request('products'))->get();
 
         return response()->json(['response' => $products], 200);
+    }
+
+    public function validateSubcriber(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'email' => 'required',
+            'dni' => 'required'
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $client = ClientEmail::where('email', request('email'))->where('used', 0)->first();
+
+
+        if(!$client){
+            return response()->json(['response' => ['error' => ['No está suscrito o ya usó el descuento']]], 400);
+        }
+
+        $validate_email_order = Order::where('client_email', request('email'))->where('state_id', 4)->first();
+
+        if($validate_email_order){
+            return response()->json(['response' => ['error' => ['El correo ya se usó para una compra']]], 400);
+        }
+
+        $validate_dni_order = Order::where('client_dni', request('dni'))->where('state_id', 4)->first();
+
+        if($validate_dni_order){
+            return response()->json(['response' => ['error' => ['El dni ya se usó para una compra']]], 400);
+        }
+
+        $offer = Offer::where('id', 1)->where('state', 1)->first();
+
+        if(!$offer){
+            return response()->json(['response' => ['error' => ['La oferta está desactivada']]], 400);
+        }
+
+        return response()->json(['response' => $offer], 200);
     }
 
 }
