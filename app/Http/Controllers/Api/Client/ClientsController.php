@@ -390,7 +390,8 @@ class ClientsController extends Controller
             ->where('mt.state', 1)
             ->language($this->language)
             ->orderBy('mt.created_at', 'desc')
-            ->paginate(8);
+        ->where('tutorials.state', 1)
+        ->paginate(8);
         }else{
             $tutorials = Tutorial::select('tutorials.title', 'mt.id as principal_id', 'mt.state', 'tutorials.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
             ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
@@ -398,7 +399,8 @@ class ClientsController extends Controller
             ->where('mt.state', 1)
             ->language($this->language)
             ->orderBy('mt.created_at', 'desc')
-            ->get();
+        ->where('tutorials.state', 1)
+        ->get();
         }
 
         foreach ($tutorials as $tutorial) {
