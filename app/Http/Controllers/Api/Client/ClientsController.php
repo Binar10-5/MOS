@@ -490,10 +490,10 @@ class ClientsController extends Controller
             $var_discount = null;
 
             if($client){
-                $validate_email_order = Order::where('client_email', request('email'))->where('state_id', 4)->first();
+                $validate_email_order = Order::where('client_email', request('client_email'))->where('state_id', 4)->first();
 
                 if(!$validate_email_order){
-                    $validate_dni_order = Order::where('client_dni', request('dni'))->where('state_id', 4)->first();
+                    $validate_dni_order = Order::where('client_dni', request('client_dni'))->where('state_id', 4)->first();
 
                     if(!$validate_dni_order){
                         $offer = Offer::where('id', 1)->where('state', 1)->first();
