@@ -111,7 +111,7 @@ class PayURequestController extends Controller
                             'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->product_id,
                             'type'=> 2
                         ]);
-                        return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
+                        return response()->json(['response' => ['error' => ['Variante de producto no encontrada']]], 400);
                     }
 
                     $variant->quantity -= $product->quantity;

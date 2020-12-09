@@ -272,6 +272,7 @@ class OrdersController extends Controller
             'state_id'=> $new_state->id,
             'state'=> $new_state->name,
             'state_date'=> date('Y-m-d H:i:s'),
+            'discount_subscriber'=> 'null',
             'reason'=> ''
         ));
 
@@ -341,6 +342,7 @@ class OrdersController extends Controller
             'state_id'=> $new_state->id,
             'state'=> $new_state->name,
             'state_date'=> date('Y-m-d H:i:s'),
+            'discount_subscriber'=> 'null',
             'reason'=> request('reason')
         ));
 
