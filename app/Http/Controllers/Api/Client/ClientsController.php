@@ -486,9 +486,8 @@ class ClientsController extends Controller
         try{
 
             # Validar si tiene descuento por primera compra y estar suscrito
-            $client = ClientEmail::where('email', request('email'))->where('used', 0)->first();
+            $client = ClientEmail::where('email', request('client_email'))->where('used', 0)->first();
             $var_discount = null;
-
             if($client){
                 $validate_email_order = Order::where('client_email', request('client_email'))->where('state_id', 4)->first();
 
@@ -499,7 +498,7 @@ class ClientsController extends Controller
                         $offer = Offer::where('id', 1)->where('state', 1)->first();
 
                         if($offer){
-                            $var_discount = (int)$subtotal * (int)$offer->minimal_cost;
+                            $var_discount = $subtotal * $offer->discount_amount;
                             $subtotal -= (int)$var_discount;
                         }
                     }
@@ -539,10 +538,10 @@ class ClientsController extends Controller
             }
             $order_number = Order::orderBy('id', 'desc')->first();
 
-            if(substr($order_number->order_number, 4) <= 0){
+            if(substr($order_number->order_number, 8) <= 0){
                 $new_order_number = 100000;
             }else{
-                $new_order_number = substr($order_number->order_number, 4) + 1;
+                $new_order_number = substr($order_number->order_number, 8) + 1;
             }
 
 
