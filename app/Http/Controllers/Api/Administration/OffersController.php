@@ -14,9 +14,7 @@ class OffersController extends Controller
      */
     public function index()
     {
-        $this->middleware('permission:/list_cupon')->only(['show', 'index']);
-        $this->middleware('permission:/create_cupon')->only(['store']);
-        $this->middleware('permission:/update_cupon')->only(['update', 'destroy']);
+
     }
 
     /**
