@@ -538,10 +538,10 @@ class ClientsController extends Controller
             }
             $order_number = Order::orderBy('id', 'desc')->first();
 
-            if(substr($order_number->order_number, 8) <= 0){
+            if(substr($order_number->order_number, 4) <= 0){
                 $new_order_number = 100000;
             }else{
-                $new_order_number = substr($order_number->order_number, 8) + 1;
+                $new_order_number = substr($order_number->order_number, 4) + 1;
             }
 
 
@@ -703,8 +703,8 @@ class ClientsController extends Controller
                 'pqrs_id' => $client_id,
                 'message' => request('message')
             );
-            #$principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
-            $principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
+            $principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
+            #$principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
             $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));

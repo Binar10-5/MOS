@@ -128,11 +128,6 @@
 		}
 	</style>
 </head>
-<<<<<<< HEAD
-<body>
-    <H2>Hola {{$data['name']}} Email: {{$data['email']}}</H2>
-    <H1><a href="https://dev.myothersidebeauty.com/forgetPass/{{$data['email_code']}}/5">Link de verificación de cuenta</a></H1>
-=======
 <body class="clean-body" style="margin: 0; padding: 0; -webkit-text-size-adjust: 100%; background-color: #FFFFFF;">
 <!--[if IE]><div class="ie-browser"><![endif]-->
 <table bgcolor="#FFFFFF" cellpadding="0" cellspacing="0" class="nl-container" role="presentation" style="table-layout: fixed; vertical-align: top; min-width: 320px; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #FFFFFF; width: 100%;" valign="top" width="100%">
@@ -242,6 +237,5 @@
 </tbody>
 </table>
 <!--[if (IE)]></div><![endif]-->
->>>>>>> master
 </body>
 </html>
