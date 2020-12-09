@@ -21,6 +21,7 @@ use App\Models\PqrsClients;
 use App\Models\ProductVariant;
 use App\Models\Tutorial;
 use App\Models\VideoHome;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -389,7 +390,8 @@ class ClientsController extends Controller
             ->where('mt.state', 1)
             ->language($this->language)
             ->orderBy('mt.created_at', 'desc')
-            ->paginate(8);
+        ->where('tutorials.state', 1)
+        ->paginate(8);
         }else{
             $tutorials = Tutorial::select('tutorials.title', 'mt.id as principal_id', 'mt.state', 'tutorials.description', 'tutorials.image', 'mt.created_at', 'mt.updated_at')
             ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
@@ -397,7 +399,8 @@ class ClientsController extends Controller
             ->where('mt.state', 1)
             ->language($this->language)
             ->orderBy('mt.created_at', 'desc')
-            ->get();
+        ->where('tutorials.state', 1)
+        ->get();
         }
 
         foreach ($tutorials as $tutorial) {
@@ -422,6 +425,7 @@ class ClientsController extends Controller
         'tutorials.principal_id', 'tutorials.language_id', 'tutorials.state')
         ->join('m_tutorials as mt', 'tutorials.principal_id', 'mt.id')
         ->where('mt.state', 1)
+        ->where('tutorials.state', 1)
         ->language($this->language)
         ->where('mt.id', $id)
         ->first();
@@ -480,6 +484,27 @@ class ClientsController extends Controller
         }
         DB::beginTransaction();
         try{
+
+            # Validar si tiene descuento por primera compra y estar suscrito
+            $client = ClientEmail::where('email', request('email'))->where('used', 0)->first();
+            $var_discount = null;
+
+            if($client){
+                $validate_email_order = Order::where('client_email', request('client_email'))->where('state_id', 4)->first();
+
+                if(!$validate_email_order){
+                    $validate_dni_order = Order::where('client_dni', request('client_dni'))->where('state_id', 4)->first();
+
+                    if(!$validate_dni_order){
+                        $offer = Offer::where('id', 1)->where('state', 1)->first();
+
+                        if($offer){
+                            $var_discount = (int)$subtotal * (int)$offer->minimal_cost;
+                            $subtotal -= (int)$var_discount;
+                        }
+                    }
+                }
+            }
             $total = $subtotal;
             $coupon = null;
             if(!empty(request('coupon'))){
@@ -520,6 +545,7 @@ class ClientsController extends Controller
                 $new_order_number = substr($order_number->order_number, 4) + 1;
             }
 
+
             $new_state = OrderState::find(1);
 
             $tracking = [array(
@@ -528,6 +554,7 @@ class ClientsController extends Controller
                 'state_id'=> $new_state->id,
                 'state'=> $new_state->name,
                 'state_date'=> date('Y-m-d H:i:s'),
+                'discount_subscriber'=> $var_discount,
                 'reason'=> ''
             )];
 
@@ -677,8 +704,8 @@ class ClientsController extends Controller
                 'pqrs_id' => $client_id,
                 'message' => request('message')
             );
-            $principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
-            #$principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
+            #$principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
+            $principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
             $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));
@@ -722,6 +749,45 @@ class ClientsController extends Controller
         $products = ProductVariant::whereIn('id', request('products'))->get();
 
         return response()->json(['response' => $products], 200);
+    }
+
+    public function validateSubcriber(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'email' => 'required',
+            'dni' => 'required'
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        $client = ClientEmail::where('email', request('email'))->where('used', 0)->first();
+
+
+        if(!$client){
+            return response()->json(['response' => ['error' => ['No está suscrito o ya usó el descuento']]], 400);
+        }
+
+        $validate_email_order = Order::where('client_email', request('email'))->where('state_id', 4)->first();
+
+        if($validate_email_order){
+            return response()->json(['response' => ['error' => ['El correo ya se usó para una compra']]], 400);
+        }
+
+        $validate_dni_order = Order::where('client_dni', request('dni'))->where('state_id', 4)->first();
+
+        if($validate_dni_order){
+            return response()->json(['response' => ['error' => ['El dni ya se usó para una compra']]], 400);
+        }
+
+        $offer = Offer::where('id', 1)->where('state', 1)->first();
+
+        if(!$offer){
+            return response()->json(['response' => ['error' => ['La oferta está desactivada']]], 400);
+        }
+
+        return response()->json(['response' => $offer], 200);
     }
 
 }

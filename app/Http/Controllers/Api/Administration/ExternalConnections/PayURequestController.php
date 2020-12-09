@@ -111,7 +111,7 @@ class PayURequestController extends Controller
                             'description'=> 'No se encontró la variante de el producto en el momento de devolver el inventario, el id es el: '.$product->product_id,
                             'type'=> 2
                         ]);
-                        return response()->json(['response' => ['error' => ['Variante de producto no encontradaa']]], 400);
+                        return response()->json(['response' => ['error' => ['Variante de producto no encontrada']]], 400);
                     }
 
                     $variant->quantity -= $product->quantity;
@@ -136,6 +136,21 @@ class PayURequestController extends Controller
                 $new_state = OrderState::find(3);
                 $new_tracking = json_decode($order->tracking);
 
+                if(isset(json_decode($order->tracking)[0]->discount_subscriber)){
+                    $new_t = json_decode($order->tracking)[0]->discount_subscriber;
+                }else{
+                    $new_t = 0;
+                }
+
+                if($new_t != null && $new_t != 0){
+                    $client = ClientEmail::where('email', $order->client_email)->where('used', 0)->first();
+                    if($client){
+                        $client->used = 1;
+                        $client->dni = $order->client_dni;
+                        $client->update();
+                    }
+                }
+
                 array_push($new_tracking, array(
                     'last_id'=> $state->id,
                     'last_state'=> $state->name,
@@ -150,6 +165,8 @@ class PayURequestController extends Controller
                 $order->facturation_date = date('Y-m-d H:i:s');
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
+
+
 
                 # We generate the data to send the mail to the factured pay
                 $data = array(

@@ -89,6 +89,9 @@ Route::middleware('clint')->group(function () {
     # Crear PQRS
     Route::post('clientPQRS', 'Api\Client\ClientsController@pqrsClient');
 
+    # Validar si tiene oferta de primera compra
+    Route::post('validateOffer', 'Api\Client\ClientsController@validateSubcriber');
+
     # Lista de tipos de pqrs
     Route::get('pqrsType', 'Api\Client\ClientsController@pqrsType');
 
