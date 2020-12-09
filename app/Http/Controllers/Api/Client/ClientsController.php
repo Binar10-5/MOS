@@ -484,6 +484,27 @@ class ClientsController extends Controller
         }
         DB::beginTransaction();
         try{
+
+            # Validar si tiene descuento por primera compra y estar suscrito
+            $client = ClientEmail::where('email', request('email'))->where('used', 0)->first();
+            $var_discount = null;
+
+            if($client){
+                $validate_email_order = Order::where('client_email', request('email'))->where('state_id', 4)->first();
+
+                if(!$validate_email_order){
+                    $validate_dni_order = Order::where('client_dni', request('dni'))->where('state_id', 4)->first();
+
+                    if(!$validate_dni_order){
+                        $offer = Offer::where('id', 1)->where('state', 1)->first();
+
+                        if($offer){
+                            $var_discount = (int)$subtotal * (int)$offer->minimal_cost;
+                            $subtotal -= (int)$var_discount;
+                        }
+                    }
+                }
+            }
             $total = $subtotal;
             $coupon = null;
             if(!empty(request('coupon'))){
@@ -523,29 +544,6 @@ class ClientsController extends Controller
             }else{
                 $new_order_number = substr($order_number->order_number, 4) + 1;
             }
-
-            # Validar si tiene descuento por primera compra y estar suscrito
-            $client = ClientEmail::where('email', request('email'))->where('used', 0)->first();
-            $var_discount = null;
-
-            if($client){
-                $validate_email_order = Order::where('client_email', request('email'))->where('state_id', 4)->first();
-
-                if(!$validate_email_order){
-                    $validate_dni_order = Order::where('client_dni', request('dni'))->where('state_id', 4)->first();
-
-                    if(!$validate_dni_order){
-                        $offer = Offer::where('id', 1)->where('state', 1)->first();
-
-                        if($offer){
-                            $var_discount = $total * $offer->minimal_cost;
-                            $total -= $var_discount;
-                        }
-                    }
-                }
-            }
-
-
 
 
             $new_state = OrderState::find(1);
