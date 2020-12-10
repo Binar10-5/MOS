@@ -149,6 +149,9 @@ Route::middleware('auth:api')->group(function () {
     # Categorías Nivel 1
     Route::apiResource('categories1', 'Api\Administration\Categories1Controller');
 
+    # Ofertas
+    Route::apiResource('offers', 'Api\Administration\OffersController');
+
     # Categorías Nivel 2
     Route::apiResource('categories2', 'Api\Administration\Categories2Controller');
 
