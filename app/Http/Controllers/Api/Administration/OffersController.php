@@ -23,7 +23,7 @@ class OffersController extends Controller
     {
         $offers = Offer::get();
 
-        return response()->json(['response' => $offers, 200]);
+        return response()->json(['response' => $offers], 200);
     }
 
     /**
@@ -71,7 +71,7 @@ class OffersController extends Controller
     {
         $offer = Offer::find($id);
 
-        return response()->json(['response' => $offer, 200]);
+        return response()->json(['response' => $offer], 200);
     }
 
     /**
