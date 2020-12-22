@@ -48,9 +48,9 @@ class PayURequestController extends Controller
         try{
             if(!$order){
                 $error = 1;
-                throw new Exception("No se encontró la orden que manda el reference_sale de payU '.request('reference_sale')");
+                throw new Exception("No se encontró la orden que manda el reference_sale de payU ". request('reference_sale'));
                 Error::create([
-                    'description'=> 'No se encontró la orden que manda el reference_sale de payU '.request('reference_sale'),
+                    'description'=> 'No se encontró la orden que manda el reference_sale de payU '. request('reference_sale'),
                     'type'=> 1
                 ]);
                 return response()->json(['response' => ['error' => ['Orden no existente']]], 400);
