@@ -26,7 +26,10 @@ class PayURequestController extends Controller
 
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
-
+        Error::create([
+            'description'=> 'Entró la orden '. json_encode($request->all()),
+            'type'=> 5
+        ]);
         # We generate the data to send the mail to the factured pay
         /*$data = array(
             'name' => 'Ronaldo',
