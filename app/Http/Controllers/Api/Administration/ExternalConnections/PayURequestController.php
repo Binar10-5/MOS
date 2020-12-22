@@ -27,10 +27,6 @@ class PayURequestController extends Controller
 
         $error =null;
         $order = Order::where('order_number', request('reference_sale'))->first();
-        Error::create([
-            'description'=> 'Entró la orden '. json_encode($request->all()),
-            'type'=> 5
-        ]);
         # We generate the data to send the mail to the factured pay
         /*$data = array(
             'name' => 'Ronaldo',
@@ -169,12 +165,6 @@ class PayURequestController extends Controller
                 $order->facturation_date = date('Y-m-d H:i:s');
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
-
-                $order = Order::where('order_number', request('reference_sale'))->first();
-                Error::create([
-                    'description'=> 'Entró la orden y se actualizó'. json_encode($request->all()),
-                    'type'=> 5
-                ]);
 
                 # We generate the data to send the mail to the factured pay
                 $data = array(
