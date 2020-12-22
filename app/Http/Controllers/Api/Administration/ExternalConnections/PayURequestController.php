@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Helpers\SendEmails;
+use App\Models\ClientEmail;
 class PayURequestController extends Controller
 {
     public function getPaymentState(Request $request)
@@ -169,7 +170,11 @@ class PayURequestController extends Controller
                 $order->tracking = json_encode($new_tracking);
                 $order->update();
 
-
+                $order = Order::where('order_number', request('reference_sale'))->first();
+                Error::create([
+                    'description'=> 'Entró la orden y se actualizó'. json_encode($request->all()),
+                    'type'=> 5
+                ]);
 
                 # We generate the data to send the mail to the factured pay
                 $data = array(
