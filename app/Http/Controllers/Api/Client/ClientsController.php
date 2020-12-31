@@ -707,7 +707,7 @@ class ClientsController extends Controller
             #$principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
-            $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));
+            $mail = Mail::to('myothersidebeauty@hotmail.com')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));
 
             if($mail){
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
