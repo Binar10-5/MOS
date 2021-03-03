@@ -25,14 +25,19 @@ class OrdersController extends Controller
         $this->middleware('permission:/update_orders')->only(['update']);
 
         // Get the languaje id
-        $language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
+            $this->language = $language->id;
         }else if($request->header('language-key') == ''){
             $this->language = '';
         }else{
             $this->language = 1;
         }
+
+
     }
     /**
      * Display a listing of the resource.

@@ -33,11 +33,16 @@ class ClientsController extends Controller
     public function __construct(Request $request)
     {
         // Get the languaje id
-        $language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id', 'languages.country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else{
             $this->language = 1;
+            $this->country = 1;
         }
     }
 
@@ -361,6 +366,7 @@ class ClientsController extends Controller
     {
         $cities = City::select('id', 'name', 'department_name', 'delivery_fee', 'delivery_time')
         ->where('state', 1)
+        ->where('country_id', $this->country)
         ->get();
 
         return response()->json(['response' => $cities], 200);

@@ -24,6 +24,9 @@ Route::post('updateFirstPass', 'Api\Helpers\ValidationController@updateFirstPass
 # Ruta para obtener la lista de idiomas
 Route::get('languages', 'Api\Free\ListsFreeController@language');
 
+# Ruta para obtener la lista de países
+Route::get('countries', 'Api\Free\ListsFreeController@country');
+
 # Olvido de contraseña
 Route::post('forgetPass', 'Api\Helpers\ValidationController@forgetPassword');
 
