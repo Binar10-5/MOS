@@ -27,6 +27,9 @@ Route::get('languages', 'Api\Free\ListsFreeController@language');
 # Ruta para obtener la lista de países
 Route::get('countries', 'Api\Free\ListsFreeController@country');
 
+# Ruta para obtener la lista de países
+Route::get('currencies', 'Api\Free\ListsFreeController@currency');
+
 # Olvido de contraseña
 Route::post('forgetPass', 'Api\Helpers\ValidationController@forgetPassword');
 
