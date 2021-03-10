@@ -122,6 +122,7 @@ class ClientsController extends Controller
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
         ->category3(request('category3_id'))
+        ->orderCat1(request('category1_id'), request('category2_id'), request('category3_id'))
         ->favorite(request('favorite'))
         ->newProduct(request('new_product'))
         ->priceRange(request('min'), request('max'))
