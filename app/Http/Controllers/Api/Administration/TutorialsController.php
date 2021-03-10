@@ -118,7 +118,7 @@ class TutorialsController extends Controller
                 $principal_id = $m_tutorial->id;
             }
 
-            $language = Language::find($request->header('language-key'));
+            $language = Language::find($this->language);
             $title = preg_replace("/[^A-Za-z0-9 ]/", '', request('title'));
             $public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.$title);
 
@@ -291,7 +291,7 @@ class TutorialsController extends Controller
                 if(!empty(request('public_id_'.$i)) || request('public_id_'.$i) != ''){
                     foreach (json_decode($tutorial->slider) as $slider) {
                         if($slider->id == request('public_id_'.$i)){
-                            $language = Language::find($request->header('language-key'));
+                            $language = Language::find($this->language);
 
                             if(empty(request('slider_'.$i))){
                                 $new_tutorials = collect(json_decode($tutorial->slider))->where('id', '!=', $slider->id)->all();
@@ -318,7 +318,7 @@ class TutorialsController extends Controller
                 }else{
                     if(!empty(request('slider_'.$i))){
                         $max_id = collect($slider_array)->max('id') + 1;
-                        $language = Language::find($request->header('language-key'));
+                        $language = Language::find($this->language);
                         $slider_public_id = str_replace(' ', '-', $language->name.'-'.$tutorial->principal_id.'-'.$max_id);
 
                         # Here we upload an image 1
@@ -355,7 +355,7 @@ class TutorialsController extends Controller
                 {
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
-                $language = Language::find($request->header('language-key'));
+                $language = Language::find($this->language);
                 # Here we upload the new image
                 $upload = \Cloudinary\Uploader::upload(request('image'),
                 array(

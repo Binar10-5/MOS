@@ -103,7 +103,7 @@ class Categories2Controller extends Controller
                 $principal_id = $m_caregory_2->id;
             }
 
-            $language = Language::find($request->header('language-key'));
+            $language = Language::find($this->language);
             $public_id = str_replace(' ', '-', $language->name.'-'.$principal_id.'-'.request('name'));
 
             # Here we upload an image 1
@@ -193,7 +193,7 @@ class Categories2Controller extends Controller
         {
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
-        $language = Language::find($request->header('language-key'));
+        $language = Language::find($this->language);
 
         $category = Category2::where('principal_id', $id)->where('language_id', $this->language)->first();
 

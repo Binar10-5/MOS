@@ -11,6 +11,7 @@ use App\Models\Master\MCategory1;
 use App\Models\Master\MProduct;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\VariantPrice;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -299,9 +300,19 @@ class ProductsController extends Controller
                 ]);
 
                 $variant_id = $variant->id;
+                $price_variant_validator = VariantPrice::where('country_id', $request->header('language-key'))->where('variant_id', $variant_id)->first();
+                if(!$price_variant_validator){
+                    $price_variant = VariantPrice::create([
+                        'price'=> $price,
+                        'discount'=> $discount,
+                        'final_price'=> $final_price,
+                        'country_id'=> $request->header('language-key'),
+                        'variant_id'=> $variant_id
+                    ]);
+                }
             }
             # Agregar registro de la variante por idioma.
-            $language = Language::find($request->header('language-key'));
+            $language = Language::find($this->language);
             $public_id = str_replace(' ', '-', $language->name.'-'.$variant_id.'-'.request('name'));
 
             # Here we upload an image 1
@@ -453,15 +464,19 @@ class ProductsController extends Controller
 
     public function variantListCategory(Request $request)
     {
+
+        # Join con la tabla de relación de precios país
+
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code',
         'products.benefits', 'products.how_to_use', 'products.variant_id', 'products.language_id', 'products.tracking', 'products.image1', 'products.image2',
-        'products.image3', 'products.image4', 'vp.discount', 'vp.final_price',
-        'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'products.image3', 'products.image4', 'vap.discount', 'vap.final_price',
+        'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vap.price', 'vap.quantity', 'vp.state_id as variant_state_id',
         'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.category1_order', 'vp.category2_order', 'vp.category3_order')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->variantName(request('name'))
         ->category1(request('category1_id'))
@@ -474,6 +489,7 @@ class ProductsController extends Controller
         $count = Product::select('vp.principal_id as principal_id')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->language($this->language)
         ->count();
@@ -490,12 +506,15 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
+        # Join con la tabla de relación de precios país
+
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color',
         'products.color_code', 'products.variant_id', 'products.language_id', 'products.benefits', 'products.how_to_use',
         'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at',
-        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.discount', 'vp.final_price')
+        'vap.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vap.discount', 'vap.final_price')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         ->language($this->language)
         ->where('vp.id', $id)
         ->first();
@@ -552,7 +571,7 @@ class ProductsController extends Controller
         if(!$variant_language){
             return response()->json(['response' => ['error' => 'Esta variante no tiene registro para el idioma seleccionado']], 400);
         }
-        $language = Language::find($request->header('language-key'));
+        $language = Language::find($this->language);
         $previous_data = array(
             'name' => $variant_language->name,
             'description' => $variant_language->description,
@@ -606,6 +625,15 @@ class ProductsController extends Controller
             $variant->favorite = request('favorite');
             $variant->cruelty_free = request('cruelty_free');
             $variant->update();
+
+            # Guardar aquí en la nueva tabla la relacion con precio y país
+            $price_variant_validator = VariantPrice::where('country_id', $request->header('language-key'))->where('variant_id', $variant->id)->first();
+            if($price_variant_validator){
+                $price_variant_validator->price = $price;
+                $price_variant_validator->discount = $discount;
+                $price_variant_validator->final_price = $final_price;
+                $price_variant_validator->update();
+            }
 
             $variant_language->name = request('name');
             $variant_language->description = request('description');

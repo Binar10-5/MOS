@@ -123,6 +123,7 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
@@ -135,6 +136,7 @@ class ClientsController extends Controller
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
         ->where('vp.state_id', 1)
+        ->where('vap.country_id', $this->country)
         ->language($this->language)
         ->paginate(8);
 
@@ -143,6 +145,7 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->category1(request('category1_id'))
         ->category2(request('category2_id'))
@@ -153,6 +156,7 @@ class ClientsController extends Controller
         ->languageName(request('name'))
         ->where('mp.state_id', 1)
         ->where('vp.state_id', 1)
+        ->where('vap.country_id', $this->country)
         ->where('products.state_id', 1)
         ->language($this->language)
         ->get();
@@ -182,6 +186,7 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->category1(request('category1_id'))
         ->priceRange(request('min'), request('max'))
@@ -192,6 +197,7 @@ class ClientsController extends Controller
         ->where('mp.state_id', 1)
         ->where('vp.state_id', 1)
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->get();
 
         $brands_collect = collect($brands)->pluck('brand_id');
@@ -214,11 +220,13 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('vp.id', $id)
         ->where('vp.state_id', 1)
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->first();
 
         $cat1 = Product::select('mc1.id', 'c1.name', 'c1.description')
@@ -226,10 +234,12 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('categories_1 as c1', 'mc1.id', 'c1.principal_id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->where('mc1.state_id', 1)
         ->where('vp.id', $id)
         ->where('vp.state_id', 1)
+        ->where('vap.country_id', $this->country)
         ->language($this->language)
         ->get();
 
@@ -238,11 +248,13 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
         ->join('categories_2 as c2', 'mc2.id', 'c2.principal_id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->where('mc2.state_id', 1)
         ->where('vp.id', $id)
         ->where('vp.state_id', 1)
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->get();
 
         $cat3 = Product::select('mc3.id', 'c3.name', 'c3.description')
@@ -250,11 +262,13 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_3 as mc3', 'mp.category3_id', 'mc3.id')
         ->join('categories_3 as c3', 'mc3.id', 'c3.principal_id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->where('mc3.state_id', 1)
         ->where('vp.id', $id)
         ->where('vp.state_id', 1)
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->get();
 
         if($product){
@@ -275,11 +289,13 @@ class ClientsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->where('mp.state_id', 1)
         ->where('mp.id', $product->principal_id)
         ->where('vp.state_id', 1)
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->get();
 
         if($product){
@@ -415,9 +431,11 @@ class ClientsController extends Controller
             'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free')
             ->join('product_variants as vp', 'products.variant_id', 'vp.id')
             ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
-            ->language($this->language)
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
+        ->language($this->language)
             ->where('tp.tutorial_id', $tutorial->principal_id)
-            ->get();
+        ->where('vap.country_id', $this->country)
+        ->get();
 
             $tutorial->products = $products;
         }
@@ -442,8 +460,10 @@ class ClientsController extends Controller
             'products.state_id', 'vp.new_product', 'vp.favorite', 'vp.cruelty_free', 'vp.discount', 'vp.price', 'vp.final_price')
             ->join('product_variants as vp', 'products.variant_id', 'vp.id')
             ->join('tutorial_products as tp', 'vp.id', 'tp.product_id')
+            ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
             ->where('tp.tutorial_id', $tutorial->principal_id)
             ->language($this->language)
+            ->where('vap.country_id', $this->country)
             ->get();
 
             $tutorial->products = $products;
@@ -709,8 +729,8 @@ class ClientsController extends Controller
                 'pqrs_id' => $client_id,
                 'message' => request('message')
             );
-            $principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
-            #$principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
+            #$principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
+            $principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
             $mail = Mail::to('programador5@binar10.co')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));
