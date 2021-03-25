@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Administration;
 
 use App\Http\Controllers\Controller;
+use App\Models\CouponCountry;
 use App\Models\Cupon;
 use Illuminate\Http\Request;
 
@@ -16,14 +17,20 @@ class CuponsController extends Controller
         $this->middleware('permission:/update_cupon')->only(['update', 'destroy']);
 
         // Get the languaje id
-        /*$language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else if($request->header('language-key') == ''){
             $this->language = '';
+            $this->country = '';
         }else{
             $this->language = 1;
-        }*/
+            $this->country = 1;
+        }
     }
 
     /**
@@ -34,13 +41,19 @@ class CuponsController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $cupons = Cupon::name(request('name'))
-        ->state(request('state'))
-        ->paginate(8);
+            $cupons = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+            ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+            ->name(request('name'))
+            ->state(request('state'))
+            ->where('cc.country_id', $this->country)
+            ->paginate(8);
         }else{
-            $cupons = Cupon::name(request('name'))
-        ->state(request('state'))
-        ->get();
+            $cupons = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+            ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+            ->name(request('name'))
+            ->state(request('state'))
+            ->where('cc.country_id', $this->country)
+            ->get();
         }
 
         return response()->json(['response' => $cupons], 200);
@@ -72,16 +85,42 @@ class CuponsController extends Controller
             return response()->json(['response' => ['error' => ['El descuento no puede ser mayor a el costo minimo de el pedido']]], 400);
         }
 
-        $cupon = Cupon::create([
-            'name' => request('name'),
-            'description' => request('description'),
-            'code' => request('code'),
-            'uses_number' => 0,
-            'maximum_uses' => request('maximum_uses'),
-            'minimal_cost' => request('minimal_cost'),
-            'discount_amount' => request('discount_amount'),
-            'state' => request('state'),
-        ]);
+        $coupon_id = Cupon::find(request('coupon_id'));
+
+        if($coupon_id){
+            $coupon_country = CouponCountry::create([
+                'uses_number' => 0,
+                'maximum_uses' => request('maximum_uses'),
+                'minimal_cost' => request('minimal_cost'),
+                'discount_amount' => request('discount_amount'),
+                'state' => 1,
+                'coupon_id' => $coupon_id->id,
+                'country_id' => $this->country,
+            ]);
+        }else{
+            $cupon = Cupon::create([
+                'name' => request('name'),
+                'description' => request('description'),
+                'code' => request('code'),
+                'uses_number' => 0,
+                'maximum_uses' => request('maximum_uses'),
+                'minimal_cost' => request('minimal_cost'),
+                'discount_amount' => request('discount_amount'),
+                'state' => request('state'),
+            ]);
+
+            $coupon_country = CouponCountry::create([
+                'uses_number' => 0,
+                'maximum_uses' => request('maximum_uses'),
+                'minimal_cost' => request('minimal_cost'),
+                'discount_amount' => request('discount_amount'),
+                'state' => 1,
+                'coupon_id' => $cupon->id,
+                'country_id' => $this->country,
+            ]);
+        }
+
+
 
         return response()->json(['response' => 'Success'], 200);
 
@@ -95,7 +134,10 @@ class CuponsController extends Controller
      */
     public function show($id)
     {
-        $cupon = Cupon::find($id);
+        $cupon = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+        ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+        ->where('cc.country_id', $this->country)
+        ->find($id);
 
         return response()->json(['response' => $cupon], 200);
     }
@@ -117,6 +159,7 @@ class CuponsController extends Controller
             'minimal_cost' => 'required|max:20',
             'discount_amount' => 'required|max:20',*/
             'state' => 'required|min:1|max:2',
+            'state_country' => 'required|min:1|max:2',
         ]);
         if($validator->fails())
         {
@@ -126,6 +169,13 @@ class CuponsController extends Controller
         $cupon = Cupon::find($id);
         if(!$cupon){
             return response()->json(['response' => ['error' => ['Cupón no encontrado']]], 400);
+        }
+
+        $coupon_country = CouponCountry::where('coupon_id', $cupon->id)->where('country_id', $this->country)->first();
+
+        if($coupon_country){
+            $coupon_country->state = request('state_country');
+            $coupon_country->update();
         }
 
         /*$cupon->name = request('name');
