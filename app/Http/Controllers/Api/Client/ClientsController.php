@@ -33,7 +33,7 @@ class ClientsController extends Controller
     public function __construct(Request $request)
     {
         // Get the languaje id
-        $language = Language::select('languages.id', 'c.country_id')
+        $language = Language::select('languages.id', 'c.id as country_id')
         ->join('countries as c', 'languages.id', 'c.language_id')
         ->where('c.id' ,$request->header('language-key'))
         ->first();
