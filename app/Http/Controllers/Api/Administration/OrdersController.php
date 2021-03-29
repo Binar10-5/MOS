@@ -25,19 +25,20 @@ class OrdersController extends Controller
         $this->middleware('permission:/update_orders')->only(['update']);
 
         // Get the languaje id
-        $language = Language::select('languages.id')
+        $language = Language::select('languages.id', 'c.id as country_id')
         ->join('countries as c', 'languages.id', 'c.language_id')
         ->where('c.id' ,$request->header('language-key'))
         ->first();
         if($language){
             $this->language = $language->id;
+            $this->country = $language->country_id;
         }else if($request->header('language-key') == ''){
+            $this->country = '';
             $this->language = '';
         }else{
+            $this->country = $language->country_id;
             $this->language = 1;
         }
-
-
     }
     /**
      * Display a listing of the resource.
@@ -214,8 +215,9 @@ class OrdersController extends Controller
         $order = Order::select('orders.id', 'orders.order_number', 'orders.client_name', 'orders.client_dni', 'orders.client_last_name', 'orders.client_address', 'orders.client_cell_phone',
         'orders.client_email', 'orders.subtotal', 'orders.total', 'orders.state_id', 'orders.coupon_id', 'orders.transportation_company_id',
         'orders.tracking_number', 'orders.language_id', 'orders.payment_data', 'orders.city_id', 'c.name as city_name', 'c.department_name', 'orders.delivery_fee',
-        'orders.tracking')
+        'orders.tracking', 'orders.country_id', 'c.name', 'c.description')
         ->join('city as c', 'orders.city_id', 'c.id')
+        ->join('countries as c', 'orders.country_id', 'c.id')
         ->where('orders.id', $id)
         ->first();
 
@@ -229,7 +231,11 @@ class OrdersController extends Controller
         ->where('o.id', $order->id)
         ->get();
 
-        $order->coupon = Cupon::select('code', 'discount_amount')->find($order->coupon_id);
+        $order->coupon = Cupon::select('cupons.code', 'cc.discount_amount')
+        ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+        ->where('cupons.id', $order->coupon_id)
+        ->where('cc.country_id', $this->country)
+        ->first();
 
         return response()->json(['response' => $order], 200);
     }

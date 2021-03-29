@@ -493,7 +493,13 @@ class ClientsController extends Controller
         $subtotal = 0;
         foreach (request('products_list') as $product) {
 
-            $variant = ProductVariant::find($product['id']);
+            $variant = ProductVariant::select('product_variants.name', 'product_variants.color_code', 'product_variants.color', 'product_variants.principal_id'
+            , 'product_variants.quantity', 'vp.price', 'vp.discount', 'vp.final_price', 'vp.country_id', 'product_variants.new_product',
+            'product_variants.favorite', 'product_variants.cruelty_free')
+            ->join('variant_price as vp', 'product_variants.id', 'vp.variant_id')
+            ->where('product_variants.id', $product['id'])
+            ->where('vp.country_id', $this->country)
+            ->first();
 
             if(!$variant){
                 return response()->json(['response' => ['error' => ['La variante de el producto no existe', $product]]], 400);
@@ -533,7 +539,11 @@ class ClientsController extends Controller
             $total = $subtotal;
             $coupon = null;
             if(!empty(request('coupon'))){
-                $validate_coupon = Cupon::where('code', request('coupon'))->first();
+                $validate_coupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+                ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+                ->where('cc.country_id', $this->country)
+                ->where('code', request('coupon'))
+                ->first();
 
                 if(!$validate_coupon){
                     return response()->json(['response' => ['error' => ['El cupón no existe']]], 400);
@@ -607,8 +617,13 @@ class ClientsController extends Controller
             $valid_data = array();
             foreach (request('products_list') as $product) {
 
-                $variant = ProductVariant::find($product['id']);
-
+                $variant = ProductVariant::select('product_variants.name', 'product_variants.color_code', 'product_variants.color', 'product_variants.principal_id'
+                , 'product_variants.quantity', 'vp.price', 'vp.discount', 'vp.final_price', 'vp.country_id', 'product_variants.new_product',
+                'product_variants.favorite', 'product_variants.cruelty_free')
+                ->join('variant_price as vp', 'product_variants.id', 'vp.variant_id')
+                ->where('product_variants.id', $product['id'])
+                ->where('vp.country_id', $this->country)
+                ->first();
                 if(!$variant){
                     return response()->json(['response' => ['error' => ['La variante de el producto no existe', $product]]], 400);
                 }

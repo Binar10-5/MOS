@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Administration;
 use App\Http\Controllers\Controller;
 use App\Models\CouponCountry;
 use App\Models\Cupon;
+use App\Models\Language;
 use Illuminate\Http\Request;
 
 class CuponsController extends Controller
@@ -137,7 +138,8 @@ class CuponsController extends Controller
         $cupon = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
         ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
         ->where('cc.country_id', $this->country)
-        ->find($id);
+        ->where('cupons.id', $id)
+        ->first();
 
         return response()->json(['response' => $cupon], 200);
     }
