@@ -303,7 +303,7 @@ class ProductsController extends Controller
                 $price_variant_validator = VariantPrice::where('country_id', $request->header('language-key'))->where('variant_id', $variant_id)->first();
                 if(!$price_variant_validator){
                     $price_variant = VariantPrice::create([
-                        'price'=> $price,
+                        'price'=> request('price'),
                         'discount'=> $discount,
                         'final_price'=> $final_price,
                         'country_id'=> $request->header('language-key'),
