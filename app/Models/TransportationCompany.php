@@ -14,14 +14,14 @@ class TransportationCompany extends Model
     public function scopeName($query, $name)
     {
         if(!empty($name)){
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('transportation_companies.name', 'LIKE', '%'.$name.'%');
         }
     }
 
     public function scopeState($query, $state)
     {
         if(!empty($state)){
-            $query->where('state', $state);
+            $query->where('transportation_companies.state', $state);
         }
     }
 }
