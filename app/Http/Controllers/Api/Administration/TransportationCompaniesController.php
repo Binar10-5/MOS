@@ -41,7 +41,7 @@ class TransportationCompaniesController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $transportations = TransportationCompany::select('transportation_companies.name', 'transportation_companies.description',
+            $transportations = TransportationCompany::select('transportation_companies.id', 'transportation_companies.name', 'transportation_companies.description',
             'transportation_companies.country_id', 'transportation_companies.state')
             ->join('countries as c', 'transportation_companies.country_id', 'c.id')
             ->name(request('name'))
@@ -50,7 +50,7 @@ class TransportationCompaniesController extends Controller
             ->where('c.id', $this->country)
             ->paginate(8);
         }else{
-            $transportations = TransportationCompany::select('transportation_companies.name', 'transportation_companies.description',
+            $transportations = TransportationCompany::select('transportation_companies.id','transportation_companies.name', 'transportation_companies.description',
             'transportation_companies.country_id', 'transportation_companies.state')
             ->join('countries as c', 'transportation_companies.country_id', 'c.id')
             ->name(request('name'))
@@ -99,7 +99,7 @@ class TransportationCompaniesController extends Controller
      */
     public function show($id)
     {
-        $transportation = TransportationCompany::select('transportation_companies.name', 'transportation_companies.description',
+        $transportation = TransportationCompany::select('transportation_companies.id','transportation_companies.name', 'transportation_companies.description',
         'transportation_companies.country_id', 'transportation_companies.state')
         ->join('countries as c', 'transportation_companies.country_id', 'c.id')
         ->where('c.id', $this->country)
