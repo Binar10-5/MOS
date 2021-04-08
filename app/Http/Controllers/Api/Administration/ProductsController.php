@@ -629,7 +629,7 @@ class ProductsController extends Controller
             # Guardar aquí en la nueva tabla la relacion con precio y país
             $price_variant_validator = VariantPrice::where('country_id', $request->header('language-key'))->where('variant_id', $variant->id)->first();
             if($price_variant_validator){
-                $price_variant_validator->price = $price;
+                $price_variant_validator->price = request('price');
                 $price_variant_validator->discount = $discount;
                 $price_variant_validator->final_price = $final_price;
                 $price_variant_validator->update();
