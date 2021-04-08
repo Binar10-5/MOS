@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Administration;
 
 use App\Http\Controllers\Controller;
+use App\Models\Language;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,22 @@ class OffersController extends Controller
         $this->middleware('permission:/list_cupon')->only(['show', 'index']);
         $this->middleware('permission:/create_cupon')->only(['store']);
         $this->middleware('permission:/update_cupon')->only(['update', 'destroy']);
+
+        // Get the languaje id
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
+        if($language){
+            $this->language = $language->id;
+            $this->country = $language->country_id;
+        }else if($request->header('language-key') == ''){
+            $this->country = '';
+            $this->language = '';
+        }else{
+            $this->country = $language->country_id;
+            $this->language = 1;
+        }
     }
     /**
      * Display a listing of the resource.
@@ -21,7 +38,7 @@ class OffersController extends Controller
      */
     public function index()
     {
-        $offers = Offer::get();
+        $offers = Offer::where('country_id', $this->country)->get();
 
         return response()->json(['response' => $offers], 200);
     }
@@ -56,6 +73,7 @@ class OffersController extends Controller
             'maximum_cost' => request('maximum_cost'),
             'discount_amount' => request('discount_amount'),
             'state' => request('state'),
+            'country_id' => $this->country,
         ]);
 
         return response()->json(['response' => $offer], 200);
@@ -69,7 +87,7 @@ class OffersController extends Controller
      */
     public function show($id)
     {
-        $offer = Offer::find($id);
+        $offer = Offer::where('country_id', $this->country)->find($id);
 
         return response()->json(['response' => $offer], 200);
     }
@@ -94,7 +112,7 @@ class OffersController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $offer = Offer::find($id);
+        $offer = Offer::where('country_id', $this->country)->find($id);
 
         if(!$offer){
             return response()-json(['response' => ['error' => ['Oferta no encontrada']]], 400);

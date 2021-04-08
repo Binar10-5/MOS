@@ -8,7 +8,7 @@ class TransportationCompany extends Model
 {
     protected $table = 'transportation_companies';
     protected $fillable = [
-        'id', 'name', 'description', 'state'
+        'id', 'name', 'description', 'state', 'country_id'
     ];
 
     public function scopeName($query, $name)

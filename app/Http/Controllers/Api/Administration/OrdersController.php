@@ -226,6 +226,7 @@ class OrdersController extends Controller
         }
 
         $order->products = OrderProducts::select('orders_products.name', 'orders_products.color', 'pv.principal_id', 'orders_products.price', 'orders_products.discount', 'orders_products.final_price', 'orders_products.quantity', 'orders_products.total as total_price')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         ->join('product_variants as pv', 'orders_products.product_id', 'pv.id')
         ->join('orders as o', 'orders_products.order_id', 'o.id')
         ->where('o.id', $order->id)
@@ -304,6 +305,13 @@ class OrdersController extends Controller
             'numeral' => '#',
         );
         if($transportation->id == 1){
+            if($this->country == 1){
+                $view = 'domiciliary_assigned';
+                $subject = 'Seguimiento de tu pedido';
+            }else{
+                $view = 'domiciliary_assigned_en';
+                $subject = 'Tracking';
+            }
             # Send Notification
             $mail = Mail::to($order->client_email)->send(new SendEmails('domiciliary_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
 
@@ -311,6 +319,13 @@ class OrdersController extends Controller
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
             }
         }else{
+            if($this->country == 1){
+                $view = 'transportation_company_assigned';
+                $subject = 'Seguimiento de tu pedido';
+            }else{
+                $view = 'transportation_company_assigned_en';
+                $subject = 'Tracking';
+            }
             # Send Notification
             $mail = Mail::to($order->client_email)->send(new SendEmails('transportation_company_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
 

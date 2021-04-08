@@ -527,7 +527,12 @@ class ClientsController extends Controller
                     $validate_dni_order = Order::where('client_dni', request('client_dni'))->where('state_id', 4)->first();
 
                     if(!$validate_dni_order){
-                        $offer = Offer::where('id', 1)->where('state', 1)->first();
+                        $offer = Offer::select('offers.id', 'offers.name', 'offers.description', 'offers.minimal_cost', 'offers.discount_amount', 'offers.state',
+                        'offers.type', 'offers.maximum_cost', 'offers.country_id')
+                        ->where('offers.id', 1)
+                        ->where('offers.state', 1)
+                        ->where('offers.country_id', $this->country)
+                        ->first();
 
                         if($offer){
                             $var_discount = $subtotal * $offer->discount_amount;
@@ -609,7 +614,8 @@ class ClientsController extends Controller
                 'tracking'=> json_encode($tracking),
                 'coupon_id' => $coupon,
                 'city_id' => request('city_id'),
-                'language_id' => $this->language
+                'language_id' => $this->language,
+                'country_id' => $this->country
             ]);
 
 
@@ -721,7 +727,14 @@ class ClientsController extends Controller
             # Send email
 
             # Send Notification
-            $mail = Mail::to(request('email'))->send(new SendEmails('pqrs_client', 'PQRS MOS.', 'noreply@mosbeautyshop.com', $data));
+            if($this->country == 1){
+                $view = 'pqrs_client';
+                $subject = 'PQRS MOS';
+            }else{
+                $view = 'pqrs_client_en';
+                $subject = 'CPCG MOS';
+            }
+            $mail = Mail::to(request('email'))->send(new SendEmails($view, $subject, 'noreply@mosbeautyshop.com', $data));
 
             if($mail){
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);

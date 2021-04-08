@@ -159,22 +159,25 @@
 <div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:transparent;border-radius:32px;-webkit-border-radius:32px;-moz-border-radius:32px;width:auto; width:auto;;border-top:1px solid transparent;border-right:1px solid transparent;border-bottom:1px solid transparent;border-left:1px solid transparent;padding-top:5px;padding-bottom:5px;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:25px;padding-right:25px;font-size:16px;display:inline-block;"><span style="font-size: 16px; line-height: 2; mso-line-height-alt: 32px;"> </span></span></div>
 <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
 </div>
-<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 0px; padding-bottom: 20px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
-<div style="color:#ffffff;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:0px;padding-right:20px;padding-bottom:20px;padding-left:20px;">
-<div style="line-height: 1.2; font-size: 12px; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; color: #ffffff; mso-line-height-alt: 14px;">
-<p style="font-size: 34px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 41px; margin: 0;"><span style="font-size: 34px; color: #000000; background-color: #000000;"><strong><span style="color: #ffffff;">Saludos, {{$data['name']}}</span> </strong></span></p>
-</div>
-</div>
-<!--[if mso]></td></tr></table><![endif]-->
-<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 40px; padding-left: 40px; padding-top: 5px; padding-bottom: 40px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
-<div style="color:#000000;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:5px;padding-right:40px;padding-bottom:40px;padding-left:40px;">
+<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 0px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
+<div style="color:#000000;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:0px;padding-right:20px;padding-bottom:10px;padding-left:20px;">
 <div style="line-height: 1.2; font-size: 12px; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; color: #000000; mso-line-height-alt: 14px;">
-<p style="font-size: 24px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 29px; margin: 0;"><span style="font-size: 24px;"><strong style="font-family: inherit;">Te informamos que tu pedido ha sido despachado y llegará pronto.</strong></span></p>
-<p style="font-size: 38px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 46px; margin: 0;"> </p>
-<p style="font-size: 20px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 20px;"><strong style="font-family: inherit;">Atentamente, equipo MOS.</strong></span></p>
+<p style="font-size: 34px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 41px; margin: 0;"><span style="font-size: 34px;"><strong>Hi, {{$data['name']}} </strong></span></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
+<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 40px; padding-left: 40px; padding-top: 5px; padding-bottom: 25px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
+<div style="color:#000000;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:5px;padding-right:40px;padding-bottom:25px;padding-left:40px;">
+<div style="line-height: 1.2; font-size: 12px; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; color: #000000; mso-line-height-alt: 14px;">
+<p style="font-size: 24px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 29px; margin: 0;"><span style="font-size: 24px;"><strong style="font-family: inherit;">Click the following link to change your password.</strong></span></p>
+</div>
+</div>
+<!--[if mso]></td></tr></table><![endif]-->
+<div align="center" class="button-container" style="padding-top:15px;padding-right:10px;padding-bottom:45px;padding-left:10px;">
+<!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 15px; padding-right: 10px; padding-bottom: 45px; padding-left: 10px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:40.5pt; width:228pt; v-text-anchor:middle;" arcsize="60%" stroke="false" fillcolor="#000000"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Tahoma, Verdana, sans-serif; font-size:22px"><![endif]-->
+<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#000000;border-radius:32px;-webkit-border-radius:32px;-moz-border-radius:32px;width:auto; width:auto;;border-top:1px solid #000000;border-right:1px solid #000000;border-bottom:1px solid #000000;border-left:1px solid #000000;padding-top:5px;padding-bottom:5px;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:25px;padding-right:25px;font-size:22px;display:inline-block;"><span style="font-size: 16px; margin: 0; line-height: 2; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 32px;"><strong><span data-mce-style="font-size: 22px; line-height: 44px;" style="font-size: 22px; line-height: 44px;"><a href="https://admin.myothersidebeauty.com/forgetPass/5/{{$data['password_code']}}">CLICK THIS LINK</a></span></strong></span></span></div>
+<!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
+</div>
 <!--[if (!mso)&(!IE)]><!-->
 </div>
 <!--<![endif]-->
