@@ -46,7 +46,7 @@ class TransportationCompaniesController extends Controller
             ->join('countries as c', 'transportation_companies.country_id', 'c.id')
             ->name(request('name'))
             ->state(request('state'))
-            ->orderBy('id', 'desc')
+            ->orderBy('transportation_companies.id', 'desc')
             ->where('c.id', $this->country)
             ->paginate(8);
         }else{
@@ -55,7 +55,7 @@ class TransportationCompaniesController extends Controller
             ->join('countries as c', 'transportation_companies.country_id', 'c.id')
             ->name(request('name'))
             ->state(request('state'))
-            ->orderBy('id', 'desc')
+            ->orderBy('transportation_companies.id', 'desc')
             ->where('c.id', $this->country)
             ->get();
         }
