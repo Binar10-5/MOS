@@ -547,11 +547,13 @@ class ClientsController extends Controller
                 $validate_coupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
                 ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
                 ->where('cc.country_id', $this->country)
-                ->where('code', request('coupon'))
+                ->where('cupons.code', request('coupon'))
+                ->where('cc.state', 1)
+                ->where('cupons.state', 1)
                 ->first();
 
                 if(!$validate_coupon){
-                    return response()->json(['response' => ['error' => ['El cupón no existe']]], 400);
+                    return response()->json(['response' => ['error' => ['El cupón no existe o está desactivado para ese país']]], 400);
                 }
 
                 if($validate_coupon->uses_number >= $validate_coupon->maximum_uses){
