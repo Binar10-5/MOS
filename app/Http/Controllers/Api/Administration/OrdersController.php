@@ -217,7 +217,7 @@ class OrdersController extends Controller
         'orders.tracking_number', 'orders.language_id', 'orders.payment_data', 'orders.city_id', 'c.name as city_name', 'c.department_name', 'orders.delivery_fee',
         'orders.tracking', 'orders.country_id', 'c.name', 'c.description')
         ->join('city as c', 'orders.city_id', 'c.id')
-        ->join('countries as c', 'orders.country_id', 'c.id')
+        ->join('countries as co', 'orders.country_id', 'co.id')
         ->where('orders.id', $id)
         ->first();
 
