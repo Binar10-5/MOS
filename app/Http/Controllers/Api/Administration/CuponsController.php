@@ -18,7 +18,7 @@ class CuponsController extends Controller
         $this->middleware('permission:/update_cupon')->only(['update', 'destroy']);
 
         // Get the languaje id
-        $language = Language::select('languages.id')
+        $language = Language::select('languages.id', 'c.id as country_id')
         ->join('countries as c', 'languages.id', 'c.language_id')
         ->where('c.id' ,$request->header('language-key'))
         ->first();
