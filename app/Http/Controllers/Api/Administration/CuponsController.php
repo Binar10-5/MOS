@@ -42,14 +42,14 @@ class CuponsController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $cupons = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+            $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
             ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
             ->name(request('name'))
             ->state(request('state'))
             ->where('cc.country_id', $this->country)
             ->paginate(8);
         }else{
-            $cupons = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+            $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
             ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
             ->name(request('name'))
             ->state(request('state'))
@@ -135,7 +135,7 @@ class CuponsController extends Controller
      */
     public function show($id)
     {
-        $cupon = Cupon::select('cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+        $cupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
         ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
         ->where('cc.country_id', $this->country)
         ->where('cupons.id', $id)
