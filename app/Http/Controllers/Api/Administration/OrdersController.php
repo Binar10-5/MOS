@@ -226,8 +226,8 @@ class OrdersController extends Controller
         }
 
         $order->products = OrderProducts::select('orders_products.name', 'orders_products.color', 'pv.principal_id', 'orders_products.price', 'orders_products.discount', 'orders_products.final_price', 'orders_products.quantity', 'orders_products.total as total_price')
-        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         ->join('product_variants as pv', 'orders_products.product_id', 'pv.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         ->join('orders as o', 'orders_products.order_id', 'o.id')
         ->where('o.id', $order->id)
         ->get();
