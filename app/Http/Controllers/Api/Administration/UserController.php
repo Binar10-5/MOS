@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Administration;
 use App\Http\Controllers\Controller;
 use App\Mail\Helpers\SendEmails;
 use App\Models\Role;
+use App\Models\RolePermission;
 use App\Models\UserRole;
 use App\User;
 use Illuminate\Http\Request;
