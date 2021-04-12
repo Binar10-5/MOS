@@ -443,11 +443,15 @@ class ProductsController extends Controller
 
     public function variantList($id)
     {
-        $variants = ProductVariant::name(request('name'))
+        $variants = ProductVariant::select('product_variants.principal_id as principal_id', 'vap.discount', 'vap.final_price', 'vap.price', 'product_variants.quantity', 'product_variants.state_id as variant_state_id',
+        'product_variants.favorite', 'product_variants.new_product', 'cruelty_free', 'product_variants.category1_order', 'product_variants.category2_order', 'product_variants.category3_order')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
+        ->name(request('name'))
         ->state(request('state'))
         ->category3(request('category3'))
         ->color(request('color'))
-        ->where('principal_id', $id)
+        ->where('product_variants.principal_id', $id)
+        ->where('cap.country_id', $this->country)
         ->get();
 
         return response()->json(['response' => $variants], 200);
