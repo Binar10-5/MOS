@@ -451,7 +451,7 @@ class ProductsController extends Controller
         ->category3(request('category3'))
         ->color(request('color'))
         ->where('product_variants.principal_id', $id)
-        ->where('cap.country_id', $this->country)
+        ->where('vap.country_id', $this->country)
         ->get();
 
         return response()->json(['response' => $variants], 200);
