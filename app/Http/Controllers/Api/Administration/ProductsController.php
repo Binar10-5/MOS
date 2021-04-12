@@ -494,10 +494,15 @@ class ProductsController extends Controller
         $count = Product::select('vp.principal_id as principal_id')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
         ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->language($this->language)
         ->variantName(request('name'))
+        ->category1(request('category1_id'))
+        ->category2(request('category2_id'))
+        ->category3(request('category3_id'))
         ->where('vap.country_id', $this->country)
         ->count();
 
