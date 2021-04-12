@@ -116,7 +116,7 @@ class BannerController extends Controller
         }else{
             $m_banner = MBanner::create([
                 'name' => request('name'),
-                'state_id' => request('state_id')
+                'state_id' => request('entity_state_id')
             ]);
 
             $m_banner_id = $m_banner->id;
