@@ -25,16 +25,16 @@ class ProductsController extends Controller
         $this->middleware('permission:/update_products')->only(['update', 'destroy']);
 
         // Get the languaje id
-        $language = Language::select('languages.id')
+        $language = Language::select('languages.id', 'c.id as country_id')
         ->join('countries as c', 'languages.id', 'c.language_id')
         ->where('c.id' ,$request->header('language-key'))
         ->first();
         if($language){
             $this->language = $language->id;
-        }else if($request->header('language-key') == ''){
-            $this->language = '';
+            $this->country = $language->country_id;
         }else{
             $this->language = 1;
+            $this->country = 1;
         }
     }
     /**
@@ -484,6 +484,7 @@ class ProductsController extends Controller
         ->category3(request('category3_id'))
         ->discount(request('discount'))
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->paginate(8);
 
         $count = Product::select('vp.principal_id as principal_id')
@@ -492,6 +493,7 @@ class ProductsController extends Controller
         ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->count();
 
         return response()->json(['response' => $products, 'count' => $count], 200);
@@ -516,6 +518,7 @@ class ProductsController extends Controller
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->where('vp.id', $id)
         ->first();
 
