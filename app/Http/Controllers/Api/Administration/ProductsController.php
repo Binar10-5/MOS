@@ -498,9 +498,6 @@ class ProductsController extends Controller
         #->vState(request('v_state'))
         ->language($this->language)
         ->variantName(request('name'))
-        ->category1(request('category1_id'))
-        ->category2(request('category2_id'))
-        ->category3(request('category3_id'))
         ->where('vap.country_id', $this->country)
         ->count();
 
