@@ -37,12 +37,18 @@ class CitiesController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $cities = City::name(request('name'))
+            $cities = City::select('city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
+            'city.delivery_time', 'city.state', 'city.country_id')
+            ->name(request('name'))
             ->state(request('state'))
+            ->where('country_id', $this->country)
             ->paginate(8);
         }else{
-            $cities = City::name(request('name'))
+            $cities = City::select('city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
+            'city.delivery_time', 'city.state', 'city.country_id')
+            ->name(request('name'))
             ->state(request('state'))
+            ->where('country_id', $this->country)
             ->get();
         }
 
@@ -70,7 +76,7 @@ class CitiesController extends Controller
      */
     public function show($id)
     {
-        $city = City::find($id);
+            $city = City::where('contry_id', $this->country)->find($id);
 
         return response()->json(['response' => $city], 200);
     }
@@ -94,7 +100,7 @@ class CitiesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $city = City::find($id);
+        $city = City::where('contry_id', $this->country)->find($id);
 
         if(!$city){
             return response()->json(['response' => ['error' => ['Ciudad no encontrada']]], 400);
@@ -129,7 +135,7 @@ class CitiesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->update(['delivery_fee' => (int)request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
+        $delivery = DB::table('delivery_fee_minimum')->where('country_id', $this->country)->where('id', 1)->update(['delivery_fee' => (int)request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
 
         return response()->json(['response' => 'Success'], 200);
     }

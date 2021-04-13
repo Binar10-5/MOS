@@ -11,6 +11,19 @@ class SubscribersController extends Controller
     public function __construct(Request $request)
     {
         $this->middleware('permission:/list_subscribers')->only(['show', 'index']);
+
+        // Get the languaje id
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
+        if($language){
+            $this->language = $language->id;
+            $this->country = $language->country_id;
+        }else{
+            $this->language = 1;
+            $this->country = 1;
+        }
     }
     /**
      * Display a listing of the resource.
@@ -23,11 +36,13 @@ class SubscribersController extends Controller
             $subscribers = ClientEmail::email(request('email'))
             ->range(request('date_start'), request('date_end'))
             ->orderBy('id', 'desc')
+            ->where('country_id', $this->country)
             ->paginate(8);
         }else{
             $subscribers = ClientEmail::email(request('email'))
             ->range(request('date_start'), request('date_end'))
             ->orderBy('id', 'desc')
+            ->where('country_id', $this->country)
             ->get();
         }
 

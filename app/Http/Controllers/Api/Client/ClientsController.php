@@ -371,6 +371,7 @@ class ClientsController extends Controller
         if(!$valid_email){
             $client_email = ClientEmail::create([
                 'email' => request('email'),
+                'country_id' => $this->country,
                 'state' => 1,
             ]);
         }
@@ -602,7 +603,7 @@ class ClientsController extends Controller
 
 
             $order = Order::create([
-                'order_number' => 'mos-'.$new_order_number,
+                'order_number' => 'dev-'.$new_order_number,
                 'client_name' => request('client_name'),
                 'client_dni' => request('client_dni'),
                 'client_last_name' => request('client_last_name'),
