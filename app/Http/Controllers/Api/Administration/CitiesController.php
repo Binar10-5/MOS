@@ -17,14 +17,17 @@ class CitiesController extends Controller
         $this->middleware('permission:/update_cities')->only(['update', 'destroy', 'deliveryFee', 'deliveryFeeGet']);
 
         // Get the languaje id
-        /*$language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
-        }else if($request->header('language-key') == ''){
-            $this->language = '';
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else{
             $this->language = 1;
-        }*/
+            $this->country = 1;
+        }
     }
     /**
      * Display a listing of the resource.

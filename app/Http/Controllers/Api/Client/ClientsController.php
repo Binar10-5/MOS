@@ -663,7 +663,7 @@ class ClientsController extends Controller
 
         }catch(Exception $e){
             DB::rollback();
-            return response()->json(['response' => ['error' => [$e->getMessage()]]], 400);
+            return response()->json(['response' => ['error' => [$e->getMessage(). ' - '.$e->getLine()]]], 400);
         }
 
         DB::commit();
