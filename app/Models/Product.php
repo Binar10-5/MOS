@@ -50,7 +50,7 @@ class Product extends Model
     public function scopeDiscount($query, $discount)
     {
         if(!empty($discount)){
-            $query->where('vp.discount', '>', 0);
+            $query->where('vap.discount', '>', 0);
         }
     }
 
@@ -102,7 +102,7 @@ class Product extends Model
     public function scopePriceRange($query, $min, $max)
     {
         if(!empty($min) && !empty($max)){
-            $query->whereBetween('vp.final_price', [(int)$min + 1, (int)$max + 1 ]);
+            $query->whereBetween('vap.final_price', [(int)$min + 1, (int)$max + 1 ]);
         }
     }
 
