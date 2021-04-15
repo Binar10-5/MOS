@@ -807,7 +807,7 @@ class ClientsController extends Controller
         'product_variants.favorite', 'product_variants.cruelty_free')
         ->join('variant_price as vp', 'product_variants.id', 'vp.variant_id')
         ->join('products as p', 'product_variants.id', 'p.variant_id')
-        ->whereIn('id', request('products'))
+        ->whereIn('product_variants.id', request('products'))
         ->where('vp.country_id', $this->country)
         ->where('p.language_id', $this->language)
         ->get();
