@@ -802,7 +802,15 @@ class ClientsController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $products = ProductVariant::whereIn('id', request('products'))->get();
+        $products = ProductVariant::select('p.name', 'p.color_code', 'p.color', 'product_variants.principal_id'
+        , 'product_variants.quantity', 'vp.price', 'vp.discount', 'vp.final_price', 'vp.country_id', 'product_variants.new_product',
+        'product_variants.favorite', 'product_variants.cruelty_free')
+        ->join('variant_price as vp', 'product_variants.id', 'vp.variant_id')
+        ->join('products as p', 'product_variants.id', 'p.variant_id')
+        ->whereIn('id', request('products'))
+        ->where('vp.country_id', $this->country)
+        ->where('p.language_id', $this->language)
+        ->get();
 
         return response()->json(['response' => $products], 200);
     }
