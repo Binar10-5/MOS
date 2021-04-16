@@ -36,7 +36,7 @@ class ListsFreeController extends Controller
     public function addNewPrices()
     {
         $prices = product::select('v.id', 'v.price', 'v.discount', 'v.final_price')
-        ->join('product_variants as v', 'products.variant_id', 'vid')
+        ->join('product_variants as v', 'products.variant_id', 'v.id')
         ->where('products.language_id', 1)
         ->get();
 
@@ -55,7 +55,7 @@ class ListsFreeController extends Controller
         }
 
         $prices = product::select('v.id', 'v.price', 'v.discount', 'v.final_price')
-        ->join('product_variants as v', 'products.variant_id', 'vid')
+        ->join('product_variants as v', 'products.variant_id', 'v.id')
         ->where('products.language_id', 2)
         ->get();
 
