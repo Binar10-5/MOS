@@ -24,6 +24,9 @@ Route::post('updateFirstPass', 'Api\Helpers\ValidationController@updateFirstPass
 # Ruta para obtener la lista de idiomas
 Route::get('languages', 'Api\Free\ListsFreeController@language');
 
+
+Route::post('fixPrice', 'Api\Free\ListsFreeController@addNewPrices');
+
 # Ruta para obtener la lista de países
 Route::get('countries', 'Api\Free\ListsFreeController@country');
 
