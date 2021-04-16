@@ -35,11 +35,12 @@ class ListsFreeController extends Controller
 
     public function addNewPrices()
     {
-        $prices = Product::select('id', 'price', 'discount', 'final_price')->get();
+        $prices = product::select('v.id', 'v.price', 'v.discount', 'v.final_price')
+        ->join('product_variants as v', 'products.variant_id', 'vid')
+        ->where('products.language_id', 1)
+        ->get();
 
         foreach ($prices as $price) {
-            $validate_price = VariantPrice::where('variant_id', $price->id)->first();
-           if($validate_price){
             $validate_col = VariantPrice::where('variant_id', $price->id)->where('country_id', 1)->first();
             if(!$validate_col){
                 $add_prices = VariantPrice::create([
@@ -51,6 +52,14 @@ class ListsFreeController extends Controller
                 ]);
             }
 
+        }
+
+        $prices = product::select('v.id', 'v.price', 'v.discount', 'v.final_price')
+        ->join('product_variants as v', 'products.variant_id', 'vid')
+        ->where('products.language_id', 2)
+        ->get();
+
+        foreach ($prices as $price) {
             $validate_col = VariantPrice::where('variant_id', $price->id)->where('country_id', 2)->first();
             if(!$validate_col){
                 $add_prices = VariantPrice::create([
@@ -61,23 +70,7 @@ class ListsFreeController extends Controller
                     'variant_id'=> $price->id,
                 ]);
             }
-           }else{
-            $add_prices = VariantPrice::create([
-                'price'=> $price->price,
-                'discount'=> $price->discount,
-                'final_price'=> $price->final_price,
-                'country_id'=> 1,
-                'variant_id'=> $price->id,
-            ]);
 
-            $add_prices = VariantPrice::create([
-                'price'=> $price->price,
-                'discount'=> $price->discount,
-                'final_price'=> $price->final_price,
-                'country_id'=> 2,
-                'variant_id'=> $price->id,
-            ]);
-           }
         }
     }
 }
