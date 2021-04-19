@@ -38,14 +38,14 @@ class CitiesController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $cities = City::select('city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
+            $cities = City::select('city.id', 'city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
             'city.delivery_time', 'city.state', 'city.country_id')
             ->name(request('name'))
             ->state(request('state'))
             ->where('country_id', $this->country)
             ->paginate(8);
         }else{
-            $cities = City::select('city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
+            $cities = City::select('city.id', 'city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
             'city.delivery_time', 'city.state', 'city.country_id')
             ->name(request('name'))
             ->state(request('state'))
