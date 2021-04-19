@@ -101,7 +101,7 @@ class CitiesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $city = City::where('contry_id', $this->country)->find($id);
+        $city = City::where('country_id', $this->country)->find($id);
 
         if(!$city){
             return response()->json(['response' => ['error' => ['Ciudad no encontrada']]], 400);
