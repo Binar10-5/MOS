@@ -326,7 +326,7 @@ class OrdersController extends Controller
                 $subject = 'Tracking';
             }
             # Send Notification
-            $mail = Mail::to($order->client_email)->send(new SendEmails('transportation_company_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
+            $mail = Mail::to($order->client_email)->send(new SendEmails($view, $subject, 'noreply@mosbeautyshop.com', $data));
 
             if($mail){
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
