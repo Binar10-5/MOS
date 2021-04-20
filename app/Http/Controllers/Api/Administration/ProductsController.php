@@ -306,7 +306,7 @@ class ProductsController extends Controller
                         'price'=> request('price'),
                         'discount'=> $discount,
                         'final_price'=> $final_price,
-                        'country_id'=> $request->header('language-key'),
+                        'country_id'=> $this->language,
                         'variant_id'=> $variant_id
                     ]);
                 }
