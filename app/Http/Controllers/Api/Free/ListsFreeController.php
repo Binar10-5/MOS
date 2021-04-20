@@ -77,6 +77,8 @@ class ListsFreeController extends Controller
 
     public function addCities(Request $request)
     {
+        return response()->json(['response' => $request->all()], 200);
+
         $validator=\Validator::make($request->all(),[
             'cities' => 'required'
         ]);
@@ -84,7 +86,6 @@ class ListsFreeController extends Controller
         {
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
-        return response()->json(['response' => $request->all()], 200);
         foreach (request('cities') as $city) {
             $city = City::create([
                 'dane_code'=> '',
