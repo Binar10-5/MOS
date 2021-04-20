@@ -242,7 +242,7 @@ class ProductsController extends Controller
                 $regex = "/^\d+(\.\d{1,2})?$/";
                 $validator=\Validator::make($request->all(),[
                     'quantity' => 'required|integer|max:1000000',
-                    'price' => 'required',
+                    'price' => 'required|regex:'.$regex,
                     'discount' => 'required|numeric|regex:'.$regex,
                 ]);
                 if($validator->fails())
@@ -557,7 +557,7 @@ class ProductsController extends Controller
             'how_to_use' => 'required',
             'principal_id' => 'required|integer|exists:m_products,id',
             'quantity' => 'required|integer',
-            'price' => 'required',
+            'price' => 'required|regec:'.$regex,
             'discount' => 'required|regex:'.$regex,
             'state_id' => 'required|integer|min:1|max:2',
             'variant_state' => 'required|integer|min:1|max:2',

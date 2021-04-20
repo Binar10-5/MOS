@@ -98,5 +98,7 @@ class ListsFreeController extends Controller
                 'country_id'=> 2,
             ]);
         }
+
+        return response()->json(['response' => 'Success'], 200);
     }
 }
