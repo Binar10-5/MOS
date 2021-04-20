@@ -629,6 +629,8 @@ class ProductsController extends Controller
                 $price_discount = ($price * $discount);
 
                 $final_price = $price - $price_discount;
+
+                return response()->json(['response' => [$final_price, $price, $discount, $price_discount]]);
             }else{
                 $discount = 0;
                 $final_price = request('price');
