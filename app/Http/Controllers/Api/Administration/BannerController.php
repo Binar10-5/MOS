@@ -70,6 +70,7 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
+        env('CLOUDINARY_URL', "cloudinary://876951455838316:Ffgu1BqWRo1xeojIj_uaavki91E@awesomeimages");
         $validator=\Validator::make($request->all(),[
             'name' => 'bail|required|min:1|max:75',
             'description' => 'bail|required|min:1',
@@ -191,6 +192,8 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id)
     {
+        env('CLOUDINARY_URL', "cloudinary://876951455838316:Ffgu1BqWRo1xeojIj_uaavki91E@awesomeimages");
+
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75',
             'description' => 'required|min:1',
@@ -302,6 +305,7 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
+        env('CLOUDINARY_URL', "cloudinary://876951455838316:Ffgu1BqWRo1xeojIj_uaavki91E@awesomeimages");
 
         $m_banner = MBanner::find($id);
 
