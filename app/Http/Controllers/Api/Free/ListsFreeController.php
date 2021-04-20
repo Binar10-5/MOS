@@ -88,10 +88,10 @@ class ListsFreeController extends Controller
         foreach (request('cities') as $city) {
             $city = City::create([
                 'dane_code'=> '',
-                'name'=> $city->name,
+                'name'=> $city->city,
                 'department_dane_code'=> '',
-                'department_name'=> '',
-                'region_name'=> $city->region_name,
+                'department_name'=> $city->state,
+                'region_name'=> $city->city.' - '.$city->state,
                 'delivery_fee'=> 3,
                 'delivery_time'=> 'Entre 4 y 5 días',
                 'state'=> 2,

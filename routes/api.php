@@ -28,7 +28,7 @@ Route::get('languages', 'Api\Free\ListsFreeController@language');
 Route::post('fixPrice', 'Api\Free\ListsFreeController@addNewPrices');
 
 
-Route::get('addCities', 'Api\Free\ListsFreeController@addCities');
+Route::post('addCities', 'Api\Free\ListsFreeController@addCities');
 
 # Ruta para obtener la lista de países
 Route::get('countries', 'Api\Free\ListsFreeController@country');
