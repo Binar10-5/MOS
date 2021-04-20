@@ -27,6 +27,9 @@ Route::get('languages', 'Api\Free\ListsFreeController@language');
 
 Route::post('fixPrice', 'Api\Free\ListsFreeController@addNewPrices');
 
+
+Route::get('addCities', 'Api\Free\ListsFreeController@addCities');
+
 # Ruta para obtener la lista de países
 Route::get('countries', 'Api\Free\ListsFreeController@country');
 
@@ -73,6 +76,7 @@ Route::middleware('clint')->group(function () {
 
     # Lista de ciudades
     Route::get('citiesList', 'Api\Client\ClientsController@citiesList');
+
 
     # Valor minimo de el costo de envio
     Route::get('cityDeliveryFee', 'Api\Client\ClientsController@deliveryFeeClient');

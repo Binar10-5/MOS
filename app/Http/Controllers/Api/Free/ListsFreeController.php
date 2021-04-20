@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Free;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Language;
@@ -71,6 +72,31 @@ class ListsFreeController extends Controller
                 ]);
             }
 
+        }
+    }
+
+    public function addCities(Request $request)
+    {
+        $validator=\Validator::make($request->all(),[
+            'cities' => 'required|'
+        ]);
+        if($validator->fails())
+        {
+          return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
+        }
+
+        foreach (request('cities') as $city) {
+            $city = City::create([
+                'dane_code'=> '',
+                'name'=> $city->name,
+                'department_dane_code'=> '',
+                'department_name'=> '',
+                'region_name'=> $city->region_name,
+                'delivery_fee'=> 3,
+                'delivery_time'=> 'Entre 4 y 5 días',
+                'state'=> 2,
+                'country_id'=> 2,
+            ]);
         }
     }
 }
