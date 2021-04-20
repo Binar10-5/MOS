@@ -78,7 +78,7 @@ class ListsFreeController extends Controller
     public function addCities(Request $request)
     {
         $validator=\Validator::make($request->all(),[
-            'cities' => 'required|'
+            'cities' => 'required'
         ]);
         if($validator->fails())
         {
