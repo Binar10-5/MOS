@@ -87,9 +87,9 @@ class ListsFreeController extends Controller
         }
         foreach (request('cities') as $city) {
             $city = City::create([
-                'dane_code'=> '',
+                'dane_code'=> null,
                 'name'=> $city['city'],
-                'department_dane_code'=> '',
+                'department_dane_code'=> null,
                 'department_name'=> $city['state'],
                 'region_name'=> $city['city'].' - '.$city['state'],
                 'delivery_fee'=> 3,
