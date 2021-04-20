@@ -77,7 +77,7 @@ class ListsFreeController extends Controller
 
     public function addCities(Request $request)
     {
-        dd(env('MAIL_DRIVER'));
+        dd(env('DB_PORT'));
         #return response()->json(['response' => ], 400);
         $validator=\Validator::make($request->all(),[
             'cities' => 'required'
