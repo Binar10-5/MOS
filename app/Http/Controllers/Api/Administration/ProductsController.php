@@ -642,7 +642,11 @@ class ProductsController extends Controller
                 $price = request('price');
                 $price_discount = ($price * $discount);
 
-                $final_price = $price - $price_discount;
+                $price_discount = bcdiv(($price * $discount), "1", 2);
+
+                $final_price_not_roud = $price - $price_discount;
+
+                $final_price = bcdiv ($final_price_not_roud , "1" , 2);
 
             }else{
                 $discount = 0;
