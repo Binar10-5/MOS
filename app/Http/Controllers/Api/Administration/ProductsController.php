@@ -275,6 +275,7 @@ class ProductsController extends Controller
                     $price_discount = ($price * $discount);
 
                     $final_price = $price - $price_discount;
+                    return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
 
                 }else{
                     $discount = 0;
@@ -300,7 +301,7 @@ class ProductsController extends Controller
                 ]);
 
                 $variant_id = $variant->id;
-                $price_variant_validator = VariantPrice::where('country_id', $request->header('language-key'))->where('variant_id', $variant_id)->first();
+                $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant_id)->first();
                 if(!$price_variant_validator){
                     $price_variant = VariantPrice::create([
                         'price'=> request('price'),
@@ -420,6 +421,17 @@ class ProductsController extends Controller
                 'public_id' => $public_id,
                 'state_id' => request('state_id'),
             ]);
+
+                $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant_id)->first();
+                if(!$price_variant_validator){
+                    $price_variant = VariantPrice::create([
+                        'price'=> request('price'),
+                        'discount'=> $discount,
+                        'final_price'=> $final_price,
+                        'country_id'=> $this->language,
+                        'variant_id'=> $variant_id
+                    ]);
+                }
 
 
             if(!$product){
@@ -630,7 +642,6 @@ class ProductsController extends Controller
 
                 $final_price = $price - $price_discount;
 
-                return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
             }else{
                 $discount = 0;
                 $final_price = request('price');
@@ -644,7 +655,7 @@ class ProductsController extends Controller
             $variant->update();
 
             # Guardar aquí en la nueva tabla la relacion con precio y país
-            $price_variant_validator = VariantPrice::where('country_id', $request->header('language-key'))->where('variant_id', $variant->id)->first();
+            $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant->id)->first();
             if($price_variant_validator){
                 $price_variant_validator->price = request('price');
                 $price_variant_validator->discount = $discount;
