@@ -275,8 +275,10 @@ class ProductsController extends Controller
                     $price_discount = ($price * $discount);
 
                     $final_price = $price - $price_discount;
-                    return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
 
+                    $test = bcdiv ($final_price , "1" , 2);
+
+                    return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price), $test]], 200);
                 }else{
                     $discount = 0;
                     $final_price = request('price');
