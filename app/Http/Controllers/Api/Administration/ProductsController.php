@@ -274,11 +274,11 @@ class ProductsController extends Controller
                     $price = request('price');
                     $price_discount = ($price * $discount);
 
-                    $final_price = $price - $price_discount;
+                    $final_price_not_roud = $price - $price_discount;
 
-                    $test = bcdiv ($final_price , "1" , 2);
+                    $final_price = bcdiv ($final_price_not_roud , "1" , 2);
 
-                    return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price), $test]], 200);
+                    return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
                 }else{
                     $discount = 0;
                     $final_price = request('price');
