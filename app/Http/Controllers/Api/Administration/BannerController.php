@@ -91,19 +91,19 @@ class BannerController extends Controller
         $public_id = str_replace(' ', '-', request('name'));
 
         # Here we upload an short img
-        $img_short = Uploader::upload(request('img_short'),
+        $img_short = \Cloudinary\Uploader::upload(request('img_short'),
         array(
             "folder" => "MOS/banners/",
             "public_id" => $public_id."-short"
         ));
         # Here we upload an short img
-        $img_median = Uploader::upload(request('img_median'),
+        $img_median = \Cloudinary\Uploader::upload(request('img_median'),
         array(
             "folder" => "MOS/banners/",
             "public_id" => $public_id."-median"
         ));
         # Here we upload an short img
-        $img_big = Uploader::upload(request('img_big'),
+        $img_big = \Cloudinary\Uploader::upload(request('img_big'),
         array(
             "folder" => "MOS/banners/",
             "public_id" => $public_id."-big"
@@ -141,7 +141,7 @@ class BannerController extends Controller
 
         # If there is a problem delete the cloud photos
         if(!$banner){
-            $api = new Api();
+            $api = new \Cloudinary\Api();
             $api->delete_resources(array($img_short['public_id']));
             $api->delete_resources(array($img_median['public_id']));
             $api->delete_resources(array($img_big['public_id']));
@@ -242,7 +242,7 @@ class BannerController extends Controller
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
                 # Here we upload the new image
-                $upload = Uploader::upload(request('img_short'),
+                $upload = \Cloudinary\Uploader::upload(request('img_short'),
                 array(
                     "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
@@ -261,7 +261,7 @@ class BannerController extends Controller
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
                 # Here we upload the new image
-                $upload = Uploader::upload(request('img_median'),
+                $upload = \Cloudinary\Uploader::upload(request('img_median'),
                 array(
                     "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
@@ -280,7 +280,7 @@ class BannerController extends Controller
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
                 # Here we upload the new image
-                $upload = Uploader::upload(request('img_big'),
+                $upload = \Cloudinary\Uploader::upload(request('img_big'),
                 array(
                     "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
@@ -318,7 +318,7 @@ class BannerController extends Controller
 
            foreach ($banners as $banner) {
                 # Delete the img of Clouddinary
-                $api = new Api();
+                $api = new \Cloudinary\Api();
                 $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-short'));
                 $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-median'));
                 $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-big'));
