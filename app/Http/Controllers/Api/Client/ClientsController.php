@@ -512,7 +512,7 @@ class ClientsController extends Controller
             }
             # MIRAR AQUÍ
             # Poner el final price en el precio
-            $subtotal += (int)$variant->final_price * $product['quantity'];
+            $subtotal += $variant->final_price * $product['quantity'];
 
         }
         DB::beginTransaction();
@@ -537,7 +537,7 @@ class ClientsController extends Controller
 
                         if($offer){
                             $var_discount = $subtotal * $offer->discount_amount;
-                            $subtotal -= (int)$var_discount;
+                            $subtotal -= $var_discount;
                         }
                     }
                 }
@@ -576,7 +576,7 @@ class ClientsController extends Controller
             $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->first();
             $delivery_fee = $city->delivery_fee;
             if($total < $delivery->delivery_fee){
-                $total += (int)$delivery_fee;
+                $total += $delivery_fee;
             }else{
                 $delivery_fee = 0;
             }
@@ -648,7 +648,7 @@ class ClientsController extends Controller
                         'price' => $variant->price,
                         'discount' => $variant->discount,
                         'final_price' => $variant->final_price,
-                        'total' => (int)$variant->final_price * $product['quantity'],
+                        'total' => $variant->final_price * $product['quantity'],
                         'product_id' => $product['id'],
                         'quantity' => $product['quantity'],
                     ]);
