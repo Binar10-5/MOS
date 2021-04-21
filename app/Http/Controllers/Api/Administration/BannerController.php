@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Language;
 use App\Models\MBanner;
+use Cloudinary;
+use Cloudinary\Uploader;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,7 +72,6 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        env('CLOUDINARY_URL', "cloudinary://876951455838316:Ffgu1BqWRo1xeojIj_uaavki91E@awesomeimages");
         $validator=\Validator::make($request->all(),[
             'name' => 'bail|required|min:1|max:75',
             'description' => 'bail|required|min:1',
@@ -90,19 +91,19 @@ class BannerController extends Controller
         $public_id = str_replace(' ', '-', request('name'));
 
         # Here we upload an short img
-        $img_short = \Cloudinary\Uploader::upload(request('img_short'),
+        $img_short = Uploader::upload(request('img_short'),
         array(
             "folder" => "MOS/banners/",
             "public_id" => $public_id."-short"
         ));
         # Here we upload an short img
-        $img_median = \Cloudinary\Uploader::upload(request('img_median'),
+        $img_median = Uploader::upload(request('img_median'),
         array(
             "folder" => "MOS/banners/",
             "public_id" => $public_id."-median"
         ));
         # Here we upload an short img
-        $img_big = \Cloudinary\Uploader::upload(request('img_big'),
+        $img_big = Uploader::upload(request('img_big'),
         array(
             "folder" => "MOS/banners/",
             "public_id" => $public_id."-big"
@@ -140,7 +141,7 @@ class BannerController extends Controller
 
         # If there is a problem delete the cloud photos
         if(!$banner){
-            $api = new \Cloudinary\Api();
+            $api = new Api();
             $api->delete_resources(array($img_short['public_id']));
             $api->delete_resources(array($img_median['public_id']));
             $api->delete_resources(array($img_big['public_id']));
@@ -192,7 +193,6 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        env('CLOUDINARY_URL', "cloudinary://876951455838316:Ffgu1BqWRo1xeojIj_uaavki91E@awesomeimages");
 
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75',
@@ -242,7 +242,7 @@ class BannerController extends Controller
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
                 # Here we upload the new image
-                $upload = \Cloudinary\Uploader::upload(request('img_short'),
+                $upload = Uploader::upload(request('img_short'),
                 array(
                     "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
@@ -261,7 +261,7 @@ class BannerController extends Controller
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
                 # Here we upload the new image
-                $upload = \Cloudinary\Uploader::upload(request('img_median'),
+                $upload = Uploader::upload(request('img_median'),
                 array(
                     "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
@@ -280,7 +280,7 @@ class BannerController extends Controller
                   return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
                 }
                 # Here we upload the new image
-                $upload = \Cloudinary\Uploader::upload(request('img_big'),
+                $upload = Uploader::upload(request('img_big'),
                 array(
                     "folder" => "MOS/banners/",
                     # Here we must put the same public_id that the previous resource has
@@ -305,7 +305,6 @@ class BannerController extends Controller
      */
     public function destroy($id)
     {
-        env('CLOUDINARY_URL', "cloudinary://876951455838316:Ffgu1BqWRo1xeojIj_uaavki91E@awesomeimages");
 
         $m_banner = MBanner::find($id);
 
@@ -319,7 +318,7 @@ class BannerController extends Controller
 
            foreach ($banners as $banner) {
                 # Delete the img of Clouddinary
-                $api = new \Cloudinary\Api();
+                $api = new Api();
                 $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-short'));
                 $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-median'));
                 $api->delete_resources(array('MOS/banners/'.$banner->public_id.'-big'));
