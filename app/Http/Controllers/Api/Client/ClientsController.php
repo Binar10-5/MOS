@@ -604,7 +604,7 @@ class ClientsController extends Controller
 
 
             $order = Order::create([
-                'order_number' => 'dev-'.$new_order_number,
+                'order_number' => 'mos-'.$new_order_number,
                 'client_name' => request('client_name'),
                 'client_dni' => request('client_dni'),
                 'client_last_name' => request('client_last_name'),
@@ -761,8 +761,8 @@ class ClientsController extends Controller
                 'pqrs_id' => $client_id,
                 'message' => request('message')
             );
-            #$principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
-            $principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
+            $principal_email = array((object)['email' => 'myothersidebeauty@hotmail.com', 'name' => 'Atención a el cliente']);
+            #$principal_email = array((object)['email' => 'programador5@binar10.co', 'name' => 'Atención a el cliente']);
 
             # Send Notification
             $mail = Mail::to('myothersidebeauty@hotmail.com')->send(new SendEmails('pqrs_admin', 'Nuevo pqrs # '.$client_id, 'noreply@mosbeautyshop.com', $data_2));
