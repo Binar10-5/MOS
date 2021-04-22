@@ -667,9 +667,14 @@ class ClientsController extends Controller
             DB::rollback();
             return response()->json(['response' => ['error' => [$e->getMessage(). ' - '.$e->getLine()]]], 400);
         }
-
         DB::commit();
-        return response()->json(['response' => $order->order_number, 'total' => bcdiv($total, "1", 2)], 200);
+
+        if($this->country == 1){
+            return response()->json(['response' => $order->order_number, 'total' => $total], 200);
+        }else{
+            return response()->json(['response' => $order->order_number, 'total' => bcdiv($total, "1", 2)], 200);
+        }
+
     }
 
     public function deliveryFeeClient()
