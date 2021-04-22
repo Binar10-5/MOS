@@ -424,6 +424,25 @@ class ProductsController extends Controller
                 'state_id' => request('state_id'),
             ]);
 
+            if(request('discount') != 0){
+                if(request('discount') >= 2){
+                    $discount = 1;
+                }else{
+                    $discount = request('discount');
+                }
+                $price = request('price');
+                $price_discount = bcdiv(($price * $discount), "1", 2);
+
+                $final_price_not_roud = $price - $price_discount;
+
+                $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+
+                #return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
+            }else{
+                $discount = 0;
+                $final_price = request('price');
+            }
+
                 $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant_id)->first();
                 if(!$price_variant_validator){
                     $price_variant = VariantPrice::create([
