@@ -309,7 +309,7 @@ class ProductsController extends Controller
                         'price'=> request('price'),
                         'discount'=> $discount,
                         'final_price'=> $final_price,
-                        'country_id'=> $this->language,
+                        'country_id'=> $this->country,
                         'variant_id'=> $variant_id
                     ]);
                 }
@@ -449,7 +449,7 @@ class ProductsController extends Controller
                         'price'=> request('price'),
                         'discount'=> $discount,
                         'final_price'=> $final_price,
-                        'country_id'=> $this->language,
+                        'country_id'=> $this->country,
                         'variant_id'=> $variant_id
                     ]);
                 }
