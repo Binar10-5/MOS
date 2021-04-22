@@ -271,12 +271,19 @@ class ProductsController extends Controller
                     }else{
                         $discount = request('discount');
                     }
-                    $price = request('price');
-                    $price_discount = bcdiv(($price * $discount), "1", 2);
+                    if($this->country == 2){
+                        $price = request('price');
+                        $price_discount = bcdiv(($price * $discount), "1", 2);
 
-                    $final_price_not_roud = $price - $price_discount;
+                        $final_price_not_roud = $price - $price_discount;
 
-                    $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+                        $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+                    }else{
+                        $price = request('price');
+                        $price_discount = ($price * $discount);
+
+                        $final_price = $price - $price_discount;
+                    }
 
                     #return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
                 }else{
@@ -430,12 +437,19 @@ class ProductsController extends Controller
                 }else{
                     $discount = request('discount');
                 }
-                $price = request('price');
-                $price_discount = bcdiv(($price * $discount), "1", 2);
+                if($this->country == 2){
+                    $price = request('price');
+                    $price_discount = bcdiv(($price * $discount), "1", 2);
 
-                $final_price_not_roud = $price - $price_discount;
+                    $final_price_not_roud = $price - $price_discount;
 
-                $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+                    $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+                }else{
+                    $price = request('price');
+                    $price_discount = ($price * $discount);
+
+                    $final_price = $price - $price_discount;
+                }
 
                 #return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
             }else{
@@ -658,14 +672,19 @@ class ProductsController extends Controller
                 }else{
                     $discount = request('discount');
                 }
-                $price = request('price');
-                $price_discount = ($price * $discount);
+                if($this->country == 2){
+                    $price = request('price');
+                    $price_discount = bcdiv(($price * $discount), "1", 2);
 
-                $price_discount = bcdiv(($price * $discount), "1", 2);
+                    $final_price_not_roud = $price - $price_discount;
 
-                $final_price_not_roud = $price - $price_discount;
+                    $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+                }else{
+                    $price = request('price');
+                    $price_discount = ($price * $discount);
 
-                $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+                    $final_price = $price - $price_discount;
+                }
 
             }else{
                 $discount = 0;
