@@ -668,7 +668,7 @@ class ClientsController extends Controller
         }
 
         DB::commit();
-        return response()->json(['response' => $order->order_number, 'total' => $order->total], 200);
+        return response()->json(['response' => $order->order_number, 'total' => $total], 200);
     }
 
     public function deliveryFeeClient()
