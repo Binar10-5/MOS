@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Administration;
 
 use App\Http\Controllers\Controller;
 use App\Models\City;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,14 +18,17 @@ class CitiesController extends Controller
         $this->middleware('permission:/update_cities')->only(['update', 'destroy', 'deliveryFee', 'deliveryFeeGet']);
 
         // Get the languaje id
-        /*$language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
-        }else if($request->header('language-key') == ''){
-            $this->language = '';
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else{
             $this->language = 1;
-        }*/
+            $this->country = 1;
+        }
     }
     /**
      * Display a listing of the resource.
@@ -34,12 +38,18 @@ class CitiesController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $cities = City::name(request('name'))
+            $cities = City::select('city.id', 'city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
+            'city.delivery_time', 'city.state', 'city.country_id')
+            ->name(request('name'))
             ->state(request('state'))
+            ->where('country_id', $this->country)
             ->paginate(8);
         }else{
-            $cities = City::name(request('name'))
+            $cities = City::select('city.id', 'city.dane_code', 'city.name', 'city.department_dane_code', 'city.department_name', 'city.region_name', 'city.delivery_fee',
+            'city.delivery_time', 'city.state', 'city.country_id')
+            ->name(request('name'))
             ->state(request('state'))
+            ->where('country_id', $this->country)
             ->get();
         }
 
@@ -67,7 +77,7 @@ class CitiesController extends Controller
      */
     public function show($id)
     {
-        $city = City::find($id);
+            $city = City::where('contry_id', $this->country)->find($id);
 
         return response()->json(['response' => $city], 200);
     }
@@ -91,7 +101,7 @@ class CitiesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $city = City::find($id);
+        $city = City::where('country_id', $this->country)->find($id);
 
         if(!$city){
             return response()->json(['response' => ['error' => ['Ciudad no encontrada']]], 400);
@@ -126,7 +136,7 @@ class CitiesController extends Controller
           return response()->json(['response' => ['error' => $validator->errors()->all()]],400);
         }
 
-        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->update(['delivery_fee' => (int)request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
+        $delivery = DB::table('delivery_fee_minimum')->where('country_id', $this->country)->where('id', 1)->update(['delivery_fee' => (int)request('delivery_fee'), 'updated_at' => date('Y-m-d H:i:s')]);
 
         return response()->json(['response' => 'Success'], 200);
     }

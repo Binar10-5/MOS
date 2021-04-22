@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Language;
 use App\Models\MBanner;
+use Cloudinary;
+use Cloudinary\Uploader;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +21,14 @@ class BannerController extends Controller
         $this->middleware('permission:/update_banner')->only(['update', 'destroy']);
 
         // Get the languaje id
-        $language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
+            $this->language = $language->id;
+        }else if($request->header('language-key') == ''){
+            $this->language = '';
         }else{
             $this->language = 1;
         }
@@ -111,7 +118,7 @@ class BannerController extends Controller
         }else{
             $m_banner = MBanner::create([
                 'name' => request('name'),
-                'state_id' => request('state_id')
+                'state_id' => request('entity_state_id')
             ]);
 
             $m_banner_id = $m_banner->id;
@@ -186,6 +193,7 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $validator=\Validator::make($request->all(),[
             'name' => 'required|min:1|max:75',
             'description' => 'required|min:1',

@@ -24,6 +24,18 @@ Route::post('updateFirstPass', 'Api\Helpers\ValidationController@updateFirstPass
 # Ruta para obtener la lista de idiomas
 Route::get('languages', 'Api\Free\ListsFreeController@language');
 
+
+Route::post('fixPrice', 'Api\Free\ListsFreeController@addNewPrices');
+
+
+Route::post('addCities', 'Api\Free\ListsFreeController@addCities');
+
+# Ruta para obtener la lista de países
+Route::get('countries', 'Api\Free\ListsFreeController@country');
+
+# Ruta para obtener la lista de países
+Route::get('currencies', 'Api\Free\ListsFreeController@currency');
+
 # Olvido de contraseña
 Route::post('forgetPass', 'Api\Helpers\ValidationController@forgetPassword');
 
@@ -64,6 +76,7 @@ Route::middleware('clint')->group(function () {
 
     # Lista de ciudades
     Route::get('citiesList', 'Api\Client\ClientsController@citiesList');
+
 
     # Valor minimo de el costo de envio
     Route::get('cityDeliveryFee', 'Api\Client\ClientsController@deliveryFeeClient');

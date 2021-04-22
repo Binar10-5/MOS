@@ -11,6 +11,7 @@ use App\Models\Master\MCategory1;
 use App\Models\Master\MProduct;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\VariantPrice;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,13 +25,16 @@ class ProductsController extends Controller
         $this->middleware('permission:/update_products')->only(['update', 'destroy']);
 
         // Get the languaje id
-        $language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
-        }else if($request->header('language-key') == ''){
-            $this->language = '';
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else{
             $this->language = 1;
+            $this->country = 1;
         }
     }
     /**
@@ -238,7 +242,7 @@ class ProductsController extends Controller
                 $regex = "/^\d+(\.\d{1,2})?$/";
                 $validator=\Validator::make($request->all(),[
                     'quantity' => 'required|integer|max:1000000',
-                    'price' => 'required',
+                    'price' => 'required|regex:'.$regex,
                     'discount' => 'required|numeric|regex:'.$regex,
                 ]);
                 if($validator->fails())
@@ -268,10 +272,13 @@ class ProductsController extends Controller
                         $discount = request('discount');
                     }
                     $price = request('price');
-                    $price_discount = ($price * $discount);
+                    $price_discount = bcdiv(($price * $discount), "1", 2);
 
-                    $final_price = $price - $price_discount;
+                    $final_price_not_roud = $price - $price_discount;
 
+                    $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+
+                    #return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
                 }else{
                     $discount = 0;
                     $final_price = request('price');
@@ -296,9 +303,19 @@ class ProductsController extends Controller
                 ]);
 
                 $variant_id = $variant->id;
+                $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant_id)->first();
+                if(!$price_variant_validator){
+                    $price_variant = VariantPrice::create([
+                        'price'=> request('price'),
+                        'discount'=> $discount,
+                        'final_price'=> $final_price,
+                        'country_id'=> $this->country,
+                        'variant_id'=> $variant_id
+                    ]);
+                }
             }
             # Agregar registro de la variante por idioma.
-            $language = Language::find($request->header('language-key'));
+            $language = Language::find($this->language);
             $public_id = str_replace(' ', '-', $language->name.'-'.$variant_id.'-'.request('name'));
 
             # Here we upload an image 1
@@ -407,6 +424,36 @@ class ProductsController extends Controller
                 'state_id' => request('state_id'),
             ]);
 
+            if(request('discount') != 0){
+                if(request('discount') >= 2){
+                    $discount = 1;
+                }else{
+                    $discount = request('discount');
+                }
+                $price = request('price');
+                $price_discount = bcdiv(($price * $discount), "1", 2);
+
+                $final_price_not_roud = $price - $price_discount;
+
+                $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+
+                #return response()->json(['response' => [$final_price, $price, $discount, $price_discount, ceil($final_price)]], 200);
+            }else{
+                $discount = 0;
+                $final_price = request('price');
+            }
+
+                $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant_id)->first();
+                if(!$price_variant_validator){
+                    $price_variant = VariantPrice::create([
+                        'price'=> request('price'),
+                        'discount'=> $discount,
+                        'final_price'=> $final_price,
+                        'country_id'=> $this->country,
+                        'variant_id'=> $variant_id
+                    ]);
+                }
+
 
             if(!$product){
                 # If there is a problem delete the cloud photos
@@ -429,11 +476,17 @@ class ProductsController extends Controller
 
     public function variantList($id)
     {
-        $variants = ProductVariant::name(request('name'))
+        $variants = ProductVariant::select('product_variants.principal_id as principal_id', 'product_variants.name', 'product_variants.color_code', 'product_variants.color', 'product_variants.state_id', 'vap.discount', 'vap.final_price', 'vap.price', 'product_variants.quantity', 'product_variants.state_id as variant_state_id',
+        'product_variants.favorite', 'product_variants.new_product', 'cruelty_free', 'product_variants.category1_order', 'product_variants.category2_order', 'product_variants.category3_order', 'product_variants.id')
+        ->join('variant_price as vap', 'product_variants.id', 'vap.variant_id')
+        ->join('products as p', 'product_variants.id', 'p.variant_id')
+        ->name(request('name'))
         ->state(request('state'))
         ->category3(request('category3'))
         ->color(request('color'))
-        ->where('principal_id', $id)
+        ->where('product_variants.principal_id', $id)
+        ->where('vap.country_id', $this->country)
+        ->where('p.language_id', $this->language)
         ->get();
 
         return response()->json(['response' => $variants], 200);
@@ -450,15 +503,19 @@ class ProductsController extends Controller
 
     public function variantListCategory(Request $request)
     {
+
+        # Join con la tabla de relación de precios país
+
         $products = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color', 'products.color_code',
         'products.benefits', 'products.how_to_use', 'products.variant_id', 'products.language_id', 'products.tracking', 'products.image1', 'products.image2',
-        'products.image3', 'products.image4', 'vp.discount', 'vp.final_price',
-        'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id',
+        'products.image3', 'products.image4', 'vap.discount', 'vap.final_price',
+        'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at', 'vap.price', 'vp.quantity', 'vp.state_id as variant_state_id',
         'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.category1_order', 'vp.category2_order', 'vp.category3_order')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
         ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
         ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->variantName(request('name'))
         ->category1(request('category1_id'))
@@ -466,13 +523,22 @@ class ProductsController extends Controller
         ->category3(request('category3_id'))
         ->discount(request('discount'))
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->paginate(8);
 
         $count = Product::select('vp.principal_id as principal_id')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('m_categories_1 as mc1', 'mp.category1_id', 'mc1.id')
+        ->join('m_categories_2 as mc2', 'mp.category2_id', 'mc2.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         #->vState(request('v_state'))
         ->language($this->language)
+        ->variantName(request('name'))
+        ->category1(request('category1_id'))
+        ->category2(request('category2_id'))
+        ->category3(request('category3_id'))
+        ->where('vap.country_id', $this->country)
         ->count();
 
         return response()->json(['response' => $products, 'count' => $count], 200);
@@ -487,13 +553,17 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
+        # Join con la tabla de relación de precios país
+
         $product = Product::select('vp.principal_id as principal_id', 'products.name', 'products.description', 'products.color',
         'products.color_code', 'products.variant_id', 'products.language_id', 'products.benefits', 'products.how_to_use',
         'products.tracking', 'products.image1', 'products.image2', 'products.image3', 'products.image4', 'products.image5', 'products.state_id', 'products.created_at', 'products.updated_at',
-        'vp.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vp.discount', 'vp.final_price')
+        'vap.price', 'vp.quantity', 'vp.state_id as variant_state_id', 'vp.favorite', 'vp.new_product', 'cruelty_free', 'vap.discount', 'vap.final_price')
         ->join('product_variants as vp', 'products.variant_id', 'vp.id')
         ->join('m_products as mp', 'vp.principal_id', 'mp.id')
+        ->join('variant_price as vap', 'vp.id', 'vap.variant_id')
         ->language($this->language)
+        ->where('vap.country_id', $this->country)
         ->where('vp.id', $id)
         ->first();
 
@@ -520,7 +590,7 @@ class ProductsController extends Controller
             'how_to_use' => 'required',
             'principal_id' => 'required|integer|exists:m_products,id',
             'quantity' => 'required|integer',
-            'price' => 'required',
+            'price' => 'required|regex:'.$regex,
             'discount' => 'required|regex:'.$regex,
             'state_id' => 'required|integer|min:1|max:2',
             'variant_state' => 'required|integer|min:1|max:2',
@@ -549,7 +619,7 @@ class ProductsController extends Controller
         if(!$variant_language){
             return response()->json(['response' => ['error' => 'Esta variante no tiene registro para el idioma seleccionado']], 400);
         }
-        $language = Language::find($request->header('language-key'));
+        $language = Language::find($this->language);
         $previous_data = array(
             'name' => $variant_language->name,
             'description' => $variant_language->description,
@@ -591,7 +661,12 @@ class ProductsController extends Controller
                 $price = request('price');
                 $price_discount = ($price * $discount);
 
-                $final_price = $price - $price_discount;
+                $price_discount = bcdiv(($price * $discount), "1", 2);
+
+                $final_price_not_roud = $price - $price_discount;
+
+                $final_price = bcdiv ($final_price_not_roud , "1" , 2);
+
             }else{
                 $discount = 0;
                 $final_price = request('price');
@@ -603,6 +678,15 @@ class ProductsController extends Controller
             $variant->favorite = request('favorite');
             $variant->cruelty_free = request('cruelty_free');
             $variant->update();
+
+            # Guardar aquí en la nueva tabla la relacion con precio y país
+            $price_variant_validator = VariantPrice::where('country_id', $this->language)->where('variant_id', $variant->id)->first();
+            if($price_variant_validator){
+                $price_variant_validator->price = request('price');
+                $price_variant_validator->discount = $discount;
+                $price_variant_validator->final_price = $final_price;
+                $price_variant_validator->update();
+            }
 
             $variant_language->name = request('name');
             $variant_language->description = request('description');

@@ -25,12 +25,18 @@ class OrdersController extends Controller
         $this->middleware('permission:/update_orders')->only(['update']);
 
         // Get the languaje id
-        $language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else if($request->header('language-key') == ''){
+            $this->country = '';
             $this->language = '';
         }else{
+            $this->country = $language->country_id;
             $this->language = 1;
         }
     }
@@ -209,8 +215,9 @@ class OrdersController extends Controller
         $order = Order::select('orders.id', 'orders.order_number', 'orders.client_name', 'orders.client_dni', 'orders.client_last_name', 'orders.client_address', 'orders.client_cell_phone',
         'orders.client_email', 'orders.subtotal', 'orders.total', 'orders.state_id', 'orders.coupon_id', 'orders.transportation_company_id',
         'orders.tracking_number', 'orders.language_id', 'orders.payment_data', 'orders.city_id', 'c.name as city_name', 'c.department_name', 'orders.delivery_fee',
-        'orders.tracking')
+        'orders.tracking', 'orders.country_id', 'co.name', 'co.description')
         ->join('city as c', 'orders.city_id', 'c.id')
+        ->join('countries as co', 'orders.country_id', 'co.id')
         ->where('orders.id', $id)
         ->first();
 
@@ -224,7 +231,11 @@ class OrdersController extends Controller
         ->where('o.id', $order->id)
         ->get();
 
-        $order->coupon = Cupon::select('code', 'discount_amount')->find($order->coupon_id);
+        $order->coupon = Cupon::select('cupons.code', 'cc.discount_amount')
+        ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+        ->where('cupons.id', $order->coupon_id)
+        ->where('cc.country_id', $this->country)
+        ->first();
 
         return response()->json(['response' => $order], 200);
     }
@@ -293,6 +304,13 @@ class OrdersController extends Controller
             'numeral' => '#',
         );
         if($transportation->id == 1){
+            if($this->country == 1){
+                $view = 'domiciliary_assigned';
+                $subject = 'Seguimiento de tu pedido';
+            }else{
+                $view = 'domiciliary_assigned_en';
+                $subject = 'Tracking';
+            }
             # Send Notification
             $mail = Mail::to($order->client_email)->send(new SendEmails('domiciliary_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
 
@@ -300,8 +318,15 @@ class OrdersController extends Controller
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);
             }
         }else{
+            if($this->country == 1){
+                $view = 'transportation_company_assigned';
+                $subject = 'Seguimiento de tu pedido';
+            }else{
+                $view = 'transportation_company_assigned_en';
+                $subject = 'Tracking';
+            }
             # Send Notification
-            $mail = Mail::to($order->client_email)->send(new SendEmails('transportation_company_assigned', 'Seguimiento de tu pedido.', 'noreply@mosbeautyshop.com', $data));
+            $mail = Mail::to($order->client_email)->send(new SendEmails($view, $subject, 'noreply@mosbeautyshop.com', $data));
 
             if($mail){
                 return response()->json(['response' => ['error' => ['Error al enviar el correo.']]], 400);

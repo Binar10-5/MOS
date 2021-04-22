@@ -162,16 +162,16 @@
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 20px; padding-left: 20px; padding-top: 0px; padding-bottom: 20px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
 <div style="color:#ffffff;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:0px;padding-right:20px;padding-bottom:20px;padding-left:20px;">
 <div style="line-height: 1.2; font-size: 12px; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; color: #ffffff; mso-line-height-alt: 14px;">
-<p style="font-size: 34px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 41px; margin: 0;"><span style="font-size: 34px; color: #000000; background-color: #000000;"><strong><span style="color: #ffffff;">Saludos, {{$data['name']}}</span> </strong></span></p>
+<p style="font-size: 34px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 41px; margin: 0;"><span style="font-size: 34px; color: #000000; background-color: #000000;"><strong><span style="color: #ffffff;">Greetings, {{$data['name']}}</span> </strong></span></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 40px; padding-left: 40px; padding-top: 5px; padding-bottom: 40px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
 <div style="color:#000000;font-family:Roboto, Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:5px;padding-right:40px;padding-bottom:40px;padding-left:40px;">
 <div style="line-height: 1.2; font-size: 12px; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; color: #000000; mso-line-height-alt: 14px;">
-<p style="font-size: 24px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 29px; margin: 0;"><span style="font-size: 24px;"><strong style="font-family: inherit;">Te informamos que tu pedido ha sido despachado y llegará pronto.</strong></span></p>
+<p style="font-size: 24px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 29px; margin: 0;"><span style="font-size: 24px;"><strong style="font-family: inherit;">'We inform you that your order has been dispatched and will arrive soon.'</strong></span></p>
 <p style="font-size: 38px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 46px; margin: 0;"> </p>
-<p style="font-size: 20px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 20px;"><strong style="font-family: inherit;">Atentamente, equipo MOS.</strong></span></p>
+<p style="font-size: 20px; line-height: 1.2; text-align: center; word-break: break-word; font-family: Roboto, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 24px; margin: 0;"><span style="font-size: 20px;"><strong style="font-family: inherit;">Sincerely, MOS Team.</strong></span></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->

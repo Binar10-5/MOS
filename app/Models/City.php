@@ -8,7 +8,7 @@ class City extends Model
 {
     protected $table = 'city';
     protected $fillable = [
-        'id', 'dane_code', 'name', 'department_dane_code', 'department_name', 'region_name', 'delivery_fee', 'delivery_time', 'state'
+        'id', 'dane_code', 'name', 'department_dane_code', 'department_name', 'region_name', 'delivery_fee', 'delivery_time', 'state', 'country_id'
     ];
 
     public function scopeName($query, $name)

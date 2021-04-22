@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Administration;
 
 use App\Http\Controllers\Controller;
+use App\Models\Language;
 use App\Models\TransportationCompany;
 use Illuminate\Http\Request;
 
@@ -16,14 +17,20 @@ class TransportationCompaniesController extends Controller
         $this->middleware('permission:/update_transportations')->only(['update', 'destroy']);
 
         // Get the languaje id
-        /*$language = Language::find($request->header('language-key'));
+        $language = Language::select('languages.id', 'c.id as country_id')
+        ->join('countries as c', 'languages.id', 'c.language_id')
+        ->where('c.id' ,$request->header('language-key'))
+        ->first();
         if($language){
-            $this->language = $request->header('language-key');
+            $this->language = $language->id;
+            $this->country = $language->country_id;
         }else if($request->header('language-key') == ''){
             $this->language = '';
+            $this->country = '';
         }else{
             $this->language = 1;
-        }*/
+            $this->country = 1;
+        }
     }
 
     /**
@@ -34,14 +41,22 @@ class TransportationCompaniesController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $transportations = TransportationCompany::name(request('name'))
+            $transportations = TransportationCompany::select('transportation_companies.id', 'transportation_companies.name', 'transportation_companies.description',
+            'transportation_companies.country_id', 'transportation_companies.state')
+            ->join('countries as c', 'transportation_companies.country_id', 'c.id')
+            ->name(request('name'))
             ->state(request('state'))
-            ->orderBy('id', 'desc')
+            ->orderBy('transportation_companies.id', 'desc')
+            ->where('c.id', $this->country)
             ->paginate(8);
         }else{
-            $transportations = TransportationCompany::name(request('name'))
+            $transportations = TransportationCompany::select('transportation_companies.id','transportation_companies.name', 'transportation_companies.description',
+            'transportation_companies.country_id', 'transportation_companies.state')
+            ->join('countries as c', 'transportation_companies.country_id', 'c.id')
+            ->name(request('name'))
             ->state(request('state'))
-            ->orderBy('id', 'desc')
+            ->orderBy('transportation_companies.id', 'desc')
+            ->where('c.id', $this->country)
             ->get();
         }
 
@@ -70,6 +85,7 @@ class TransportationCompaniesController extends Controller
             'name' => request('name'),
             'description' => request('description'),
             'state' => request('state'),
+            'country_id' => $this->country
         ]);
 
         return response()->json(['response' => 'Success'], 200);
@@ -83,7 +99,11 @@ class TransportationCompaniesController extends Controller
      */
     public function show($id)
     {
-        $transportation = TransportationCompany::find($id);
+        $transportation = TransportationCompany::select('transportation_companies.id','transportation_companies.name', 'transportation_companies.description',
+        'transportation_companies.country_id', 'transportation_companies.state')
+        ->join('countries as c', 'transportation_companies.country_id', 'c.id')
+        ->where('c.id', $this->country)
+        ->first();
 
         return response()->json(['response' => $transportation], 200);
 
@@ -117,6 +137,7 @@ class TransportationCompaniesController extends Controller
         $transportation->name = request('name');
         $transportation->description = request('description');
         $transportation->state = request('state');
+        $transportation->country_id = $this->country;
         $transportation->update();
 
         return response()->json(['response' => 'Success'], 200);

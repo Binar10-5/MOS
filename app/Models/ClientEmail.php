@@ -8,7 +8,7 @@ class ClientEmail extends Model
 {
     protected $table = 'client_email';
     protected $fillable = [
-        'id', 'email', 'state', 'used', 'dni'
+        'id', 'email', 'state', 'used', 'dni', 'country_id'
     ];
 
     public function scopeEmail($query, $email)
