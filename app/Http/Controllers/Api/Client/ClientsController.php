@@ -574,7 +574,7 @@ class ClientsController extends Controller
 
             // Si el sub total de la compra es mayor a 80, el delivery free de la ciudad es 0, osea que no se le suma a el total
             $city = City::find(request('city_id'));
-            $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->first();
+            $delivery = DB::table('delivery_fee_minimum')->where('country_id', $this->country)->first();
             $delivery_fee = $city->delivery_fee;
             if($total < $delivery->delivery_fee){
                 $total += $delivery_fee;
