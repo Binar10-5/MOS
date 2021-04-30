@@ -679,7 +679,7 @@ class ClientsController extends Controller
 
     public function deliveryFeeClient()
     {
-        $delivery = DB::table('delivery_fee_minimum')->where('id', 1)->first();
+        $delivery = DB::table('delivery_fee_minimum')->where('country_id', $this->country)->first();
 
         return response()->json(['response' => $delivery], 200);
 
