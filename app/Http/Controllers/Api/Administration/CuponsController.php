@@ -42,14 +42,14 @@ class CuponsController extends Controller
     public function index()
     {
         if(request('paginate')){
-            $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state', 'cupons.created_at', 'cupons.updated_at')
+            $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.type_id', 'cupons.state', 'cupons.created_at', 'cupons.updated_at')
             ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
             ->name(request('name'))
             ->state(request('state'))
             ->where('cc.country_id', $this->country)
             ->paginate(8);
         }else{
-            $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state', 'cupons.created_at', 'cupons.updated_at')
+            $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state', 'cupons.type_id', 'cupons.created_at', 'cupons.updated_at')
             ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
             ->name(request('name'))
             ->state(request('state'))
@@ -76,6 +76,7 @@ class CuponsController extends Controller
             'maximum_uses' => 'required',
             'discount_amount' => 'required|max:20',
             'state' => 'required|min:1|max:2',
+            'type_id' => 'required|min:1|max:2',
         ]);
         if($validator->fails())
         {
@@ -107,6 +108,7 @@ class CuponsController extends Controller
                 'maximum_uses' => request('maximum_uses'),
                 'minimal_cost' => request('minimal_cost'),
                 'discount_amount' => request('discount_amount'),
+                'type_id' => request('type_id'),
                 'state' => request('state'),
             ]);
 
@@ -135,7 +137,7 @@ class CuponsController extends Controller
      */
     public function show($id)
     {
-        $cupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state', 'cupons.created_at', 'cupons.updated_at')
+        $cupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cupons.type_id', 'cc.discount_amount', 'cupons.state', 'cupons.created_at', 'cupons.updated_at')
         ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
         ->where('cc.country_id', $this->country)
         ->where('cupons.id', $id)

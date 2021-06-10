@@ -231,8 +231,9 @@ class OrdersController extends Controller
         ->where('o.id', $order->id)
         ->get();
 
-        $order->coupon = Cupon::select('cupons.code', 'cc.discount_amount')
+        $order->coupon = Cupon::select('cupons.code', 'cc.discount_amount', 'cupons.type_id')
         ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
+        //->join('type_coupon as tc', 'cupons.type_id', 'tc.id')
         ->where('cupons.id', $order->coupon_id)
         ->where('cc.country_id', $this->country)
         ->first();

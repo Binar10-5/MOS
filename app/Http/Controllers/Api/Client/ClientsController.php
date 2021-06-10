@@ -546,7 +546,7 @@ class ClientsController extends Controller
             $total = $subtotal;
             $coupon = null;
             if(!empty(request('coupon'))){
-                $validate_coupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state')
+                $validate_coupon = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state', 'cupons.type_id')
                 ->join('coupons_country as cc', 'cupons.id', 'cc.coupon_id')
                 ->where('cc.country_id', $this->country)
                 ->where('cupons.code', request('coupon'))
@@ -568,8 +568,14 @@ class ClientsController extends Controller
 
                 /*$validate_coupon->uses_number += 1;
                 $validate_coupon->update();*/
-                $total -= $validate_coupon->discount_amount;
-                $coupon = $validate_coupon->id;
+                if($validate_coupon->type_id == 2){
+                    $coupon_discount = $total * $validate_coupon->discount_amount;
+                    $total -= $coupon_discount;
+                    $coupon = $validate_coupon->id;
+                }else{
+                    $total -= $validate_coupon->discount_amount;
+                    $coupon = $validate_coupon->id;
+                }
             }
 
             // Si el sub total de la compra es mayor a 80, el delivery free de la ciudad es 0, osea que no se le suma a el total
