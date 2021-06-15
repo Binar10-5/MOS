@@ -568,7 +568,7 @@ class ClientsController extends Controller
 
                 /*$validate_coupon->uses_number += 1;
                 $validate_coupon->update();*/
-                if($validate_coupon->type_id == 2){
+                if($validate_coupon->type_id == 1){
                     $coupon_discount = $total * $validate_coupon->discount_amount;
                     $total -= $coupon_discount;
                     $coupon = $validate_coupon->id;
