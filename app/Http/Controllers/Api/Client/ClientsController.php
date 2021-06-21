@@ -610,7 +610,7 @@ class ClientsController extends Controller
 
 
             $order = Order::create([
-                'order_number' => 'dev-'.$new_order_number,
+                'order_number' => 'mos-'.$new_order_number,
                 'client_name' => request('client_name'),
                 'client_dni' => request('client_dni'),
                 'client_last_name' => request('client_last_name'),
