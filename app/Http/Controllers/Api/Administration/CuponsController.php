@@ -47,6 +47,7 @@ class CuponsController extends Controller
             ->name(request('name'))
             ->state(request('state'))
             ->where('cc.country_id', $this->country)
+            ->orderBy('cupons.id', 'desc')
             ->paginate(8);
         }else{
             $cupons = Cupon::select('cupons.id', 'cupons.name', 'cupons.description', 'cupons.code', 'cc.uses_number', 'cc.maximum_uses', 'cc.minimal_cost', 'cc.discount_amount', 'cupons.state', 'cupons.type_id', 'cupons.created_at', 'cupons.updated_at')
